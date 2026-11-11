@@ -1,0 +1,14 @@
+\begin{table}[H]\centering\small
+\caption{Auditoría de los seis listados NUCLEO-L476RG.}\label{tab:list_nucleo}
+\begin{tabularx}{\linewidth}{Xccccc}\toprule
+Modelo & Q/MVE & SMLAD & SXTB16 & FP con S & MUL/MLA\\\midrule
+RX QAT & No & Sí & Sí & Sí & Sí\\
+MPC INT8 tensor & No & Sí & Sí & Sí & Sí\\
+MPC INT8 canal & No & Sí & Sí & Sí & Sí\\
+MPC QAT & No & Sí & Sí & Sí & Sí\\
+MPC INT16x8 & No & No & No & Sí & Sí\\
+MPC mixta & No & Sí & Sí & Sí & Sí\\
+\bottomrule\end{tabularx}
+\par\smallskip\begin{minipage}{\linewidth}\footnotesize Q/MVE: operandos Q y predicación vectorial; SXTB16 incluye SXTAB16; FP con S: aritmética flotante escalar. SMLAD es producto-acumulación dual DSP, no Helium. La presencia se refiere al ejecutable completo.\end{minipage}
+\fuente{auditoría estática de los ejecutables; coordenadas y conteos conservados en CSV}
+\end{table}

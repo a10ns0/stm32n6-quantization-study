@@ -1,0 +1,8 @@
+{
+  "Profiles": {
+    "user_profile": {
+      "memory_pool": "C:\\Users\\Alonso\\.stm32cubeaistudio\\workspace\\Clasificador_Neumonia\\.ai\\run\\run-3\\.ai\\memory_pool.mpool",
+      "options": "--native-float --cache-maintenance --Ocache-opt --enable-virtual-mem-pools --Os --Oauto-sched --enable-epoch-controller"
+    }
+  }
+}

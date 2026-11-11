@@ -1,0 +1,67 @@
+\chapter{Estado del arte}\label{cap:estado}
+La revisión se concentra en trabajos que estudian la reducción de precisión de redes neuronales, la aproximación de controladores predictivos y su implementación en sistemas embebidos. El propósito es identificar qué resuelven estos antecedentes y qué aspectos requieren evaluación en los dos casos de esta memoria: clasificación de radiografías y control del cartpole mediante una red que aproxima una política MPC. La comparación permite formular una brecha de evaluación e implementación, sin atribuir novedad a los formatos numéricos utilizados.
+
+\section{Cuantización de redes: calidad de tarea y costo de inferencia}
+Jacob et al. proponen cuantizar pesos y activaciones a ocho bits y adaptar el entrenamiento para permitir inferencia con aritmética entera. Sus experimentos con clasificación ImageNet y detección COCO muestran un compromiso favorable entre calidad y latencia en CPU ARM \cite{jacob2018}. El trabajo establece una base para QAT y para evaluar conjuntamente el resultado predictivo y el costo de ejecución. Sin embargo, sus tareas y plataformas no permiten anticipar el comportamiento en lazo cerrado de un controlador cuantizado ni la asignación de operadores a Neural-ART.
+
+Nagel et al. sistematizan procedimientos PTQ y QAT orientados a limitar la degradación introducida por la cuantización \cite{nagel2021}. Su análisis aporta criterios para comparar una conversión posterior al entrenamiento con otra que adapta los parámetros durante el entrenamiento. Para esta memoria, la consecuencia es metodológica: deben conservarse ambas alternativas como referencias y comprobar su desempeño en cada aplicación, en lugar de asumir que un procedimiento será siempre superior.
+
+Li et al. presentan BRECQ, que reconstruye bloques de la red para reducir el error de PTQ e incorpora precisión mixta a partir de la sensibilidad de sus componentes. Lo evalúan en clasificación y detección \cite{brecq2021}. El antecedente respalda estudiar una asignación de precisión no uniforme, pero no demuestra que INT8 cause necesariamente inestabilidad o \emph{chattering} en un MPC. Tampoco equivale al procedimiento de esta memoria: conservar regiones seleccionadas en Float32 dentro de un modelo parcialmente INT8 no reproduce el algoritmo de reconstrucción ni la selección de anchos de bits de BRECQ.
+
+Estos trabajos son directamente pertinentes al caso de radiografías como problema de clasificación sometido a compresión numérica. No constituyen una validación clínica del clasificador estudiado. Su utilidad reside en orientar la comparación de calidad de tarea, tamaño y costo de implementación; el comportamiento de la CNN concreta y de sus variantes debe establecerse con los datos y registros experimentales propios.
+
+\section{MPC aproximado: del error de la red al comportamiento de control}
+\subsection{Aproximación neuronal y adaptación de parámetros}
+Hose, Gräfe y Trimpe desarrollan una arquitectura de MPC aproximado que utiliza sensibilidades para ajustar el controlador neuronal ante cambios conocidos de parámetros sin repetir todo el entrenamiento \cite{hose2024}. El repositorio asociado al trabajo presenta un flujo de generación de datos, entrenamiento y despliegue en STM32G4 para el levantamiento y la estabilización de un cartpole \cite{hoserepo}. Su contribución principal es la adaptación de la política aproximada, no una comparación de esquemas de cuantización sobre STM32N6.
+
+Este trabajo es el antecedente del caso de control de la memoria, que examina los cambios de comportamiento al reducir la precisión de la representación neuronal y compilarla para otro destino. Utilizar ese antecedente no transfiere automáticamente sus garantías a una red convertida, cuantizada o ejecutada mediante una cadena de herramientas distinta. Por ello se requiere contrastar la concordancia de la acción calculada y el desempeño de las trayectorias en lazo cerrado.
+
+\subsection{Compensación de una red cuantizada mediante LQR}
+Sathyanarayanan et al. aproximan mediante una red neuronal el nivel de seguimiento de un MPC no lineal para invernaderos y cuantizan esa red. Añaden una acción LQR para compensar las desviaciones de la aproximación cuantizada \cite{greenhouse2024}. En el escenario presentado, la red cuantizada sin compensación exhibe desviaciones de estado y una vulneración de la restricción de CO$_2$; la compensación mejora el seguimiento en gran parte del ensayo. El trabajo muestra así que una implementación compacta y rápida puede necesitar una evaluación funcional adicional.
+
+La implementación utiliza un STM32F407 con Cortex-M4F a 168 MHz. Los autores informan una red de aproximadamente 3800 parámetros, menos de 5 kB de Flash para almacenar sus parámetros cuantizados y la información adicional de cuantización, y una inferencia media cercana a 200~$\mu$s para la red. El almacenamiento descrito no equivale a la ocupación total del firmware, ni la inferencia al ciclo completo de control. Estas cifras corresponden a su aplicación y no son directamente intercambiables con las del cartpole. Las garantías consideradas para el LQR no se extienden automáticamente al funcionamiento con saturación, y esta compensación no impone por sí misma las restricciones de estado.
+
+La relación con esta memoria es precisa: ese antecedente modifica la ley de control agregando compensación, mientras que aquí se estudia si una mayor resolución numérica o la conservación selectiva de regiones Float32 mejora la fidelidad del controlador neuronal. Se trata de una alternativa que debe evaluarse, no de una demostración previa de que puede sustituir al LQR. El problema descrito en el artículo es la degradación de seguimiento y restricciones; no se utiliza como prueba de que la compensación elimine universalmente el \emph{chattering}.
+
+\section{Precisión mixta y mayor resolución como alternativas}
+\subsection{Precisión mixta en MPC explícito robusto}
+Salamati et al. estudian implementaciones de precisión mixta para MPC explícito robusto de sistemas lineales invariantes en el tiempo \cite{salamati2019}. El controlador se representa mediante regiones poliédricas y leyes afines, y el procedimiento ajusta la precisión manteniendo el error dentro del margen de robustez considerado. En sus bancos de prueba, informan una reducción de almacenamiento de hasta 20,9\% y de 12,6\% en promedio frente a una implementación de precisión uniforme mínima.
+
+El aporte relevante es que la precisión puede asignarse de forma no uniforme atendiendo a restricciones de error y recursos. No obstante, su representación no es una red neuronal, y sus garantías provienen de un análisis específico del controlador robusto. La selección de regiones Float32 realizada en esta memoria no reproduce ese análisis ni hereda sus garantías. Por tanto, Salamati aporta la motivación para estudiar precisión mixta bajo restricciones funcionales, mientras que el antecedente de red cuantizada con compensación LQR corresponde al trabajo de invernaderos.
+
+\subsection{INT16x8 y precisión mixta selectiva en la red neuronal}
+La documentación de LiteRT describe INT16x8 como una representación con activaciones enteras de 16 bits y pesos de ocho bits. La presenta como una opción para modelos cuyas activaciones son sensibles a la cuantización \cite{litert16}. Esta fuente es un antecedente de implementación, no un estudio que demuestre estabilidad de un MPC. La disponibilidad de la conversión tampoco garantiza que un compilador o acelerador concreto ejecute nativamente ese formato.
+
+A partir de los antecedentes anteriores se plantean dos respuestas distintas a la pérdida de fidelidad. INT16x8 aumenta la resolución de las activaciones manteniendo pesos compactos; la precisión mixta selectiva conserva regiones Float32 y cuantiza otras a INT8. La primera explora un cambio de representación numérica; la segunda, una asignación no uniforme dentro del grafo. Su motivación común es reducir la perturbación introducida por la cuantización sin volver necesariamente a una implementación completamente Float32.
+
+El interés de evaluarlas no presupone que sean más rápidas ni que siempre recuperen el comportamiento de referencia. La mayor precisión puede aumentar memoria y tiempo, y la mezcla de tipos puede introducir conversiones o ejecución software. La contribución experimental consiste en determinar qué parte de la ventaja observada en el modelo convertido se mantiene después de la compilación y durante la aplicación.
+
+\section{Evaluación embebida y síntesis de los antecedentes}
+Banbury et al. proponen MLPerf Tiny para comparar inferencia embebida mediante calidad de tarea, latencia y energía con procedimientos reproducibles \cite{banbury2021}. El antecedente refuerza la necesidad de evaluar el sistema ejecutado, no sólo el tamaño del archivo o el error calculado en el computador. Esta memoria adopta ese criterio de trazabilidad, pero no constituye una ejecución oficial de MLPerf Tiny ni incluye mediciones de energía.
+
+La Tabla~\ref{tab:estado} resume los antecedentes más próximos a la pregunta de investigación. Las diferencias indicadas delimitan su relación con esta memoria; no implican deficiencias de los objetivos originales de cada trabajo.
+
+\begin{table}[htbp]\centering\footnotesize
+\caption{Antecedentes y relación con la brecha estudiada.}\label{tab:estado}
+\begin{tabularx}{\linewidth}{p{2.4cm}YY}\toprule
+Trabajo & Aporte demostrado & Aspecto que requiere evaluación aquí\\\midrule
+Jacob et al. \cite{jacob2018} & Inferencia entera y entrenamiento adaptado, evaluados en visión y CPU ARM. & Calidad del clasificador y ejecución efectiva CPU/NPU en STM32N6.\\
+Li et al. \cite{brecq2021} & PTQ por reconstrucción y precisión mixta según sensibilidad. & Conservación selectiva de Float32 y costo de su grafo compilado.\\
+Hose et al. \cite{hose2024} & MPC neuronal adaptable mediante sensibilidades; caso cartpole. & Efecto de cuantización y despliegue sobre fidelidad y lazo cerrado.\\
+Sathyanarayanan et al. \cite{greenhouse2024} & Red cuantizada con compensación LQR para invernaderos en MCU. & Evaluar alternativas numéricas en el cartpole sin atribuirles equivalencia con esa compensación.\\
+Salamati et al. \cite{salamati2019} & Precisión mixta con margen de robustez en MPC explícito. & Aplicabilidad experimental a una representación neuronal distinta.\\
+Banbury et al. \cite{banbury2021} & Evaluación reproducible de sistemas TinyML. & Integrar calidad, latencia, memoria y validación funcional de estos casos.\\\bottomrule
+\end{tabularx}
+\end{table}
+\FloatBarrier
+
+\section{Brecha abordada y contribución de la memoria}
+Los antecedentes revisados muestran avances en cuantización, aproximación neuronal del MPC y asignación de precisión. Sin embargo, no resuelven conjuntamente, para los modelos y la plataforma considerados, la elección de una representación que conserve el desempeño de la aplicación y mantenga una ventaja verificable de implementación. Esta es una brecha delimitada al conjunto de trabajos revisados y al contexto experimental de la memoria, no una afirmación de ausencia universal de investigaciones similares.
+
+\textbf{La brecha abordada es la falta de una caracterización experimental integrada del compromiso entre fidelidad funcional, latencia, memoria y compatibilidad de ejecución de PTQ INT8, QAT INT8, INT16x8 y precisión mixta selectiva, al pasar desde la evaluación en computador al despliegue CPU/NPU en STM32N6570-DK, para clasificación de radiografías y aproximación neuronal de MPC.}
+
+Como pregunta específica de la comparación general planteada en la Introducción, se examina: \emph{¿en qué condiciones conservar mayor precisión mediante INT16x8 o regiones Float32 seleccionadas ofrece un compromiso más adecuado que la cuantización INT8, una vez considerados tanto el desempeño de la aplicación como los costos y restricciones de la implementación real?}
+
+La respuesta se construye en tres niveles conectados. Primero, se compara la calidad de las variantes respecto de sus referencias. Segundo, se caracteriza la representación obtenida mediante los informes de compilación y los artefactos disponibles, junto con los recursos de memoria, la asignación CPU/NPU y la latencia; se indican las verificaciones no cubiertas. Tercero, se contrasta el funcionamiento de la aplicación, incluyendo la evaluación en lazo cerrado y el banco HIL de la alternativa MPC seleccionada. La comparación complementaria con NUCLEO-L476RG amplía el contraste de recursos y tiempos, sin aislar un efecto causal de una característica del procesador.
+
+La contribución consiste en evaluar y seleccionar alternativas según la aplicación. No se propone un nuevo algoritmo de cuantización ni una prueba formal de estabilidad. En particular, estudiar INT16x8 y precisión mixta selectiva permite comprobar si la fidelidad recuperada justifica su costo y si el destino conserva la representación solicitada. Una pérdida de aceleración, una conversión a software o una recuperación funcional incompleta también constituyen resultados relevantes para responder esa pregunta.

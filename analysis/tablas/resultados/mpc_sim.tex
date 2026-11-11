@@ -1,0 +1,14 @@
+\begin{table}[H]
+\centering\small
+\caption{Resultados en lazo cerrado sobre 200 condiciones iniciales.}\label{tab:mpcres}
+\begin{tabularx}{\linewidth}{Yrrrrl}\toprule
+Variante & Éxitos & Fallos & Éxito (\%) & Archivo (B) & Formato\\\midrule
+Float32 Keras & 199 & 1 & 99,5 & 97\,905 & .keras\\
+PTQ INT8 tensor & 74 & 126 & 37,0 & 22\,440 & .tflite\\
+PTQ INT8 canal & 50 & 150 & 25,0 & 30\,672 & .tflite\\
+QAT INT8 & 65 & 135 & 32,5 & 23\,568 & .tflite\\
+PTQ INT16x8 & 198 & 2 & 99,0 & 35\,624 & .tflite\\
+Mixta selectiva & 156 & 44 & 78,0 & 55\,360 & .tflite\\
+\bottomrule\end{tabularx}
+\fuente{exportación HTML del estudio MPC de referencia; el conteo Keras procede de su evaluación explícita}
+\end{table}

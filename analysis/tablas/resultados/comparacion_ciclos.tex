@@ -1,0 +1,14 @@
+\begin{table}[H]
+\centering\small
+\caption{Ciclos de CPU informados en las dos rutas sin NPU.}\label{tab:comparacion_ciclos}
+\begin{tabularx}{\linewidth}{Yrrr}\toprule
+Caso / modelo & L476, 80 MHz & M55, 800 MHz & $C_{L4}/C_{M55}$\\\midrule
+RX / QAT INT8 & 23\,148\,043 & 11\,851\,478 & 1,953\\
+MPC / INT8 tensor & 59\,254 & 102\,498 & 0,578\\
+MPC / INT8 canal & 94\,634 & 189\,200 & 0,500\\
+MPC / QAT INT8 & 59\,747 & 108\,900 & 0,549\\
+MPC / INT16x8 importado & 227\,053 & 242\,032 & 0,938\\
+MPC / Mixta & 192\,056 & 260\,666 & 0,737\\
+\bottomrule\end{tabularx}
+\fuente{campo CPU cycles de cada perfil; no se estiman ciclos a partir de una frecuencia hipotética}
+\end{table}

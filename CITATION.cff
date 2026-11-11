@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: "Cite este repositorio como material experimental de la memoria; complete DOI, institución y título oficial al publicar."
+type: software
+title: "Cuantización de redes neuronales en STM32N6: radiografías y MPC"
+authors:
+  - family-names: "Castillo Pinto"
+    given-names: "Alonso"
+abstract: "Material experimental de clasificación de radiografías y aproximación neuronal de MPC con cuantización y validación embebida."

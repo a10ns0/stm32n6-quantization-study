@@ -1,0 +1,46 @@
+\section{Caso de estudio: clasificación de radiografías}\label{cap:xray}
+\subsection{Objetivo y definición de la tarea}
+Se utiliza una CNN para clasificar radiografías de tórax en NORMAL y PNEUMONIA. El caso permite estudiar la relación entre reducción de precisión, conservación de decisiones y ejecución de operaciones convolucionales en hardware. La entrada trabajada tiene dimensiones $150\times150\times1$ y la salida contiene dos puntuaciones.
+
+\subsection{Conjunto de datos y preprocesamiento}
+El flujo utiliza imágenes organizadas por clase. Se debe fijar el origen, versión y licencia del conjunto, así como el número de imágenes de cada partición. La existencia de una carpeta de validación de 16 imágenes no implica que ese lote sea representativo de todo el conjunto de prueba.
+
+El preprocesamiento incluye lectura, conversión a un canal, redimensionamiento y normalización según el entrenamiento. La secuencia y la interpolación deben mantenerse idénticas en el computador y la placa. Cualquier cambio de escala altera la entrada efectiva y puede confundirse con un error de cuantización.
+
+\begin{table}[H]\centering\small
+\caption{Ficha de datos del clasificador por completar.}
+\begin{tabularx}{\linewidth}{p{4cm}Y}\toprule
+Campo & Valor o evidencia requerida\\\midrule
+Dimensión de entrada & $150\times150\times1$\\
+Clases & NORMAL y PNEUMONIA; documentar orden de índices\\
+Origen y versión & \ND\\
+Entrenamiento / validación / prueba & \ND\ imágenes por clase y por paciente\\
+Calibración PTQ & \ND\ identificadores y criterio de selección\\
+Normalización & \ND\ ecuación exacta y tipo numérico\\
+Prevención de fuga & \ND\ separación por paciente cuando sea posible\\\bottomrule
+\end{tabularx}\end{table}
+\pendiente{Completar la ficha a partir del cuaderno final. No deducir automáticamente la procedencia del dataset por los nombres de archivo.}
+
+\subsection{Arquitectura y entrenamiento de referencia}
+La arquitectura deberá describirse por capa, dimensión de salida, activación y número de parámetros. Se conserva el modelo Float32 como referencia funcional y se evalúa antes de generar variantes. El entrenamiento y la selección del punto de control se documentarán con curvas de pérdida y métricas por época.
+\figurapendiente{Diagrama de la CNN exportada; usar el resumen real del modelo}{Arquitectura del clasificador de radiografías.}{fig:cnn}
+\pendiente{Incorporar la tabla de capas y el tipo exacto de salida. El informe de agosto describe una Sigmoid final: comprobar que corresponde al mismo artefacto usado en las mediciones actuales.}
+
+\subsection{Variantes de cuantización}
+Se contemplan Float32, PTQ INT8, QAT INT8, INT16x8 y precisión mixta selectiva. Los resultados disponibles no cubren todas las combinaciones: la ausencia de un resultado QAT del clasificador se conservará como pendiente y no se rellenará con el QAT del controlador.
+
+El informe de agosto identifica una variante PTQ INT8 con interfaces Float32 y operaciones internas enteras \cite{avance2026}. En conversaciones de desarrollo también se trabajó con una variante selectiva INT8/Float32 con interfaces INT8. Estos archivos se deben mantener diferenciados mediante sus huellas digitales, aunque compartan dimensiones de entrada.
+
+\subsection{Validación en computador y en ST Edge AI}
+Se comparan las etiquetas y las puntuaciones para las mismas imágenes. Para el flujo de validación que requirió etiquetas de dos clases se prepararon arreglos con codificación de clase y forma compatible con la salida, incluida la adaptación a $(-1,1,1,2)$ observada en el proyecto. Ese ajuste responde a una interfaz particular; debe comprobarse contra la firma del modelo actual.
+
+El subconjunto de ocho imágenes, cuatro por clase, sirve para comprobar el recorrido de datos. Las métricas de desempeño final deben calcularse sobre un conjunto más amplio reservado para ese propósito. Se conservará la distinción entre prueba de comunicación, validación numérica y evaluación de clasificación.
+
+\subsection{Interfaz UART y resultados por imagen}
+El protocolo implementado intercambia el aviso \texttt{READY}, las confirmaciones de cabecera y carga, la confirmación de ejecución y una línea \texttt{RESULT}. Esta última contiene identificador, clase, etiqueta, puntuaciones y latencia en microsegundos.
+
+Los valores transmitidos deben especificar su escala. Por ejemplo, un entero denominado \texttt{normal\_milli} sólo se interpreta como milésimas si el programa aplica ese convenio. Una pareja de puntuaciones iguales o que no suma mil no se corrige por suposición: debe rastrearse hasta la salida del modelo y el posprocesamiento.
+
+\subsection{Plan de resultados y análisis de errores}
+Se presentarán la matriz de confusión por variante, ejemplos de falsos positivos y negativos, desempeño por clase, latencia, memoria y asignación CPU/NPU. Las diferencias de exactitud pequeñas se discutirán junto con el tamaño muestral. La selección dependerá del umbral funcional definido y de las mediciones completas, no únicamente del máximo observado de exactitud.
+\figurapendiente{Matrices de confusión con las mismas muestras y orden de clases}{Comparación de errores del clasificador por estrategia de cuantización.}{fig:confusion}

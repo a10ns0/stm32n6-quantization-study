@@ -1,0 +1,5 @@
+extracto,archivo,funcion,linea_inicio,linea_fin
+nucleo_rx_dsp,NUCLEO-L476RG/CasoRadiografia/InstruccionesBinario/NUCLEO-L476RG_QAT.list,st_sssa8_ch_nn_mat_mult_kernel_opt,14925,14934
+nucleo_mpc_dsp,NUCLEO-L476RG/CasoMPC/InstruccionesBinario/NUCLEO-L476RG_PTQ_PER_TENSOR.list,st_sssa8_fully_connected,11314,11323
+nucleo_mpc_float,NUCLEO-L476RG/CasoMPC/InstruccionesBinario/NUCLEO-L476RG_PTQ_16x8.list,forward_lite_dense_if32of32wf32,10592,10601
+n6_qat_mve,CasoRadiografia/InstruccionesBinario/STM32N6570-DK_Appli_QAT_CM55.list,st_sssa8_ch_nn_mat_mult_nt_t_s8,19606,19615

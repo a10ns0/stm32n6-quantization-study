@@ -1,0 +1,68 @@
+\usepackage{fontspec}
+% La norma exige Times New Roman. No se distribuye una fuente propietaria.
+% Opción 1: cuatro archivos propios en fuentes/ (ver README).
+\IfFileExists{fuentes/times.ttf}{
+ \setmainfont{times.ttf}[Path=fuentes/,BoldFont=timesbd.ttf,ItalicFont=timesi.ttf,BoldItalicFont=timesbi.ttf]
+}{\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{
+ \iffuenteestricta
+  \PackageError{memoria}{Falta Times New Roman}{Suba los cuatro TTF propios a fuentes/.}
+ \fi
+ \IfFontExistsTF{TeX Gyre Termes}{\setmainfont{TeX Gyre Termes}}{\setmainfont{NimbusRoman-Regular.otf}[BoldFont=NimbusRoman-Bold.otf,ItalicFont=NimbusRoman-Italic.otf,BoldItalicFont=NimbusRoman-BoldItalic.otf]}
+ \PackageWarningNoLine{memoria}{Fuente alternativa de previsualizacion. Instale Times New Roman antes de la entrega}
+}}
+\usepackage[english]{babel}
+\babelprovide[main,import]{spanish}
+\addto\captionsspanish{\renewcommand{\tablename}{Tabla}\renewcommand{\appendixname}{Anexo}}
+\usepackage[left=4cm,right=3cm,top=3cm,bottom=3cm,footskip=1.2cm]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+% 12 pt: espacio natural 14.5 pt; 1.5 interlineado = 18.125 pt.
+% Añadir 6.042 pt entre párrafos da 24.167 pt: doble interlineado.
+\setlength{\parskip}{6.042pt plus 1pt minus 1pt}
+\setlength{\parindent}{1.25cm}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx,xcolor,booktabs,array,tabularx,longtable}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf}
+\captionsetup[table]{position=top}
+\usepackage{float,enumitem,titlesec,fancyhdr,etoolbox}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta}
+\usepackage{xurl}
+\usepackage[hidelinks,unicode]{hyperref}
+\hypersetup{pdftitle={\TituloMemoria},pdfauthor={\AutorMemoria},pdfsubject={Memoria de titulación: evaluación de cuantización en microcontroladores}}
+\pagestyle{fancy}\fancyhf{}\fancyfoot[R]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[R]{\thepage}\renewcommand{\headrulewidth}{0pt}}
+\titleformat{\chapter}[block]{\normalfont\bfseries\Large}{\thechapter}{.7em}{}
+\titleformat{name=\chapter,numberless}[block]{\normalfont\bfseries\Large\filcenter}{}{0pt}{}
+\titlespacing*{\chapter}{0pt}{0pt}{20pt}
+\titleformat{\section}{\normalfont\bfseries\large}{\thesection}{.7em}{}
+\titleformat{\subsection}{\normalfont\bfseries}{\thesubsection}{.7em}{}
+% Un nivel adicional para conservar la jerarquía de los antiguos capítulos.
+\setcounter{secnumdepth}{3}\setcounter{tocdepth}{3}
+\titleformat{\subsubsection}{\normalfont\bfseries}{\thesubsubsection}{.7em}{}
+\addto\captionsspanish{\renewcommand{\contentsname}{ÍNDICE}\renewcommand{\listfigurename}{ÍNDICE DE FIGURAS}\renewcommand{\listtablename}{ÍNDICE DE TABLAS}\renewcommand{\bibname}{REFERENCIAS}}
+\setlist{itemsep=2pt,topsep=4pt}
+\renewcommand{\arraystretch}{1.16}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\preliminar}[1]{\chapter*{\centering #1}\phantomsection\addcontentsline{toc}{chapter}{#1}}
+\newcommand{\pendiente}[1]{\ifnotaseditoriales\par\noindent{\small\color{brown}\textbf{POR COMPLETAR:} #1}\par\fi}
+\newcommand{\notaeditorial}[1]{\ifnotaseditoriales\par\noindent{\small\color{blue!55!black}\textbf{NOTA DE EDICIÓN:} #1}\par\fi}
+\newcommand{\ND}{\textemdash}
+\newcommand{\termino}[1]{\textquotedblleft#1\textquotedblright}
+\newcommand{\fuente}[1]{\par\vspace{1pt}{\footnotesize Fuente: #1.}\par}
+\newcommand{\figurapendiente}[3]{\begin{figure}[H]\centering
+\fbox{\parbox[c][3.2cm][c]{.90\linewidth}{\centering\small Figura por incorporar\\[5pt]#1}}
+\caption{#2}\label{#3}\end{figure}}
+% Bibliografía sencilla, numérica y en orden de citación. Revisar campos según anexo C.
+\AtBeginEnvironment{quote}{\singlespacing} % etoolbox se carga explícitamente abajo.
+\raggedbottom
+\emergencystretch=2em
+
+% Figuras del capítulo Resultados: tamaño legible y altura limitada.
+\newcommand{\resfig}[5]{\begin{figure}[htbp]\centering
+\includegraphics[width=#5\linewidth,height=.74\textheight,keepaspectratio]{figuras/resultados/#1}
+\caption{#2}\label{#3}\fuente{#4}\end{figure}}
+
+\usepackage{placeins}

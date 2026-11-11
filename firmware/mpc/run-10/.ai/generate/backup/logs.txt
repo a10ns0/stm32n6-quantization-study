@@ -1,0 +1,2 @@
+Generate Project
+Copying previous project files from C:\Users\Alonso\.stm32cubeaistudio\workspace\MPC_CartPole\.ai\run\run-10 to C:\Users\Alonso\.stm32cubeaistudio\workspace\MPC_CartPole\.ai\run\run-10\.ai\generate\backup

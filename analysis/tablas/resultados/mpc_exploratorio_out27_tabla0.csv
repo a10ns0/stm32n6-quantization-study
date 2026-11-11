@@ -1,0 +1,2 @@
+Unnamed: 0,RMSE_x_cart,RMSE_theta,RMSE_xdot,RMSE_thetadot,RMSE_u,MAE_u,MaxAbsError_u,TV_u_MPC,TV_u_NN,Esfuerzo_MPC,Esfuerzo_NN,Norma_estado_final_MPC,Norma_estado_final_NN
+NN Float32,0.009758,0.016085,0.041748,0.065424,0.329854,0.248651,0.880048,57.027592,59.808321,225.919586,226.450548,0.00061,0.174384

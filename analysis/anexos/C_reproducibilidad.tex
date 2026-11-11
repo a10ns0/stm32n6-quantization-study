@@ -1,0 +1,31 @@
+\chapter{Reproducibilidad y archivos técnicos}
+\section{Manifiesto mínimo de un ensayo}
+\begin{enumerate}
+\item Fecha, identificador, caso, variante y propósito del ensayo.
+\item Origen y huella de datos, modelo, pesos y código fuente.
+\item Versión del intérprete, bibliotecas, convertidor, compilador y entorno de ejecución.
+\item Opciones de generación, optimización, frecuencias y asignación de memorias.
+\item Protocolo de medición, calentamiento, repeticiones y frontera energética.
+\item Registros sin procesar y procedimiento que genera tablas y figuras.
+\end{enumerate}
+
+\section{Verificación del binario}
+Para conservar el desensamblado se puede utilizar la herramienta de la cadena Arm:
+\begin{quote}\ttfamily\small
+arm-none-eabi-objdump -d -S aplicacion.elf > disassembly.txt
+\end{quote}
+La búsqueda de VMLADAV(A), instrucciones de carga vectorial y predicación permite localizar candidatos MVE. El nombre completo de función, su llamada y el perfil asociado deben quedar registrados. La búsqueda textual por sí sola no prueba ejecución de una instrucción ni mide su contribución a la latencia.
+
+\section{Organización sugerida de evidencias}
+\begin{table}[H]\centering\small
+\caption{Archivos que acompañan las mediciones.}
+\begin{tabularx}{\linewidth}{p{4cm}Y}\toprule
+Directorio & Contenido\\\midrule
+\texttt{modelos/} & Modelos por formato y SHA-256\\
+\texttt{datos/} & Particiones y manifiestos, según licencia\\
+\texttt{reportes\_st/} & Análisis, perfil y asignación CPU/NPU\\
+\texttt{firmware/} & Fuentes, ELF, mapa y binarios\\
+\texttt{registros/} & Salidas UART y mediciones sin procesar\\
+\texttt{analisis/} & Scripts de métricas y figuras\\\bottomrule
+\end{tabularx}\end{table}
+\pendiente{Incorporar aquí los fragmentos esenciales del código validado. Los programas completos se entregan como material complementario y se referencian por versión.}

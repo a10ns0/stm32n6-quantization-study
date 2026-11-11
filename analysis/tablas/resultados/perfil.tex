@@ -1,0 +1,16 @@
+\begin{table}[H]
+\centering\small
+\caption{Distribución temporal informada en las ejecuciones Neural-ART.}\label{tab:perfil}
+\begin{tabularx}{\linewidth}{Yrrr}\toprule
+Modelo & HW (\%) & SW (\%) & Control SW (\%)\\\midrule
+RX INT8 & 66,6 & 31,0 & 2,3\\
+RX INT16x8 importado & 65,3 & 28,3 & 6,4\\
+RX mixta-5 & 0,3 & 99,6 & 0,1\\
+MPC INT8 tensor & 98,7 & 0,0 & 1,3\\
+MPC INT8 canal & 98,7 & 0,0 & 1,3\\
+MPC QAT & 98,7 & 0,0 & 1,3\\
+MPC mixta & 9,5 & 84,1 & 6,4\\
+RX QAT & 98,9 & 0,0 & 1,1\\
+\bottomrule\end{tabularx}
+\fuente{resumen del perfil ST; pequeñas diferencias respecto de 100\% se deben al redondeo}
+\end{table}

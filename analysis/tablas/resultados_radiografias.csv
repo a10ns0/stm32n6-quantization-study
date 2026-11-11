@@ -1,0 +1,1 @@
+ensayo,sha256_modelo,variante,n_muestras,exactitud,sensibilidad,especificidad,f1,tflite_bytes,flash_compilada_bytes,sram_pico_bytes,latencia_media_us,latencia_p95_us,energia_medida_uJ,motor,fuente_registro

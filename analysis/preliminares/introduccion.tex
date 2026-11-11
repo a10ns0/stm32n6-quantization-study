@@ -1,0 +1,36 @@
+\chapter{Introducción}\label{cap:introduccion}
+El procesamiento de datos en el borde de una red, denominado \termino{edge computing}, acerca el cálculo al dispositivo que observa o actúa sobre el entorno. En aplicaciones con restricciones temporales o conectividad limitada, ejecutar la inferencia localmente evita que cada decisión dependa de una comunicación remota. En esta memoria se abordan dos necesidades: clasificar una imagen con recursos limitados y producir una acción de control dentro de un período de muestreo.
+
+La disminución de la precisión numérica permite reducir la representación de pesos y activaciones de una red neuronal. No obstante, la reducción de bits puede introducir diferencias numéricas respecto de la función de referencia y no asegura por sí sola una menor latencia. El resultado depende del modelo, de sus datos, de la plataforma y de la asignación de operadores realizada por las herramientas de compilación.
+
+Esta memoria estudia esa interacción mediante una metodología común aplicada a una CNN de radiografías y una MLP aproximadora de MPC. La plataforma STM32N6570-DK permite analizar ejecución en Cortex-M55 con Helium y ejecución acelerada mediante Neural-ART. El estudio separa explícitamente calidad algorítmica, representación compilada y comportamiento medido en la placa.
+
+\section{Planteamiento del problema}
+Una clasificación correcta depende de preservar la separación entre categorías. En un sistema realimentado, en cambio, el error de una acción modifica el estado siguiente y puede acumularse a lo largo de la trayectoria. Por ello, el formato que ofrece una relación favorable entre exactitud y memoria para imágenes no necesariamente preserva el comportamiento del controlador. Se requiere un criterio de selección específico para cada aplicación.
+
+\section{Objetivo general}
+Desarrollar y aplicar una metodología de evaluación de estrategias de cuantización de redes neuronales en STM32N6570-DK, que permita seleccionar alternativas según desempeño funcional, latencia, utilización de memoria y compatibilidad de ejecución, en clasificación de radiografías y aproximación neuronal de MPC.
+
+\section{Objetivos específicos}
+\begin{enumerate}
+\item Establecer modelos y conjuntos de evaluación de referencia para ambos casos.
+\item Generar y auditar variantes Float32, PTQ INT8, QAT INT8, INT16x8 y de precisión mixta selectiva.
+\item Evaluar los efectos numéricos mediante métricas propias de clasificación y control en lazo cerrado.
+\item Caracterizar la compilación y la ejecución en CPU y NPU, junto con latencia y memoria, utilizando las instrucciones Helium como evidencia complementaria de la implementación en CPU.
+\item Implementar validación UART y un banco HIL para el controlador.
+\item Comparar las alternativas factibles y justificar una selección por aplicación, indicando las limitaciones de la evidencia.
+\end{enumerate}
+
+\section{Pregunta de investigación e hipótesis de trabajo}
+¿Qué compromisos ofrecen las estrategias de cuantización evaluadas y qué alternativas pueden justificarse para cada aplicación según los criterios funcionales y las restricciones de ejecución documentados? Se plantea como hipótesis que la selección depende conjuntamente de la sensibilidad de la tarea, la compatibilidad del grafo y la representación numérica, por lo que no puede determinarse únicamente por el número de bits.
+
+\section{Alcances y contribuciones}
+Se estudian dos aplicaciones sobre una plataforma común. El clasificador se evalúa como caso técnico de inferencia; su exactitud experimental no constituye validación para uso clínico. En el banco HIL la planta se simula en el computador y el controlador se ejecuta en la placa; no se presenta como ensayo sobre un péndulo mecánico físico. Los prototipos de control simple y de péndulo con experto LQR se conservan como antecedentes, sin confundirlos con el caso MPC final.
+
+Las contribuciones se centran en la evaluación comparativa, la adaptación del modelo al flujo de despliegue, la auditoría de precisiones y el análisis de la ejecución real. No se atribuyen garantías formales de estabilidad a partir de un conjunto finito de simulaciones.
+
+La selección se interpreta como un compromiso condicionado por la aplicación y por las rutas efectivamente evaluadas, sin establecer una puntuación única ni una superioridad universal. En MPC se distingue el estudio de una alternativa parcialmente cuantizada de la conservación del desempeño de la referencia Float32. En radiografías, la comparación de implementaciones considera las diferencias de topología identificadas y el alcance de los conjuntos de evaluación. Estas condiciones delimitan las conclusiones que pueden extraerse de la campaña.
+
+\section{Organización del documento}
+
+El capítulo~\ref{cap:marco_teorico} reúne los fundamentos del trabajo y el capítulo~\ref{cap:estado} presenta los antecedentes y la brecha abordada. El capítulo~\ref{cap:metodologia} describe el procedimiento experimental. Los resultados se presentan en el capítulo~\ref{cap:resultados} y se discuten en el capítulo~\ref{cap:discusion}.

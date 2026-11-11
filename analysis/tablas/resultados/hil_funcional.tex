@@ -1,0 +1,16 @@
+\begin{table}[H]
+\centering\small
+\caption{Verificación funcional de las ocho condiciones iniciales HIL.}\label{tab:hilres}
+\begin{tabularx}{\linewidth}{Yrrrrl}\toprule
+$\alpha_0$ (rad) & $\max |y|$ (m) & $\max |u|$ (V) & $\max_{10}|y|$ (m) & $\max_{10}|e_\alpha|$ (rad) & Cumple\\\midrule
+-3,13 & 0,3588 & 9,000 & 0,1536 & 0,0359 & No\\
+-1,00 & 0,1968 & 9,000 & 0,0731 & 0,0368 & Sí\\
+-0,30 & 0,2110 & 9,000 & 0,1313 & 2,7736 & No\\
+-0,10 & 0,1944 & 9,000 & 0,1475 & 0,0989 & No\\
+0,10 & 0,1208 & 5,320 & 0,0278 & 0,0260 & Sí\\
+0,30 & 0,1700 & 8,434 & 0,0828 & 0,0250 & Sí\\
+1,00 & 0,2079 & 8,836 & 0,0547 & 0,0693 & Sí\\
+3,13 & 0,3595 & 9,000 & 0,0954 & 0,0531 & Sí\\
+\bottomrule\end{tabularx}
+\fuente{CSV HIL; ventana final de 14,56 a 16,00 s, con estado terminal reconstruido}
+\end{table}

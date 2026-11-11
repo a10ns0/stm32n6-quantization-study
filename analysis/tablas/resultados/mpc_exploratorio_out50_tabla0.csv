@@ -1,0 +1,2 @@
+Unnamed: 0,RMSE_x_cart,RMSE_theta,RMSE_xdot,RMSE_thetadot,MAE_global_estados,MaxAbsError_global,Norma_error_final
+Replay MPC,0.004826,0.185241,0.013995,0.785545,0.085098,3.428965,3.525374

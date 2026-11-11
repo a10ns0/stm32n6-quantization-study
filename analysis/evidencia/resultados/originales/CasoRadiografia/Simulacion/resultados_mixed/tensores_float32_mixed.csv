@@ -1,0 +1,6 @@
+﻿op_name,tensor_name,scale,mean_squared_error,rmse_scale
+CONV_2D,sequential_1_1/conv2d_4_1/Relu;sequential_1_1/conv2d_4_1/BiasAdd;sequential_1_1/conv2d_4_1/convolution;sequential_1_1/conv2d_4_1/Squeeze1,0.002727586,1.6758594e-06,0.4746137731913965
+CONV_2D,sequential_1_1/conv2d_6_1/Relu;sequential_1_1/conv2d_6_1/BiasAdd;sequential_1_1/conv2d_6_1/convolution;sequential_1_1/conv2d_6_1/Squeeze1,0.004906821,4.036717e-06,0.4094623140868861
+FULLY_CONNECTED,sequential_1_1/dense_3_1/MatMul;sequential_1_1/dense_3_1/BiasAdd,0.038899165,0.00024394471,0.40151837351190467
+CONV_2D,sequential_1_1/conv2d_5_1/Relu;sequential_1_1/conv2d_5_1/BiasAdd;sequential_1_1/conv2d_5_1/convolution;sequential_1_1/conv2d_5_1/Squeeze1,0.0069052055,4.9898326e-06,0.32349411191146354
+CONV_2D,sequential_1_1/conv2d_7_1/Relu;sequential_1_1/conv2d_7_1/BiasAdd;sequential_1_1/conv2d_7_1/convolution;sequential_1_1/conv2d_7_1/Squeeze1,0.0050696703,2.6493617e-06,0.32106348129114715

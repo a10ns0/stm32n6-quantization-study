@@ -1,0 +1,14 @@
+\begin{table}[H]
+\centering\small
+\caption{Pesos y activaciones de las implementaciones validadas en NUCLEO-L476RG.}\label{tab:nucleo_memoria}
+\begin{tabularx}{\linewidth}{Yrr}\toprule
+Caso / modelo & Pesos (B) & Activaciones (B)\\\midrule
+RX / QAT INT8 & 22\,828 & 57\,360\\
+MPC / INT8 tensor & 16\,656 & 212\\
+MPC / INT8 canal & 16\,656 & 1\,212\\
+MPC / QAT INT8 & 16\,656 & 212\\
+MPC / INT16x8 importado & 62\,404 & 400\\
+MPC / Mixta & 47\,404 & 852\\
+\bottomrule\end{tabularx}
+\fuente{primer resumen de generación de cada registro ST}
+\end{table}

@@ -1,0 +1,32 @@
+# Python / Jupyter
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+.env
+# Local STM32 builds. .a libraries, .ioc, .project, .cproject, .launch are retained.
+**/Debug/
+**/Release/
+**/.metadata/
+*.o
+*.d
+*.su
+*.cyclo
+# Local data/checkpoints; evidence already curated under analysis is retained.
+**/chest_xray/
+**/FinalAMPCPendulumDataset/
+**/checkpoint/
+**/logs/fit/
+material_privado_no_publicar/
+# TeX build products (context aux files are not used by main.tex)
+*.aux
+*.log
+*.out
+*.blg
+*.bbl
+*.fls
+*.fdb_latexmk
+*.xdv
+.DS_Store
+Thumbs.db

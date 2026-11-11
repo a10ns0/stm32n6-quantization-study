@@ -1,0 +1,4 @@
+(CNN) C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Adaptative MPC\MPC_HIL_STM32\PC>python hil_cartpole_uart.py --self-test
+Self-test OK
+dx/dt: [ 0.          0.         -0.54732672  6.44795087]
+state(t+0.160): [-0.00460069  0.38117935 -0.04788599  1.03468691]

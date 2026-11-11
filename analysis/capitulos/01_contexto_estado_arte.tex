@@ -1,0 +1,11 @@
+\section{Computación en el borde}\label{sec:contexto_borde}
+\subsection{De la computación centralizada a la inferencia local}
+La computación en el borde distribuye parte del procesamiento hacia el entorno donde se originan los datos. El objetivo no es eliminar todo servicio centralizado, sino decidir qué tareas requieren proximidad. El entrenamiento puede realizarse en una estación de trabajo y la inferencia ejecutarse en un dispositivo local. Esta separación permite actualizar modelos sin exigir que el dispositivo final disponga de los recursos necesarios para entrenarlos.
+
+Shi y colaboradores presentan el borde como un paradigma motivado por el crecimiento de dispositivos conectados y el costo de transportar todos sus datos a servicios remotos \cite{shi2016}. En esta memoria, la motivación se traduce en autonomía de operación, menor dependencia de la red y optimización de recursos locales. La privacidad puede beneficiarse de procesar datos localmente, aunque depende también de cómo se almacenan y transmiten.
+
+\subsection{Edge AI, TinyML y relevancia tecnológica}
+La inteligencia artificial en el borde aplica modelos de aprendizaje automático cerca de la adquisición de datos. El término \termino{TinyML} enfatiza dispositivos con restricciones de memoria, potencia y capacidad de cómputo. La disponibilidad de microcontroladores con extensiones vectoriales y aceleradores neuronales amplía las opciones de implementación; no elimina la necesidad de medir el sistema completo.
+
+El STM32N6 combina Cortex-M55 y Neural-ART \cite{stm32n6}. Esto vuelve pertinente estudiar qué partes del grafo se aceleran y cuáles permanecen en software. La contribución de una plataforma heterogénea depende de sus transferencias de datos, conversiones y sincronización, además de la cantidad de operaciones aritméticas.
+

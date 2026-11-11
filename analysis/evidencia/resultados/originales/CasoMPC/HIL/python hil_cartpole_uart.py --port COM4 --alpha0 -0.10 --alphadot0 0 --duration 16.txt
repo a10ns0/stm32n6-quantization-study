@@ -1,0 +1,11 @@
+Deadlines RTT perdidos: 0
+Ciclos tardíos del PC (incluye gráfico): 100
+============================================================
+CRITERIO ORIGINAL DE LOS AUTORES
+============================================================
+Restricción global |y| < 0.4 m: True
+Restricción de control |u| <= 9 V: True
+Últimas 10: |y| < 0.1 m y |e_alpha| < 0.17 rad: False
+ÉXITO: False
+Inferencia [ms]: media=0.3373, p99=0.3450, máx=0.3450
+RTT [ms]: media=5.0708, p99=5.1546, máx=5.1602

@@ -1,0 +1,14 @@
+\preliminar{CONCLUSIONES}
+\notaeditorial{Esta sección no se numera, conforme a la norma. El texto siguiente es una base provisional; debe cerrarse después de completar las mediciones y la selección del capítulo 6.}
+El desarrollo plantea una metodología común para evaluar cuantización de redes neuronales en STM32N6570-DK mediante dos casos con exigencias diferentes. La clasificación de radiografías permite estudiar conservación de decisiones y aprovechamiento de operaciones convolucionales; la aproximación neuronal de MPC exige además analizar trayectorias, restricciones y plazos de control.
+
+Los resultados disponibles indican que la reducción de precisión puede disminuir el tamaño de los modelos sin un efecto equivalente en todas las tareas. En radiografías, PTQ INT8 conserva un desempeño comparable a la referencia en el conjunto reportado. En control, las variantes INT8 evaluadas muestran una pérdida funcional considerable y la mayor resolución de INT16x8 preserva mejor el comportamiento en simulación. Estas observaciones no sustituyen la comparación completa de las implementaciones compiladas.
+
+La distinción entre Cortex-M55/Helium y Neural-ART es necesaria para interpretar los resultados. La presencia de un formato cuantizado, una instrucción vectorial o un acelerador en la plataforma no basta para atribuir la ejecución de todo el modelo a un motor particular. La memoria incorpora la auditoría del grafo y del binario como parte del proceso experimental.
+
+\section*{Cumplimiento de objetivos}
+\pendiente{Indicar para cada objetivo la evidencia concreta y el capítulo donde se demuestra. Completar la medición energética o declarar explícitamente el alcance reducido del estudio.}
+\section*{Alternativa seleccionada por aplicación}
+\pendiente{Redactar la decisión final para radiografías y MPC, especificando artefacto, precisión efectiva, motor, desempeño, latencia, memoria y energía disponible. No equiparar el modelo de demostración HIL con el óptimo final.}
+\section*{Trabajo futuro}
+Se propone extender la evaluación de control a una planta física y a perturbaciones paramétricas, estudiar objetivos de selección de precisión que incorporen desempeño en lazo cerrado y completar la instrumentación energética. Para el clasificador, corresponde ampliar la evaluación de generalización y estudiar el comportamiento por clase bajo cambios de distribución. Estas extensiones deben partir de los límites observados, evitando presentar una demostración técnica como validación de uso final.

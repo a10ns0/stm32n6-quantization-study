@@ -1,0 +1,48 @@
+\chapter{Control editorial de la plantilla}
+\textbf{Este anexo es una guía de edición y debe retirarse de la memoria final.} Se oculta al desactivar \texttt{notaseditoriales} en \texttt{config/datos.tex}.
+
+\section{Cumplimiento de formato}
+\begin{longtable}{p{4.5cm}p{8.7cm}}
+\toprule\textbf{Requisito} & \textbf{Implementación y revisión}\\\midrule\endhead
+Papel carta & Clase \texttt{letterpaper}; verificar PDF final.\\
+Margen izquierdo 4 cm & Configurado con \texttt{geometry}; otros márgenes 3 cm.\\
+Times New Roman & Detección automática o archivos TTF propios. La vista previa puede usar una alternativa; activar modo estricto antes de entregar.\\
+Tamaño del cuerpo & Se adopta 12 pt; la norma no fija explícitamente un tamaño de cuerpo.\\
+Interlineado & 1,5 en cuerpo; ajuste entre párrafos para doble espacio; citas a espacio simple.\\
+Cubierta y portada & Dos páginas; tamaños 18/16/14/20/14/12/12/14 pt y escudo de 33 mm.\\
+Portada & Negrita, correferente y advertencia institucional.\\
+Paginación & Inferior derecha. Preliminares e introducción en romanos; desarrollo en arábigos.\\
+Conclusiones & Título sin numeración; incluidas en el índice.\\
+Figuras y tablas & Numeración por capítulo; título de figura debajo y de tabla encima.\\
+Ecuaciones & Numeración por capítulo a la derecha entre paréntesis.\\
+Anexos & Letras mayúsculas mediante \texttt{appendix}.\\
+Referencias & BibTeX numérico en orden de citación; revisar metadatos conforme al anexo C de la norma.\\
+\bottomrule
+\end{longtable}
+
+\section{Cuestiones técnicas pendientes}
+\begin{enumerate}
+\item Congelar la arquitectura y orden de estados del cartpole final; diferenciarlo del prototipo LQR.
+\item Resolver la identidad del modelo UART de radiografías: PTQ interno INT8 con interfaz Float32 o mixta selectiva con interfaz INT8.
+\item Vincular el ELF del MPC HIL con su perfil; resolver la discrepancia CPU frente a partición CPU/NPU.
+\item Revisar la trayectoria HIL completa antes de afirmar estabilidad sostenida desde 4 s.
+\item Separar tamaños de archivos, Flash compilada y SRAM máxima.
+\item Completar resultados faltantes de clasificación, recursos y energía.
+\item Verificar límites del control y criterio de éxito en el script final.
+\item Cerrar resumen y traducción, objetivos cumplidos y selección definitiva.
+\end{enumerate}
+
+\section{Identidad de fuentes}
+Los informes tempranos se usan como antecedentes del proceso y no como evidencia definitiva de la ejecución final. El documento \path{paper_MPC_arquitecturaModificada.pdf} corresponde a control de invernaderos; \texttt{MixPresition.pdf} corresponde a MPC explícito robusto. El artículo de origen del cartpole es \termino{Parameter-Adaptive Approximate MPC: Tuning Neural-Network Controllers without Retraining}.
+
+El DOI de ejemplo que aparece en la copia preliminar de \texttt{MixPresition.pdf} no se utilizó. La bibliografía registra el DOI publicado 10.1145/3358223. Los informes internos incluyen las fechas que se pudieron identificar; no se inventó editorial, DOI o fecha para campos ausentes.
+
+\section{Antes de entregar}
+\begin{enumerate}
+\item Confirmar título aprobado, denominación profesional y mes del examen.
+\item Instalar Times New Roman y activar \texttt{fuenteestricta}.
+\item Sustituir todas las figuras pendientes y resolver las celdas vacías relevantes.
+\item Completar referencias y revisar citas contra sus fuentes.
+\item Desactivar notas editoriales y retirar instrucciones que no pertenecen al informe.
+\item Compilar y revisar índices, márgenes, paginación y desbordamientos.
+\end{enumerate}

@@ -1,0 +1,51 @@
+{
+  "args": {
+    "model": "C:\\Users\\Alonso\\Jupyter\\Tesis\\Test_Modelos_Cuantizacion\\Adaptative MPC\\modelos_cuantizados\\AMPC_CartPole_MixedPrecision.tflite",
+    "valinput": "C:\\Users\\Alonso\\Jupyter\\Tesis\\Test_Modelos_Cuantizacion\\Adaptative MPC\\datasets_validacion_stm32cubeai\\validation_AMPC_CartPole_MixedPrecision.npy",
+    "valoutput": "",
+    "mode": "target",
+    "name": "network",
+    "verbosity": 1,
+    "c-api": "st-ai",
+    "optimization": "balanced",
+    "target": "stm32n6",
+    "workspace": "C:\\Users\\Alonso\\.stm32cubeaistudio\\workspace\\MPC_CartPole\\.ai\\run\\run-10\\.ai\\st_ai_ws",
+    "output": "C:\\Users\\Alonso\\.stm32cubeaistudio\\workspace\\MPC_CartPole\\.ai\\run\\run-10\\.ai\\st_ai_output",
+    "memory-pool": "C:\\Users\\Alonso\\.stm32cubeaistudio\\workspace\\MPC_CartPole\\.ai\\run\\run-10\\.ai\\mempools.json"
+  },
+  "mempools": [
+    {
+      "name": "RAM",
+      "size": 2097152,
+      "offset": 872415232,
+      "driver": "RAM",
+      "max": 2097152,
+      "mode_available": []
+    },
+    {
+      "name": "AXISRAM3_4_5_6",
+      "size": 1835008,
+      "offset": 874512384,
+      "driver": "AXISRAM3_4_5_6",
+      "max": 1835008,
+      "mode_available": []
+    },
+    {
+      "driver": "xSPI1",
+      "name": "xSPI1",
+      "max": 33554432,
+      "offset": 2415919104,
+      "size": 33554432,
+      "mode_available": []
+    }
+  ],
+  "exportWeightsAsBin": false,
+  "copyWeightsToRam": false,
+  "automaticFlash": true,
+  "splitWeightsMapping": {
+    "external": [],
+    "internal": [
+      "g_network_weights_array"
+    ]
+  }
+}

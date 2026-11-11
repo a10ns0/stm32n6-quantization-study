@@ -1,0 +1,14 @@
+Generate Project
+Copying previous project files from C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-3 to C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-3\.ai\generate\backup
+Downloading board template for STM32CubeIDE/NUCLEO-L476RG...
+No board template found for STM32CubeIDE/NUCLEO-L476RG. Proceeding with project generation...
+Calculating memory footprint...
+Run failed: Error: analyze error: E700(UnfeasibleAllocation): Allocation Pass failed on schedule. Not enough memory on device. Please check the report for more details. Output: ST Edge AI Core v4.0.1-20581 7ed50de05
+PASS:   0%|          | 0/171 [00:00<?, ?it/s]                                                       Allocation Pass failed on schedule. Not enough memory on device
+Minimal sizes needed are: {'unlimited memory': 568432}
+Generated device info file C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-3\.ai\st_ai_ws\device_info.mpool.in
+                                                       
+E700(UnfeasibleAllocation): Allocation Pass failed on schedule. Not enough memory on device
+Minimal sizes needed are: {'unlimited memory': 568432}
+Generated device info file C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-3\.ai\st_ai_ws\device_info.mpool.in
+ 

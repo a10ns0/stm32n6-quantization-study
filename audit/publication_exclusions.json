@@ -1,0 +1,6 @@
+[
+  "firmware/radiography/run-3/.ai/st_ai_output/network_val_c_inputs_1.csv",
+  "firmware/radiography/run-3/.ai/st_ai_output/network_val_m_inputs_1.csv",
+  "firmware/mpc/run-10/.ai/st_ai_output/network_val_c_inputs_1.csv",
+  "firmware/mpc/run-10/.ai/st_ai_output/network_val_m_inputs_1.csv"
+]

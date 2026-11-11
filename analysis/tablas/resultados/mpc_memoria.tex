@@ -1,0 +1,18 @@
+\begin{table}[H]
+\centering\small
+\caption{Memoria de red informada durante la generación para MPC.}\label{tab:mpc_memoria}
+\begin{tabularx}{\linewidth}{Yrr}\toprule
+Variante / ruta & Pesos (B) & Activaciones (B)\\\midrule
+Float32 / M55 & 62\,404 & 400\\
+INT8 tensor / M55 & 16\,656 & 304\\
+INT8 tensor / NPU & 15\,331 & 130\\
+INT8 canal / M55 & 16\,656 & 704\\
+INT8 canal / NPU & 15\,331 & 130\\
+QAT / M55 & 16\,656 & 304\\
+QAT / NPU & 15\,331 & 130\\
+INT16x8 / M55 & 62\,404 & 400\\
+Mixta / M55 & 47\,404 & 852\\
+Mixta / NPU & 47\,201 & 616\\
+\bottomrule\end{tabularx}
+\fuente{primer resumen de \texttt{generate}; incluye búferes de entrada/salida en activaciones}
+\end{table}

@@ -1,0 +1,18 @@
+\begin{table}[H]\centering\small
+\caption{Presencia de familias de instrucciones en los listados de MPC.}\label{tab:helium_mpc}
+\begin{tabularx}{\linewidth}{Xlcccccc}\toprule
+Modelo & Ruta & P & L & M & R & FQ & FS\\\midrule
+Float32 & M55 & No & No & No & No & No & Sí\\
+INT8 tensor & M55 & Sí & Sí & Sí & Sí & No & Sí\\
+INT8 tensor & NPU & No & No & No & No & No & Sí\\
+INT8 canal & M55 & Sí & Sí & Sí & Sí & No & Sí\\
+INT8 canal & NPU & No & No & No & No & No & Sí\\
+QAT INT8 & M55 & Sí & Sí & Sí & Sí & No & Sí\\
+QAT INT8 & NPU & No & No & No & No & No & Sí\\
+INT16x8 & M55 & No & No & No & No & No & Sí\\
+Mixta & M55 & Sí & Sí & Sí & Sí & Sí & Sí\\
+Mixta & NPU & Sí & Sí & No & No & Sí & Sí\\
+\bottomrule\end{tabularx}
+\par\smallskip\begin{minipage}{\linewidth}\footnotesize P: \texttt{vctp}; L: cargas \texttt{vldrb*} con Q; M: \texttt{vmlava.s8}; R: \texttt{vaddva.s8}; FQ: aritmética Float32 con Q; FS: aritmética Float32 con S. Sí/No indica presencia/ausencia en el listado completo, no frecuencia de ejecución. NE: no evaluable por ausencia del listado.\end{minipage}
+\fuente{auditoría de las instrucciones desensambladas en los archivos originales}
+\end{table}

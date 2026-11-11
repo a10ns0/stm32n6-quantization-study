@@ -1,0 +1,653 @@
+Generate Project
+Copying previous project files from C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9 to C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\generate\backup
+Downloading board template for STM32CubeIDE/STM32N6570-DK...
+Board template for STM32CubeIDE/STM32N6570-DK downloaded successfully.
+Calculating memory footprint...
+Adjusting memory area RAM for pool RAM perfect match of 2097152 bytes
+Adjusting memory area AXISRAM3_4_5_6 for pool AXISRAM3_4_5_6 perfect match of 1835008 bytes
+Copy external flasher file for STM32CubeProgrammer
+Downloading firmware package N6 version 1.3.0...
+C:\Users\Alonso\STM32Cube\Repository\STM32Cube_FW_N6_V1.3.0 already exists... Skipping installation...
+FSBL main.c found, patching FSBL...
+Adding init function call to FSBL main.c
+Generating code...
+>>> C:\ST\STEdgeAI\4.0\Utilities\windows\stedgeai.exe generate --model C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\modelos\CNN_QAT_INT8.tflite --valinput C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\radiografias_val_8_st.npz --mode target --name network --verbosity 1 --c-api st-ai --optimization balanced --target stm32n6 --workspace C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\st_ai_ws --output C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\st_ai_output --memory-pool C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\mempools.json
+ST Edge AI Core v4.0.1-20581 7ed50de05
+
+Creating c (debug) info json file C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\st_ai_output\network_c_info.json
+
+ Exec/report summary (generate)
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ model file         :   C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\modelos\CNN_QAT_INT8.tflite                
+ type               :   tflite                                                                                                                                                       
+ c_name             :   network                                                                                                                                                      
+ compression        :   lossless                                                                                                                                                     
+ options            :   allocate-inputs, allocate-outputs, multi-heaps, use-lite-runtime, use-st-ai                                                                                  
+ optimization       :   balanced                                                                                                                                                     
+ target/series      :   stm32n6                                                                                                                                                      
+ memory pool        :   C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\mempools.json                                                           
+ workspace dir      :   C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\st_ai_ws                                                                
+ output dir         :   C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\st_ai_output                                                            
+ vinput files       :   C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\radiografias_val_8_st.npz   
+ model_fmt          :   ss/sa per channel                                                                                                                                            
+ model_name         :   CNN_QAT_INT8                                                                                                                                                 
+ model_hash         :   0xa51e9164608a6653e553be25592d8fdc                                                                                                                           
+ params #           :   22,700 items (22.29 KiB)                                                                                                                                     
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ input 1/1          :   'serving_default_input_10', int8(1x150x150x1), 21.97 KBytes, QLinear(0.003921569,-128,int8), activations                                                     
+ output 1/1         :   'nl_10', int8(1x2), 2 Bytes, QLinear(0.003906250,-128,int8), activations                                                                                     
+ macc               :   3,671,846                                                                                                                                                    
+ weights (ro)       :   22,828 B (22.29 KiB) (1 segment) / -67,972(-74.9%) vs float model                                                                                            
+ activations (rw)   :   35,704 B (34.87 KiB) (1 segment) *                                                                                                                           
+ ram (total)        :   35,704 B (34.87 KiB) = 35,704 + 0 + 0                                                                                                                        
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ (*) 'input'/'output' buffers are allocated in the activations buffer
+  Memory-pools summary (activations/ domain)
+  ---------------- -------- ------------------------ --------- 
+  name             id       used                     buffer#   
+  ---------------- -------- ------------------------ --------- 
+  RAM              0        34.87 KiB (1.7%)         22        
+  AXISRAM3_4_5_6   unused   -                        0         
+  xSPI1            unused   -                        0         
+  weights_array    3        22.29 KiB (2282800.0%)   12        
+  ---------------- -------- ------------------------ --------- 
+  Warning: ['AXISRAM3_4_5_6', 'xSPI1'] memory pool s not used
+
+Computing AI RT data/code size (target=stm32n6)..
+
+ Requested memory size by section - "stm32n6" target
+ ------------------------------- -------- -------- ------- --------
+
+ module                              text   rodata    data      bss
+ ------------------------------- -------- -------- ------- --------
+ NetworkRuntime1201_CM55_GCC.a     14,308       16       0        0
+ network.o                          1,990      799   2,844      120
+ lib (toolchain)*                     104        0       0        0
+ ------------------------------- -------- -------- ------- --------
+
+ RT total**                        16,402      815   2,844      120
+ ------------------------------- -------- -------- ------- --------
+ weights                                0   22,832       0        0
+ activations                            0        0       0   35,704
+ states                                 0        0       0        0
+ io                                     0        0       0        0
+
+ ------------------------------- -------- -------- ------- --------
+ TOTAL                             16,402   23,647   2,844   35,824
+ ------------------------------- -------- -------- ------- --------
+ *  toolchain objects (libm/libgcc*)
+ ** RT AI runtime objects (kernels+infrastructure)
+
+  Summary - "stm32n6" target
+  --------------------------------------------------
+               FLASH (ro)      %*   RAM (rw)      %
+  --------------------------------------------------
+
+  RT total         20,061   46.8%      2,964   7.7%
+  --------------------------------------------------
+  TOTAL            42,893             38,668
+  --------------------------------------------------
+  *  rt/total
+
+ Generated files (5)
+ ---------------------------------------------------------------------------------------------------------------------
+ C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\st_ai_output\network_data.h
+ C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\st_ai_output\network_data.c
+ C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\st_ai_output\network.h
+ C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\st_ai_output\network.c
+
+ C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\st_ai_output\network_details.h
+Creating txt report file C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\st_ai_output\network_generate_report.txt
+
+elapsed time (GENERATE): 7.495s
+
+Compiling template bsp_ai.h.hbs...
+Compiling template app_config.h.hbs...
+Compiling template user_init.h.hbs...
+Compiling template user_init.c.hbs...
+Compiling template app_x-cube-ai.h.hbs...
+Compiling template app_x-cube-ai.c.hbs...
+Compiling template npu_init.h.hbs...
+Compiling template npu_init.c.hbs...
+Compiling template npu_cache.h.hbs...
+Compiling template npu_cache.c.hbs...
+Compiling template weights.h.hbs...
+Compiling template weights.c.hbs...
+Removing static from USART Init in main.c
+Adding include line #include "app_x-cube-ai.h" to main.c
+Adding init function call STM32CubeAI_Studio_AI_Init(); to main.c
+Adding process function call STM32CubeAI_Studio_AI_Process(); to main.c
+Generate project done
+Create.
+
+Opening 'STM32N6570-DK_FSBL'.
+
+16:38:20 **** Build of configuration Release for project STM32N6570-DK_FSBL ****
+
+make -j12 all 
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Middlewares/ST/STM32_ExtMem_Manager/boot/stm32_boot_xip.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Middlewares/STM32_ExtMem_Manager/stm32_boot_xip.d" -MT"Middlewares/STM32_ExtMem_Manager/stm32_boot_xip.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Middlewares/STM32_ExtMem_Manager/stm32_boot_xip.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Middlewares/ST/STM32_ExtMem_Manager/stm32_extmem.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Middlewares/STM32_ExtMem_Manager/stm32_extmem.d" -MT"Middlewares/STM32_ExtMem_Manager/stm32_extmem.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Middlewares/STM32_ExtMem_Manager/stm32_extmem.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Middlewares/ST/STM32_ExtMem_Manager/psram/stm32_psram_driver.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Middlewares/STM32_ExtMem_Manager/stm32_psram_driver.d" -MT"Middlewares/STM32_ExtMem_Manager/stm32_psram_driver.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Middlewares/STM32_ExtMem_Manager/stm32_psram_driver.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Middlewares/ST/STM32_ExtMem_Manager/sal/stm32_sal_sd.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Middlewares/STM32_ExtMem_Manager/stm32_sal_sd.d" -MT"Middlewares/STM32_ExtMem_Manager/stm32_sal_sd.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Middlewares/STM32_ExtMem_Manager/stm32_sal_sd.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Middlewares/ST/STM32_ExtMem_Manager/sal/stm32_sal_xspi.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Middlewares/STM32_ExtMem_Manager/stm32_sal_xspi.d" -MT"Middlewares/STM32_ExtMem_Manager/stm32_sal_xspi.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Middlewares/STM32_ExtMem_Manager/stm32_sal_xspi.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Middlewares/ST/STM32_ExtMem_Manager/sdcard/stm32_sdcard_driver.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Middlewares/STM32_ExtMem_Manager/stm32_sdcard_driver.d" -MT"Middlewares/STM32_ExtMem_Manager/stm32_sdcard_driver.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Middlewares/STM32_ExtMem_Manager/stm32_sdcard_driver.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp/stm32_sfdp_data.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Middlewares/STM32_ExtMem_Manager/stm32_sfdp_data.d" -MT"Middlewares/STM32_ExtMem_Manager/stm32_sfdp_data.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Middlewares/STM32_ExtMem_Manager/stm32_sfdp_data.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp/stm32_sfdp_driver.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Middlewares/STM32_ExtMem_Manager/stm32_sfdp_driver.d" -MT"Middlewares/STM32_ExtMem_Manager/stm32_sfdp_driver.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Middlewares/STM32_ExtMem_Manager/stm32_sfdp_driver.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Middlewares/ST/STM32_ExtMem_Manager/user/stm32_user_driver.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Middlewares/STM32_ExtMem_Manager/stm32_user_driver.d" -MT"Middlewares/STM32_ExtMem_Manager/stm32_user_driver.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Middlewares/STM32_ExtMem_Manager/stm32_user_driver.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_sdram.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_sdram.d" -MT"Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_sdram.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_sdram.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_cortex.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_cortex.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_cortex.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_cortex.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_dma.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_dma.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_dma.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_dma.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_dma_ex.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_dma_ex.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_dma_ex.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_dma_ex.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_exti.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_exti.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_exti.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_exti.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_gpio.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_gpio.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_gpio.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_gpio.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_pwr.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_pwr.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_pwr.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_pwr.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_pwr_ex.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_pwr_ex.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_pwr_ex.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_pwr_ex.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_rcc.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_rcc.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_rcc.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_rcc.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_rcc_ex.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_rcc_ex.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_rcc_ex.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_rcc_ex.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_xspi.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_xspi.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_xspi.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_xspi.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/FSBL/Core/Src/system_stm32n6xx_fsbl.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/CMSIS/system_stm32n6xx_fsbl.d" -MT"Drivers/CMSIS/system_stm32n6xx_fsbl.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/CMSIS/system_stm32n6xx_fsbl.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/BSP/STM32N6570-DK/stm32n6570_discovery.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/BSP/STM32N6570-DK/stm32n6570_discovery.d" -MT"Drivers/BSP/STM32N6570-DK/stm32n6570_discovery.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/BSP/STM32N6570-DK/stm32n6570_discovery.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/BSP/STM32N6570-DK/stm32n6570_discovery_xspi.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/BSP/STM32N6570-DK/stm32n6570_discovery_xspi.d" -MT"Drivers/BSP/STM32N6570-DK/stm32n6570_discovery_xspi.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/BSP/STM32N6570-DK/stm32n6570_discovery_xspi.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/BSP/Components/mx66uw1g45g/mx66uw1g45g.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/BSP/Components/mx66uw1g45g/mx66uw1g45g.d" -MT"Drivers/BSP/Components/mx66uw1g45g/mx66uw1g45g.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/BSP/Components/mx66uw1g45g/mx66uw1g45g.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/BSP/Components/aps256xx/aps256xx.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/BSP/Components/aps256xx/aps256xx.d" -MT"Drivers/BSP/Components/aps256xx/aps256xx.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/BSP/Components/aps256xx/aps256xx.o"
+
+arm-none-eabi-gcc -mcpu=cortex-m55 -c -x assembler-with-cpp -MMD -MP -MF"Application/User/Startup/startup_stm32n657x0hxq_fsbl.d" -MT"Application/User/Startup/startup_stm32n657x0hxq_fsbl.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Application/User/Startup/startup_stm32n657x0hxq_fsbl.o" "../Application/User/Startup/startup_stm32n657x0hxq_fsbl.s"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/FSBL/Core/Src/extmem_manager.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Application/User/Core/extmem_manager.d" -MT"Application/User/Core/extmem_manager.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Application/User/Core/extmem_manager.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/FSBL/Core/Src/main.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Application/User/Core/main.d" -MT"Application/User/Core/main.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Application/User/Core/main.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/FSBL/Core/Src/stm32n6xx_hal_msp.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Application/User/Core/stm32n6xx_hal_msp.d" -MT"Application/User/Core/stm32n6xx_hal_msp.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Application/User/Core/stm32n6xx_hal_msp.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/FSBL/Core/Src/stm32n6xx_it.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Application/User/Core/stm32n6xx_it.d" -MT"Application/User/Core/stm32n6xx_it.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Application/User/Core/stm32n6xx_it.o"
+
+arm-none-eabi-gcc "../Application/User/Core/syscalls.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Application/User/Core/syscalls.d" -MT"Application/User/Core/syscalls.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Application/User/Core/syscalls.o"
+
+arm-none-eabi-gcc "../Application/User/Core/sysmem.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -c -I../../../FSBL/Core/Inc -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Middlewares/ST/STM32_ExtMem_Manager -I../../../Middlewares/ST/STM32_ExtMem_Manager/boot -I../../../Middlewares/ST/STM32_ExtMem_Manager/sal -I../../../Middlewares/ST/STM32_ExtMem_Manager/nor_sfdp -I../../../Middlewares/ST/STM32_ExtMem_Manager/psram -I../../../Middlewares/ST/STM32_ExtMem_Manager/sdcard -I../../../Middlewares/ST/STM32_ExtMem_Manager/user -I../../../Drivers/CMSIS/Include -I../../../Drivers/BSP/STM32N6570-DK -I../../../Drivers/BSP/Components/mx66uw1g45g -I../../../Drivers/BSP/Components/aps256xx -I../../../Drivers/STM32N6xx_HAL_Driver/Src -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Application/User/Core/sysmem.d" -MT"Application/User/Core/sysmem.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Application/User/Core/sysmem.o"
+
+arm-none-eabi-gcc -o "STM32N6570-DK_FSBL.elf" @"objects.list"   -mcpu=cortex-m55 -T"C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\STM32CubeIDE\FSBL\STM32N657X0HXQ_AXISRAM2_fsbl.ld" --specs=nosys.specs -Wl,-Map="STM32N6570-DK_FSBL.map" -Wl,--gc-sections -static -Wl,--cmse-implib -Wl,--out-implib=./secure_nsclib.o --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+
+Finished building target: STM32N6570-DK_FSBL.elf
+
+arm-none-eabi-size  STM32N6570-DK_FSBL.elf 
+
+arm-none-eabi-objdump -h -S STM32N6570-DK_FSBL.elf  > "STM32N6570-DK_FSBL.list"
+
+   text	   data	    bss	    dec	    hex	filename
+
+  35080	     12	   3580	  38672	   9710	STM32N6570-DK_FSBL.elf
+
+arm-none-eabi-objcopy  -O binary STM32N6570-DK_FSBL.elf  "STM32N6570-DK_FSBL.bin"
+
+Finished building: default.size.stdout
+
+Finished building: STM32N6570-DK_FSBL.bin
+
+Finished building: STM32N6570-DK_FSBL.list
+
+
+16:38:26 Build Finished. 0 errors, 0 warnings. (took 6s.670ms)
+
+
+Saving workspace.
+
+Create.
+
+Opening 'STM32N6570-DK_Appli'.
+
+16:38:38 **** Build of configuration Release for project STM32N6570-DK_Appli ****
+
+make -j12 all 
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Middlewares/ST/AI/Validation/Src/aiPbIO.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Middlewares/ST/AI/Validation/Src/aiPbIO.d" -MT"Middlewares/ST/AI/Validation/Src/aiPbIO.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Validation/Src/aiPbIO.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Middlewares/ST/AI/Validation/Src/aiPbMemRWServices.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Middlewares/ST/AI/Validation/Src/aiPbMemRWServices.d" -MT"Middlewares/ST/AI/Validation/Src/aiPbMemRWServices.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Validation/Src/aiPbMemRWServices.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Middlewares/ST/AI/Validation/Src/aiPbMgr.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Middlewares/ST/AI/Validation/Src/aiPbMgr.d" -MT"Middlewares/ST/AI/Validation/Src/aiPbMgr.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Validation/Src/aiPbMgr.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Middlewares/ST/AI/Validation/Src/aiValidation_ST_AI.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Middlewares/ST/AI/Validation/Src/aiValidation_ST_AI.d" -MT"Middlewares/ST/AI/Validation/Src/aiValidation_ST_AI.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Validation/Src/aiValidation_ST_AI.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Middlewares/ST/AI/Validation/Src/pb_common.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Middlewares/ST/AI/Validation/Src/pb_common.d" -MT"Middlewares/ST/AI/Validation/Src/pb_common.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Validation/Src/pb_common.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Middlewares/ST/AI/Validation/Src/pb_decode.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Middlewares/ST/AI/Validation/Src/pb_decode.d" -MT"Middlewares/ST/AI/Validation/Src/pb_decode.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Validation/Src/pb_decode.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Middlewares/ST/AI/Validation/Src/pb_encode.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Middlewares/ST/AI/Validation/Src/pb_encode.d" -MT"Middlewares/ST/AI/Validation/Src/pb_encode.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Validation/Src/pb_encode.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Middlewares/ST/AI/Validation/Src/stm32msg.pb.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Middlewares/ST/AI/Validation/Src/stm32msg.pb.d" -MT"Middlewares/ST/AI/Validation/Src/stm32msg.pb.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Validation/Src/stm32msg.pb.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Middlewares/ST/AI/Misc/Src/aiTestHelper_ST_AI.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Middlewares/ST/AI/Misc/Src/aiTestHelper_ST_AI.d" -MT"Middlewares/ST/AI/Misc/Src/aiTestHelper_ST_AI.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Misc/Src/aiTestHelper_ST_AI.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Middlewares/ST/AI/Misc/Src/aiTestUtility.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Middlewares/ST/AI/Misc/Src/aiTestUtility.d" -MT"Middlewares/ST/AI/Misc/Src/aiTestUtility.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Misc/Src/aiTestUtility.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Middlewares/ST/AI/Misc/Src/ai_device_adaptor.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Middlewares/ST/AI/Misc/Src/ai_device_adaptor.d" -MT"Middlewares/ST/AI/Misc/Src/ai_device_adaptor.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Misc/Src/ai_device_adaptor.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Middlewares/ST/AI/Misc/Src/lc_print.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Middlewares/ST/AI/Misc/Src/lc_print.d" -MT"Middlewares/ST/AI/Misc/Src/lc_print.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Misc/Src/lc_print.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Middlewares/ST/AI/Misc/Src/syscalls.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Middlewares/ST/AI/Misc/Src/syscalls.d" -MT"Middlewares/ST/AI/Misc/Src/syscalls.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Misc/Src/syscalls.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_cacheaxi.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_cacheaxi.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_cacheaxi.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_cacheaxi.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_cortex.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_cortex.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_cortex.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_cortex.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_dma.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_dma.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_dma.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_dma.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_dma_ex.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_dma_ex.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_dma_ex.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_dma_ex.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_exti.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_exti.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_exti.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_exti.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_gpio.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_gpio.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_gpio.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_gpio.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_pwr.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_pwr.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_pwr.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_pwr.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_pwr_ex.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_pwr_ex.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_pwr_ex.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_pwr_ex.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_rcc.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_rcc.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_rcc.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_rcc.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_rcc_ex.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_rcc_ex.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_rcc_ex.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_rcc_ex.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_rif.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_rif.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_rif.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_rif.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_uart.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_uart.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_uart.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_uart.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Drivers/STM32N6xx_HAL_Driver/Src/stm32n6xx_hal_uart_ex.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_uart_ex.d" -MT"Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_uart_ex.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32N6xx_HAL_Driver/stm32n6xx_hal_uart_ex.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Appli/Core/Src/system_stm32n6xx_s.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Drivers/CMSIS/system_stm32n6xx_s.d" -MT"Drivers/CMSIS/system_stm32n6xx_s.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Drivers/CMSIS/system_stm32n6xx_s.o"
+
+arm-none-eabi-gcc -mcpu=cortex-m55 -c -x assembler-with-cpp -MMD -MP -MF"Application/User/Startup/startup_stm32n657x0hxq.d" -MT"Application/User/Startup/startup_stm32n657x0hxq.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Application/User/Startup/startup_stm32n657x0hxq.o" "../Application/User/Startup/startup_stm32n657x0hxq.s"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Appli/Core/Src/main.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Application/User/Core/main.d" -MT"Application/User/Core/main.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Application/User/Core/main.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Appli/Core/Src/secure_nsc.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Application/User/Core/secure_nsc.d" -MT"Application/User/Core/secure_nsc.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Application/User/Core/secure_nsc.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Appli/Core/Src/stm32n6xx_hal_msp.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Application/User/Core/stm32n6xx_hal_msp.d" -MT"Application/User/Core/stm32n6xx_hal_msp.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Application/User/Core/stm32n6xx_hal_msp.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Appli/Core/Src/stm32n6xx_it.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Application/User/Core/stm32n6xx_it.d" -MT"Application/User/Core/stm32n6xx_it.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Application/User/Core/stm32n6xx_it.o"
+
+arm-none-eabi-gcc "../Application/User/Core/syscalls.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Application/User/Core/syscalls.d" -MT"Application/User/Core/syscalls.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Application/User/Core/syscalls.o"
+
+arm-none-eabi-gcc "../Application/User/Core/sysmem.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Application/User/Core/sysmem.d" -MT"Application/User/Core/sysmem.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Application/User/Core/sysmem.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Appli/AI/App/app_x-cube-ai.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Appli/AI/App/app_x-cube-ai.d" -MT"Appli/AI/App/app_x-cube-ai.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Appli/AI/App/app_x-cube-ai.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Appli/AI/App/network.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Appli/AI/App/network.d" -MT"Appli/AI/App/network.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Appli/AI/App/network.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Appli/AI/App/network_data.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Appli/AI/App/network_data.d" -MT"Appli/AI/App/network_data.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Appli/AI/App/network_data.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Appli/AI/App/network_weights.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Appli/AI/App/network_weights.d" -MT"Appli/AI/App/network_weights.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Appli/AI/App/network_weights.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Appli/AI/App/npu_cache.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Appli/AI/App/npu_cache.d" -MT"Appli/AI/App/npu_cache.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Appli/AI/App/npu_cache.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Appli/AI/App/npu_init.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Appli/AI/App/npu_init.d" -MT"Appli/AI/App/npu_init.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Appli/AI/App/npu_init.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_Neumonia/.ai/run/run-9/Appli/AI/App/user_init.c" -mcpu=cortex-m55 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32N657xx -DHAVE_NETWORK_INFO -c -I../../../Appli/Core/Inc -I../../../Secure_nsclib -I../../../Drivers/STM32N6xx_HAL_Driver/Inc -I../../../Drivers/CMSIS/Device/ST/STM32N6xx/Include -I../../../Drivers/STM32N6xx_HAL_Driver/Inc/Legacy -I../../../Drivers/CMSIS/Include -I../../../Middlewares/ST/AI/Inc -I../../../Middlewares/ST/AI/Misc/Inc -I../../../Middlewares/ST/AI/Validation/Inc -I../../../Middlewares/ST/AI/Misc/Src -I../../../Middlewares/ST/AI/Validation/Src -I../../../Appli/AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -mcmse -MMD -MP -MF"Appli/AI/App/user_init.d" -MT"Appli/AI/App/user_init.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Appli/AI/App/user_init.o"
+
+arm-none-eabi-gcc -o "STM32N6570-DK_Appli.elf" @"objects.list"  -l:NetworkRuntime1201_CM55_GCC.a -mcpu=cortex-m55 -T"C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\STM32CubeIDE\Appli\STM32N657X0HXQ_ROMxspi2.ld" --specs=nosys.specs -Wl,-Map="STM32N6570-DK_Appli.map" -Wl,--gc-sections -static -Wl,--cmse-implib -Wl,--out-implib=./secure_nsclib.o -L../../../Middlewares/ST/AI/Lib --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+
+Finished building target: STM32N6570-DK_Appli.elf
+
+arm-none-eabi-size  STM32N6570-DK_Appli.elf 
+
+arm-none-eabi-objdump -h -S STM32N6570-DK_Appli.elf  > "STM32N6570-DK_Appli.list"
+
+arm-none-eabi-objcopy  -O binary STM32N6570-DK_Appli.elf  "STM32N6570-DK_Appli.bin"
+
+   text	   data	    bss	    dec	    hex	filename
+  84464	   3236	  47852	 135552	  21180	STM32N6570-DK_Appli.elf
+
+Finished building: default.size.stdout
+
+Finished building: STM32N6570-DK_Appli.list
+
+Finished building: STM32N6570-DK_Appli.bin
+
+
+16:38:46 Build Finished. 0 errors, 0 warnings. (took 8s.40ms)
+
+
+Saving workspace.
+
+      -------------------------------------------------------------------
+                       STM32CubeProgrammer v2.23.0                  
+
+      -------------------------------------------------------------------
+
+
+ST-LINK SN  : 004100283234511233353533
+ST-LINK FW  : V3J17M11
+
+Board       : STM32N6570-DK
+
+Voltage     : 3.28V
+
+SWD freq    : 8000 KHz
+
+Connect mode: Under Reset
+Reset mode  : Hardware reset
+
+Device ID   : 0x486
+
+Revision ID : Rev Z
+
+Device name : ST32N657
+Device type : MCU
+Device CPU  : Cortex-M55
+BL Version  : --
+
+
+
+Opening and parsing file: STM32N6570-DK_Appli.elf
+
+
+
+Memory Programming ...
+  File          : STM32N6570-DK_Appli.elf
+
+  Size          : 85.66 KB 
+  Address       : 0x34000000
+
+
+
+Erasing memory corresponding to segment 1:
+
+Erasing external memory sectors [16 17]
+
+Download in Progress:
+
+
+
+File download complete
+Time elapsed during download operation: 00:00:00.959
+
+
+
+STMicroelectronics ST-LINK GDB server. Version 7.14.0
+Copyright (c) 2026, STMicroelectronics. All rights reserved.
+
+Starting server with the following options:
+        Persistent Mode            : Disabled
+        Logging Level              : 1
+        Listen Port Number         : 57584
+        Status Refresh Delay       : 15s
+        Verbose Mode               : Disabled
+        SWD Debug                  : Enabled
+
+
+Waiting for debugger connection...
+
+GNU gdb (GNU Tools for STM32 14.3.rel1.20251027-0700) 15.2.90.20241229-git
+Copyright (C) 2024 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "--host=x86_64-w64-mingw32 --target=arm-none-eabi".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+
+Reading symbols from C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\STM32CubeIDE\FSBL\Release\STM32N6570-DK_FSBL.elf...
+(No debugging symbols found in C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\STM32CubeIDE\FSBL\Release\STM32N6570-DK_FSBL.elf)
+
+Debugger connected
+
+Waiting for debugger connection...
+
+Remote debugging using :57584
+0x18003514 in ?? ()
+
+STM32 Successfully completed reset operation (System res
+et)
+
+Loading section .isr_vector, size 0x34c lma 0x34180400
+Loading section .text, size 0x8550 lma 0x3418074c
+Loading section .rodata, size 0x44 lma 0x34188c9c
+Loading section .init_array, size 0x4 lma 0x34188ce0
+Loading section .fini_array, size 0x4 lma 0x34188ce4
+Loading section .data, size 0xc lma 0x34188ce8
+Loading section .gnu.sgstubs, size 0x20 lma 0x34188d00
+Start address 0x34180e54, load size 35092
+Transfer rate: 126 KB/sec, 3899 bytes/write.
+Detaching from program: C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\STM32CubeIDE\FSBL\Release\STM32N6570-DK_FSBL.elf, Remote target
+Ending remote debugging.
+[Inferior 1 (Remote target) detached]
+
+Flashing completed
+Device is ready on port COM4
+>>> C:\ST\STEdgeAI\4.0\Utilities\windows\stedgeai.exe validate --model C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\modelos\CNN_QAT_INT8.tflite --valinput C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\radiografias_val_8_st.npz --mode target --name network --verbosity 1 --c-api st-ai --optimization balanced --target stm32n6 --workspace C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\st_ai_ws --output C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\st_ai_output --memory-pool C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\mempools.json --desc serial:COM4:115200 --save-csv
+ST Edge AI Core v4.0.1-20581 7ed50de05
+
+Setting validation data...
+
+ loading file: C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\radiografias_val_8_st.npz
+
+  available entries: ['x_test', 'y_test'] selector="None"
+  selected entries: x_test/y_test
+
+   I[1]: (8, 150, 150, 1)/float32, min/max=[0.000000, 0.974623], mean/std=[0.496833, 0.252869]
+
+    c/I[1] conversion [Q(0.00392157,-128)]-> (8, 150, 150, 1)/int8, min/max=[-128, 121], mean/std=[-1.308400, 64.483796]
+
+    m/I[1] conversion [Q(0.00392157,-128)]-> (8, 150, 150, 1)/int8, min/max=[-128, 121], mean/std=[-1.308400, 64.483796]
+
+   O[1]: (8, 1, 1, 2)/float32, min/max=[0.000000, 1.000000], mean/std=[0.500000, 0.500000]
+
+Creating c (debug) info json file C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\st_ai_output\network_c_info_valid.json
+
+ Exec/report summary (validate)
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ model file         :   C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\modelos\CNN_QAT_INT8.tflite                
+ type               :   tflite                                                                                                                                                       
+ c_name             :   network                                                                                                                                                      
+ compression        :   lossless                                                                                                                                                     
+ options            :   allocate-inputs, allocate-outputs, multi-heaps, use-lite-runtime, use-st-ai                                                                                  
+ optimization       :   balanced                                                                                                                                                     
+ target/series      :   stm32n6                                                                                                                                                      
+ memory pool        :   C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\mempools.json                                                           
+ workspace dir      :   C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\st_ai_ws                                                                
+ output dir         :   C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\st_ai_output                                                            
+ vinput files       :   C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\radiografias_val_8_st.npz   
+ model_fmt          :   ss/sa per channel                                                                                                                                            
+ model_name         :   CNN_QAT_INT8                                                                                                                                                 
+ model_hash         :   0xa51e9164608a6653e553be25592d8fdc                                                                                                                           
+ params #           :   22,700 items (22.29 KiB)                                                                                                                                     
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ input 1/1          :   'serving_default_input_10', int8(1x150x150x1), 21.97 KBytes, QLinear(0.003921569,-128,int8), activations                                                     
+ output 1/1         :   'nl_10', int8(1x2), 2 Bytes, QLinear(0.003906250,-128,int8), activations                                                                                     
+ macc               :   3,671,846                                                                                                                                                    
+ weights (ro)       :   22,828 B (22.29 KiB) (1 segment) / -67,972(-74.9%) vs float model                                                                                            
+ activations (rw)   :   35,704 B (34.87 KiB) (1 segment) *                                                                                                                           
+ ram (total)        :   35,704 B (34.87 KiB) = 35,704 + 0 + 0                                                                                                                        
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ (*) 'input'/'output' buffers are allocated in the activations buffer
+  Memory-pools summary (activations/ domain)
+  ---------------- -------- ------------------------ --------- 
+  name             id       used                     buffer#   
+  ---------------- -------- ------------------------ --------- 
+  RAM              0        34.87 KiB (1.7%)         22        
+  AXISRAM3_4_5_6   unused   -                        0         
+  xSPI1            unused   -                        0         
+  weights_array    3        22.29 KiB (2282800.0%)   12        
+  ---------------- -------- ------------------------ --------- 
+  Warning: ['AXISRAM3_4_5_6', 'xSPI1'] memory pool s not used
+
+Running the TFlite model...
+
+INFO: Created TensorFlow Lite XNNPACK delegate for CPU.
+
+Running the ST.AI c-model (AI RUNNER)...(name=network, mode=TARGET)
+
+ Proto-buffer driver v2.1 (msg v3.2) (Serial driver v1.0 - COM4:115200) ['network']
+
+  Summary 'network' - ['network']
+  ------------------------------------------------------------------------------------------------------
+  I[1/1] 'input_1'    :   int8[1,150,150,1], 22500 Bytes, QLinear(0.003921569,-128,int8), activations
+  O[1/1] 'output_1'   :   int8[1,2], 2 Bytes, QLinear(0.003906250,-128,int8), activations
+  n_nodes             :   9
+  activations         :   35704
+  weights             :   22828
+  macc                :   3671846
+  hash                :   0xa51e9164608a6653e553be25592d8fdc
+  compile_datetime    :   Oct 30 2026 16:38:44
+
+  ------------------------------------------------------------------------------------------------------
+  protocol            :   Proto-buffer driver v2.1 (msg v3.2) (Serial driver v1.0 - COM4:115200)
+  tools               :   ST.AI (st-ai api) v4.0.1
+  runtime lib         :   v12.0.1-92efada9 compiled with GCC 13.3.1 (GCC)
+  capabilities        :   IO_ONLY, PER_LAYER, PER_LAYER_WITH_DATA
+  device.desc         :   stm32 family - 0x486 - STM32N6xx @800/400MHz
+  device.attrs        :   fpu,core_icache,core_dcache,npu_cache=0
+  ------------------------------------------------------------------------------------------------------
+
+  ST.AI Profiling results v2.0 - "network"
+
+  -------------------------------------------------------------------------------
+  nb sample(s)                   :   8
+  duration                       :   14.814 ms by sample (14.805/14.840/0.011)
+  macc                           :   3671846
+  cycles/MACC                    :   3.23
+  CPU cycles                     :   [11,851,478]
+
+  network initialize time (ms)   :   0.011
+  -------------------------------------------------------------------------------
+
+   Inference time per node
+   --------------------------------------------------------------------------------------------------------------
+   c_id    m_id   type                                 dur (ms)        %     cumul  CPU cycles       name
+
+   --------------------------------------------------------------------------------------------------------------
+   0       1      Conv2dPool (0x109) - Conv2D             9.958   67.22%    67.22%  [  7,966,284 ]   ai_node_0
+   1       3      Conv2dPool (0x109) - Conv2D             3.651   24.65%    91.87%  [  2,921,178 ]   ai_node_1
+   2       5      Conv2dPool (0x109) - Conv2D             0.832    5.62%    97.48%  [    665,660 ]   ai_node_2
+   3       6      Conv2D (0x103) - Conv2D                 0.121    0.82%    98.30%  [     96,793 ]   ai_node_3
+   4       6      NL (0x107) - Nonlinearity (relu)        0.002    0.02%    98.31%  [      1,784 ]   ai_node_4
+
+   5       8      Dense (0x104) - Dense                   0.242    1.63%    99.95%  [    193,707 ]   ai_node_5
+   6       8      NL (0x107) - Nonlinearity (relu)        0.002    0.01%    99.96%  [      1,555 ]   ai_node_6
+   7       9      Dense (0x104) - Dense                   0.003    0.02%    99.99%  [      2,775 ]   ai_node_7
+   8       10     NL (0x107) - Nonlinearity (lut)         0.002    0.01%   100.00%  [      1,742 ]   ai_node_8
+   --------------------------------------------------------------------------------------------------------------
+   total                                                 14.814                     [ 11,851,478 ]
+
+   --------------------------------------------------------------------------------------------------------------
+
+   Statistic per tensor
+
+   ---------------------------------------------------------------------------------
+   tensor   #   type[shape]:size           min   max      mean      std  name
+   ---------------------------------------------------------------------------------
+   I.0      8   i8[1,150,150,1]:22500     -128   121    -1.308   64.484  input_1
+   O.0      8   i8[1,2]:2                 -125    52   -64.250   51.544  output_1
+
+   ---------------------------------------------------------------------------------
+
+Saving validation data...
+ output directory: C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\st_ai_output
+
+ creating C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\st_ai_output\network_val_io.npz
+
+ m_outputs_1: (8, 2)/int8, min/max=[-125, 52], mean/std=[-64.250000, 51.544277], nl_10
+
+ c_outputs_1: (8, 1, 1, 2)/int8, min/max=[-125, 52], mean/std=[-64.250000, 51.544277], scale=0.003906250 zp=-128, nl_10
+
+Computing the metrics...
+
+ Accuracy report #1 for the generated TARGET C-model
+
+ ----------------------------------------------------------------------------------------------------
+ notes: - data type is different: r/float32 instead p/int8
+        - p/int8 data are dequantized with s=0.00390625 zp=-128
+        - computed against the provided ground truth values
+
+        - 8 samples (2 items per sample)
+  acc=75.00% rmse=0.486651570 mae=0.383300781 l2r=1.519655466 mean=0.250977 std=0.430616 snr=3.245337 nse=0.111889 cos=0.807540
+
+  Confusion matrix (axis=-1) - 2 classes (8 samples)
+  ------------------
+  C0        2    2
+  C1        .    4
+
+ Accuracy report #1 for the reference model
+ ----------------------------------------------------------------------------------------------------
+
+ notes: - data type is different: r/float32 instead p/int8
+        - p/int8 data are dequantized with s=0.00390625 zp=-128
+        - computed against the provided ground truth values
+        - 8 samples (2 items per sample)
+
+  acc=75.00% rmse=0.486651570 mae=0.383300781 l2r=1.519655466 mean=0.250977 std=0.430616 snr=3.245337 nse=0.111889 cos=0.807540
+
+  Confusion matrix (axis=-1) - 2 classes (8 samples)
+  ------------------
+  C0        2    2
+  C1        .    4
+
+ Cross accuracy report #1 (reference vs C-model)
+ ----------------------------------------------------------------------------------------------------
+
+ notes: - r/int8 data are dequantized with s=0.00390625 zp=-128
+        - p/int8 data are dequantized with s=0.00390625 zp=-128
+        - ACC metric is not computed ("--classifier" option can be used to force it)
+
+        - the output of the reference model is used as ground truth/reference value
+        - 8 samples (2 items per sample)
+  acc=n.a. rmse=0.000000000 mae=0.000000000 l2r=0.000000000 mean=0.000000 std=0.000000 snr=inf nse=1.000000 cos=1.000000
+
+ Evaluation report (summary)
+
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Output              acc      rmse          mae           l2r           mean       std        snr        nse        cos        tensor
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ TARGET c-model #1   75.00%   0.486651570   0.383300781   1.519655466   0.250977   0.430616   3.245337   0.111889   0.807540   'nl_10', 8 x int8(1x2), m_id=[10]
+
+ original model #1   75.00%   0.486651570   0.383300781   1.519655466   0.250977   0.430616   3.245337   0.111889   0.807540   'nl_10', 8 x int8(1x2), m_id=[10]
+ X-cross #1          n.a.     0.000000000   0.000000000   0.000000000   0.000000   0.000000   inf        1.000000   1.000000   'nl_10', 8 x int8(1x2), m_id=[10]
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  acc  : Accuracy (class, axis=-1)
+  rmse : Root Mean Squared Error
+  mae  : Mean Absolute Error
+
+  l2r  : L2 relative error
+  mean : Mean error
+  std  : Standard deviation error
+  snr  : Signal-to-Noise Ratio (SNR), bigger is better
+  nse  : Nash-Sutcliffe efficiency criteria, bigger is better, best=1, range=(-inf, 1]
+  cos  : COsine Similarity, bigger is better, best=1, range=(0, 1]
+
+Creating txt report file C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-9\.ai\st_ai_output\network_validate_report.txt
+
+elapsed time (VALIDATE): 29.678s
+

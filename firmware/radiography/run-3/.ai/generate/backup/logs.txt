@@ -1,0 +1,2 @@
+Generate Project
+Copying previous project files from C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-3 to C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-3\.ai\generate\backup

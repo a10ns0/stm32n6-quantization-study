@@ -1,0 +1,13 @@
+\begin{table}[H]
+\centering\small
+\caption{Cambios de decisión respecto de Float32 sobre las mismas imágenes.}\label{tab:rx_pareadas}
+\begin{tabularx}{\linewidth}{Yrrr}\toprule
+Variante & Corrige & Introduce error & Decisiones distintas\\\midrule
+PTQ INT8 & 25 & 18 & 43\\
+INT16x8 & 0 & 4 & 4\\
+Mixed-3 & 0 & 2 & 2\\
+Mixed-5 & 0 & 0 & 0\\
+QAT INT8 & 9 & 8 & 17\\
+\bottomrule\end{tabularx}
+\fuente{cálculo propio a partir de \texttt{predicciones\_*.npz}}
+\end{table}

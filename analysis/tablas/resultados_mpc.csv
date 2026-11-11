@@ -1,0 +1,1 @@
+ensayo,sha256_modelo,variante,n_condiciones,n_exitos,rmse_vs_experto,rmse_vs_float32,n_violaciones,TV_u,tflite_bytes,flash_compilada_bytes,sram_pico_bytes,latencia_media_us,rtt_p95_us,n_deadlines_perdidos,energia_medida_uJ,motor,fuente_registro

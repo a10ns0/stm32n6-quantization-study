@@ -1,0 +1,21 @@
+{
+  "toolchain": "STM32CubeIDE",
+  "variant": "Validation",
+  "fromMx": false,
+  "isGenerated": true,
+  "name": "run-3",
+  "createdAt": 1787072021948,
+  "lastModified": 1787082806684,
+  "lastAccessed": 1787082806684,
+  "path": "C:\\Users\\Alonso\\.stm32cubeaistudio\\workspace\\Clasificador_Neumonia",
+  "board": "STM32N6570-DK",
+  "mcu": "STM32N657X0H3Q",
+  "type": "BYOM",
+  "context": "Appli",
+  "contextProject": "FullSecure",
+  "uartInstance": {
+    "usart": "USART1",
+    "txpin": "PE5",
+    "rxpin": "PE6"
+  }
+}

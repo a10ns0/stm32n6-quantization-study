@@ -1,0 +1,16 @@
+\begin{table}[H]\centering\small
+\caption{Presencia de familias de instrucciones en los listados de radiografías.}\label{tab:helium_rx}
+\begin{tabularx}{\linewidth}{Xlcccccc}\toprule
+Modelo & Ruta & P & L & M & R & FQ & FS\\\midrule
+PTQ INT8 & M55 & Sí & Sí & Sí & Sí & Sí & Sí\\
+PTQ INT8 & NPU & Sí & Sí & No & No & Sí & Sí\\
+INT16x8 & M55 & NE & NE & NE & NE & NE & NE\\
+INT16x8 & NPU & Sí & Sí & No & No & Sí & Sí\\
+Mixta-5 & M55 & Sí & Sí & Sí & Sí & Sí & Sí\\
+Mixta-5 & NPU & Sí & Sí & No & No & Sí & Sí\\
+QAT INT8 & M55 & Sí & Sí & Sí & Sí & No & Sí\\
+QAT INT8 & NPU & No & No & No & No & No & Sí\\
+\bottomrule\end{tabularx}
+\par\smallskip\begin{minipage}{\linewidth}\footnotesize P: \texttt{vctp}; L: cargas \texttt{vldrb*} con Q; M: \texttt{vmlava.s8}; R: \texttt{vaddva.s8}; FQ: aritmética Float32 con Q; FS: aritmética Float32 con S. Sí/No indica presencia/ausencia en el listado completo, no frecuencia de ejecución. NE: no evaluable por ausencia del listado.\end{minipage}
+\fuente{auditoría de las instrucciones desensambladas en los archivos originales}
+\end{table}

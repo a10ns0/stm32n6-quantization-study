@@ -1,0 +1,32 @@
+[
+  {
+    "command": "python analysis/scripts_resultados/graficos.py",
+    "exit_code": 0,
+    "tail": ""
+  },
+  {
+    "command": "python analysis/scripts_resultados/tablas.py",
+    "exit_code": 0,
+    "tail": "informada en las ejecuciones Neural-ART.','tab:perfil',['Modelo','HW (\\%)','SW (\\%)','Control SW (\\%)'],[[n,*[num(D[D.archivo==k].iloc[0][c],1) for c in ['hw_pct','sw_pct','ctrl_pct']]] for n,k in zip(names,keys)],'resumen del perfil ST; pequeñas diferencias respecto de 100\\% se deben al redondeo')\n"
+  },
+  {
+    "command": "python analysis/scripts_resultados/auditar_instrucciones.py",
+    "exit_code": 0,
+    "tail": ""
+  },
+  {
+    "command": "python analysis/scripts_resultados/ampliacion_placas.py",
+    "exit_code": 0,
+    "tail": ""
+  },
+  {
+    "command": "python analysis/scripts_resultados/auditar_nucleo.py",
+    "exit_code": 0,
+    "tail": ""
+  },
+  {
+    "command": "python analysis/scripts_resultados/preparar_figuras_detalle.py",
+    "exit_code": 0,
+    "tail": ""
+  }
+]

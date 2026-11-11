@@ -1,0 +1,292 @@
+\section{Cuantización y estrategias de precisión reducida}\label{cap:cuant}
+La cuantización permite representar los parámetros y las señales internas de una red neuronal mediante un conjunto reducido de valores. Su interés para la inteligencia artificial en el borde radica en la posibilidad de disminuir el almacenamiento y el movimiento de datos, así como de utilizar operaciones de menor precisión cuando el hardware dispone de soporte adecuado. Estos beneficios introducen una aproximación numérica que puede modificar el resultado de la inferencia. En consecuencia, reducir el número de bits constituye una decisión de diseño que debe vincularse con las exigencias de la aplicación.
+
+Esta sección desarrolla la representación de números, la transformación entre valores en punto flotante y enteros, el error de cuantización y los procedimientos de calibración y entrenamiento. A partir de estos fundamentos se presentan las estrategias estudiadas en la memoria: PTQ INT8, QAT INT8, INT16$\times$8 y precisión mixta selectiva INT8/Float32. El desarrollo distingue la calidad numérica observada en computador de la viabilidad de la implementación resultante en el dispositivo.
+
+\subsection{Cuantización en el contexto de la compresión de modelos}
+\subsubsection{Parámetros, activaciones y recursos de inferencia}
+Los pesos y sesgos son parámetros aprendidos que permanecen constantes durante una inferencia. Las activaciones, en cambio, son los valores generados al procesar una entrada y cambian entre muestras. Ambos se organizan en tensores, es decir, arreglos de números de una o varias dimensiones. Una matriz de pesos de una capa densa y un conjunto de mapas de características de una convolución son ejemplos de tensores.
+
+En un microcontrolador, los parámetros requieren almacenamiento persistente y las activaciones necesitan memoria de trabajo durante la ejecución. Que una activación sea temporal no implica que su costo sea despreciable: varias señales pueden tener que coexistir hasta que los operadores que las consumen hayan terminado. Por ello, cuantizar activaciones puede ser tan relevante para la memoria de trabajo como cuantizar pesos lo es para el almacenamiento del modelo.
+
+Si un tensor contiene $N$ elementos de $b$ bits, su almacenamiento ideal, sin metadatos ni alineamiento, es
+\begin{equation}
+M_{\mathrm{tensor}}=\frac{Nb}{8}\quad\text{bytes}.
+\end{equation}
+Representar el mismo conjunto de valores en INT8 en lugar de Float32 reduce de cuatro a un byte el espacio por elemento. Esta relación no equivale automáticamente a una reducción de cuatro veces del archivo completo ni de la memoria total de la aplicación. También deben almacenarse escalas, puntos cero, sesgos y la descripción de las operaciones; el programa compilado incorpora además código y memoria auxiliar.
+
+\subsubsection{Relación con otras técnicas de compresión}
+La poda, o \textit{pruning}, elimina conexiones o estructuras seleccionadas de una red. La destilación de conocimiento entrena un modelo estudiante para reproducir información proporcionada por un modelo profesor. La cuantización conserva habitualmente la topología y modifica la representación de sus valores. Estas técnicas pueden combinarse, pero responden a decisiones diferentes: cambiar la estructura, transferir el comportamiento a otra red o reducir la precisión numérica.
+
+En esta memoria se utiliza una referencia Float32 para cada caso de estudio y se examina el efecto de modificar su representación. El objetivo es determinar cuánto puede reducirse la precisión sin comprometer las funciones relevantes de la clasificación de radiografías y del control del péndulo. Las restricciones de memoria y tiempo justifican esta evaluación, pero la aceptación de cada variante depende de su comportamiento funcional \cite{nagel2021}.
+
+\subsection{Formatos numéricos y cambio de precisión}
+\subsubsection{Enteros con y sin signo}
+Un número de $b$ bits dispone de $2^b$ combinaciones binarias. En una representación entera sin signo, estas combinaciones corresponden al intervalo $[0,2^b-1]$. En complemento a dos, empleado para enteros con signo, el intervalo es
+\begin{equation}
+-2^{b-1}\leq q\leq 2^{b-1}-1.
+\end{equation}
+Así, UINT8 representa los enteros entre 0 y 255, INT8 los comprendidos entre $-128$ y 127, e INT16 los comprendidos entre $-32768$ y 32767. El número de bits determina los niveles disponibles, pero no establece por sí solo qué magnitudes reales representan. Esa correspondencia se define mediante los parámetros de cuantización.
+
+\subsubsection{Punto flotante y reducción del ancho de palabra}
+Float32 corresponde al formato binario de precisión simple de IEEE 754: reserva un bit para el signo, ocho para el exponente y 23 para la fracción. La \textit{Numerical Computation Guide} de Oracle reproduce esta distribución y la interpretación de sus campos en la sección 2.2.2 y la Tabla 2-2 \cite{oracleieee}. Para un número normalizado, finito y no nulo, dicha interpretación se escribe como
+\begin{equation}
+r=(-1)^{\sigma}\left(1+\frac{F}{2^{23}}\right)2^{E-127},
+\label{eq:cap3_float32}
+\end{equation}
+donde $\sigma\in\{0,1\}$ representa el signo, $F$ es el entero sin signo formado por los 23 bits de fracción y $E$ es el exponente almacenado, entre 1 y 254 en este caso. El término $F/2^{23}$ expresa la fracción binaria y el uno inicial es implícito. El desplazamiento 127 permite codificar exponentes positivos y negativos mediante un campo sin signo. Esta ecuación reescribe la representación $(-1)^{\sigma}2^{E-127}(1.f)_2$ de la fuente; las codificaciones de cero, subnormales, infinitos y valores no numéricos se interpretan por separado \cite{oracleieee}.
+
+Por ejemplo, $3{,}5=(1{,}11)_2\,2^1$: el signo es positivo, $E=128$ y la fracción tiene valor $0{,}75$. Un entero INT8, en cambio, no contiene un campo de exponente ni de fracción y no puede representar directamente $3{,}5$. Para utilizarlo en cuantización se establece una correspondencia externa: con escala $s=0{,}1$ y punto cero $z=0$, el código $q=35$, almacenado como $00100011_2$, representa $s(q-z)=3{,}5$. La escala se comparte entre los elementos del tensor o del canal correspondiente. Este ejemplo anticipa la transformación afín de la sección siguiente y muestra que cuantizar no consiste en conservar ocho bits de la codificación Float32.
+
+El exponente de Float32 permite cubrir magnitudes muy diferentes y su fracción determina la resolución relativa. Float16 también utiliza punto flotante, con un bit de signo, cinco de exponente y diez de fracción, por lo que reduce tanto el rango como la precisión respecto de Float32 \cite{oraclefloat16}. Se incluye como contraste conceptual; las estrategias experimentales de esta memoria se construyen con Float32, INT8 e INT16.
+
+\begin{table}[htbp]\centering\small
+\caption{Formatos numéricos considerados en la explicación del cambio de precisión.}\label{tab:cap3_formatos}
+\begin{tabularx}{\linewidth}{lclY}\toprule
+Formato & Bits & Representación & Interpretación\\\midrule
+Float32 & 32 & Punto flotante & Referencia numérica del trabajo.\\
+Float16 & 16 & Punto flotante & Menor rango y precisión; contraste conceptual.\\
+INT8 & 8 & Entero con signo & 256 códigos; escala y punto cero vinculan códigos con valores reales.\\
+INT16 & 16 & Entero con signo & 65\,536 códigos; mayor resolución potencial de activaciones.\\\bottomrule
+\end{tabularx}
+\end{table}
+
+Para TinyML, entendido aquí como la ejecución de aprendizaje automático en dispositivos con recursos limitados, INT8 reduce el almacenamiento de los datos de cuatro bytes a uno por elemento respecto de Float32. En un tensor de 1000 pesos, esto corresponde a 4000 y 1000 bytes, respectivamente, antes de añadir metadatos. La menor cantidad de datos también puede reducir las transferencias de memoria. Cuando existen instrucciones y rutinas optimizadas para estos operandos, las multiplicaciones y acumulaciones enteras permiten aprovechar los recursos del microcontrolador; el desarrollo de CMSIS-NN documenta este enfoque para procesadores Cortex-M \cite{lai2018}. El beneficio temporal depende de las operaciones y de su implementación, de modo que la reducción de bytes no debe interpretarse como una aceleración de igual proporción.
+
+Convertir Float32 a Float16 mantiene una representación en punto flotante. La cuantización entera establece una correspondencia entre valores reales y códigos enteros, con un rango y un paso determinados. Se distingue, además, la \emph{precisión numérica}, asociada a los valores representables, de la \emph{exactitud de clasificación}, que mide aciertos sobre un conjunto de muestras.
+
+\subsection{Cuantización uniforme afín}
+\subsubsection{Escala, punto cero y reconstrucción}
+La cuantización uniforme utiliza niveles separados por una distancia constante. En su formulación afín, un valor real $r$ se aproxima mediante un entero $q$ y dos parámetros: una escala $s>0$ y un punto cero entero $z$. La transformación es
+\begin{align}
+q&=\operatorname{clip}\!\left(\operatorname{round}(r/s)+z,\;q_{\min},\;q_{\max}\right),\label{eq:cuant}\\
+\widehat r&=s(q-z).\label{eq:decuant}
+\end{align}
+La función $\operatorname{round}$ aproxima al entero más cercano y $\operatorname{clip}$ limita el resultado al intervalo permitido. La escala expresa cuánto cambia el valor reconstruido al aumentar en una unidad el código entero. El punto cero es el código que representa exactamente el cero real: cuando $q=z$, se obtiene $\widehat r=0$ \cite{jacob2018}.
+
+La segunda transformación se denomina descuantización. Devuelve una aproximación en la escala original, pero no recupera la información eliminada por el redondeo o la saturación. Varios valores originales pueden producir el mismo código entero y, por tanto, el mismo valor reconstruido.
+
+Para un intervalo no degenerado $[r_{\min},r_{\max}]$ que incluya el cero, una elección inicial basada en sus extremos es
+\begin{align}
+s&=\frac{r_{\max}-r_{\min}}{q_{\max}-q_{\min}},\\
+z&=\operatorname{clip}\!\left(\operatorname{round}\!\left(q_{\min}-\frac{r_{\min}}{s}\right),q_{\min},q_{\max}\right).
+\end{align}
+El redondeo de $z$ puede desplazar ligeramente los extremos reconstruidos. Si el tensor es constante o nulo, el procedimiento debe asignar una escala válida evitando la división por cero. La elección de rango es parte de la cuantización y no una propiedad fija del tipo INT8.
+
+\subsubsection{Cuantización simétrica y asimétrica}
+En la cuantización simétrica se elige un intervalo centrado en cero y se fija $z=0$. La especificación INT8 de LiteRT, anteriormente TensorFlow Lite, establece para los pesos cuantizados el intervalo $[-127,127]$ \cite{litertspec}. Para deducir la escala a partir de los extremos, se define $a=\max_i|r_i|$, con $a>0$, y se exige que el código 127 reconstruya $a$. Al sustituir en $\widehat r=s(q-z)$ se obtiene $a=127s$ y, por tanto,
+\begin{equation}
+a=\max_i|r_i|,\qquad s=\frac{a}{127},\qquad z=0.
+\label{eq:cap3_simetrica}
+\end{equation}
+El extremo negativo cumple simultáneamente $-a=-127s$. Esta expresión procede de aplicar la transformación afín al rango elegido; no introduce una nueva regla independiente del cuantizador.
+
+El tipo INT8 sí puede almacenar $-128$. La convención citada excluye ese código en los pesos porque no existe el código $+128$ que permitiría mantener extremos enteros opuestos. Así se emplean 255 niveles, incluidos el cero y 127 pares de valores positivos y negativos. Se trata de una decisión de la especificación de LiteRT para estos pesos, no de una limitación general del almacenamiento INT8 ni de una regla universal para cualquier cuantizador \cite{litertspec}.
+
+La cuantización asimétrica permite desplazar el punto cero para utilizar un intervalo real que no esté centrado en cero. Por ejemplo, para una activación posterior a ReLU con rango $[0,6]$, los códigos INT8 entre $-128$ y 127 permiten elegir $s=6/255$ y $z=-128$. El código negativo $-128$ representa entonces el cero real. Un esquema simétrico sobre $[-6,6]$ dedicaría parte de sus niveles a magnitudes negativas que esa activación no utiliza.
+
+La combinación de pesos simétricos y activaciones que admiten asimetría también responde al costo de la operación. Para observarlo, considérese el producto interno de dos vectores de $n$ elementos. Al desarrollar sus desplazamientos se obtiene
+\begin{equation}
+\begin{aligned}
+\sum_{i=1}^{n}(q_{a,i}-z_a)(q_{w,i}-z_w)
+={}&\sum_{i=1}^{n}q_{a,i}q_{w,i}-z_w\sum_{i=1}^{n}q_{a,i}\\
+&-z_a\sum_{i=1}^{n}q_{w,i}+nz_az_w.
+\end{aligned}
+\label{eq:cap3_productoz}
+\end{equation}
+Este desarrollo algebraico corresponde al tratamiento de puntos cero presentado por Jacob et al. y retomado por la especificación de LiteRT \cite{jacob2018,litertspec}. Como las activaciones cambian con cada entrada, el término $z_w\sum_iq_{a,i}$ tendría que actualizarse durante la inferencia. Fijar $z_w=0$ lo elimina. En cambio, con parámetros de cuantización estáticos, $z_a\sum_iq_{w,i}$ se puede calcular previamente porque los pesos y $z_a$ son constantes.
+
+Por ello, pesos simétricos simplifican el cálculo, mientras permitir activaciones asimétricas ayuda a aprovechar su rango sin introducir aquel término dependiente de la entrada. Permitir asimetría no obliga a que todas las activaciones tengan un punto cero distinto de cero: un tensor cuyo rango sea simétrico puede utilizar $z_a=0$. La elección final también debe respetar las condiciones del operador utilizado.
+
+\subsubsection{Ejemplo numérico de cuantización de pesos}
+Considérese el tensor $[1{,}2,-3{,}5,0{,}8,2{,}1,-1{,}9,3{,}5]$. Aplicando la convención simétrica de la Ecuación~\ref{eq:cap3_simetrica}, se obtiene $s=3{,}5/127\approx0{,}0275591$. Para el primer elemento,
+\begin{equation}
+q=\operatorname{round}\left(\frac{1{,}2}{3{,}5/127}\right)=44,
+\qquad \widehat r=44\frac{3{,}5}{127}\approx1{,}212598.
+\end{equation}
+La Tabla~\ref{tab:cap3_ejemplo} presenta la transformación completa. Se conserva la escala sin redondear en los cálculos; los valores mostrados se redondean únicamente para su lectura.
+
+\begin{table}[htbp]\centering\small
+\caption{Ejemplo de cuantización simétrica INT8 con $s=3{,}5/127$ y $z=0$.}\label{tab:cap3_ejemplo}
+\begin{tabular}{rrrr}\toprule
+Original $r$ & Código $q$ & Reconstruido $\widehat r$ & Error $\widehat r-r$\\\midrule
+$1{,}200000$ & $44$ & $1{,}212598$ & $0{,}012598$\\
+$-3{,}500000$ & $-127$ & $-3{,}500000$ & $0{,}000000$\\
+$0{,}800000$ & $29$ & $0{,}799213$ & $-0{,}000787$\\
+$2{,}100000$ & $76$ & $2{,}094488$ & $-0{,}005512$\\
+$-1{,}900000$ & $-69$ & $-1{,}901575$ & $-0{,}001575$\\
+$3{,}500000$ & $127$ & $3{,}500000$ & $0{,}000000$\\\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Granularidad de la cuantización}
+\subsubsection{Cuantización por tensor, por canal y por grupos}
+La granularidad establece qué elementos comparten parámetros de cuantización \cite{krishnamoorthi2018}. En el esquema por tensor se utiliza un único par $(s,z)$ para todo el arreglo. Su costo de metadatos es reducido, aunque puede ser poco adecuado si distintas regiones del tensor tienen rangos muy diferentes.
+
+En el esquema por canal se asignan escalas a canales individuales. En una convolución, un canal de salida se asocia con un filtro; en una capa densa, con una neurona de salida. La correspondencia con filas o columnas depende del orden de almacenamiento de la matriz. Por ello, una transposición de pesos puede modificar el eje asociado al canal sin modificar la transformación matemática de la capa.
+
+Para pesos simétricos de un canal $c$, se calcula $s_c=\max_i|w_{c,i}|/127$. Un valor extremo modifica entonces la escala de su canal, sin obligar a ampliar la de los demás. Esta mayor flexibilidad puede reducir el error de representación, aunque no garantiza que mejore la métrica final de la aplicación. Tampoco elimina errores producidos en activaciones o en otras capas.
+
+La cuantización por grupos divide los tensores en bloques más pequeños, cada uno con sus propios parámetros. Es útil para comprender estrategias de muy pocos bits, como INT4, pero no constituye una variante experimental de esta memoria. Cuanto menor es el grupo, mayor es el número de escalas que deben almacenarse y aplicarse. La granularidad y el ancho de palabra son decisiones distintas: una red INT8 puede cuantizar sus pesos por canal y sus activaciones por tensor.
+
+\subsection{Cuantización de pesos y activaciones durante la inferencia}
+Cuantizar únicamente los pesos reduce el espacio de sus datos, pero no define por sí solo cómo se ejecutará la red. Algunas implementaciones convierten esos pesos a punto flotante para operar con activaciones flotantes; otras emplean rutinas que combinan conversiones y cálculo entero. La documentación de cuantización posterior al entrenamiento de LiteRT distingue estas posibilidades de la cuantización entera de pesos y activaciones \cite{litertptq}. Por ello, el ahorro de almacenamiento y la reducción del tiempo de inferencia deben evaluarse por separado.
+
+Al cuantizar también las activaciones, dos capas compatibles pueden intercambiar tensores enteros. Sin embargo, no basta con multiplicar sus códigos: cada tensor puede utilizar una escala diferente. Además, sumar muchos productos exige un acumulador con mayor rango que sus operandos. La formulación de inferencia entera de Jacob et al. describe cómo realizar estas operaciones y convertir el resultado a la representación de salida \cite{jacob2018}.
+
+Para una neurona, sean $q_{a,i}$ y $q_{w,i}$ los códigos de activaciones y pesos, y $(s_a,z_a)$ y $(s_w,z_w)$ sus parámetros. Sustituir las reconstrucciones afines en la suma ponderada da
+\begin{equation}
+\widehat y=s_as_w\sum_i(q_{a,i}-z_a)(q_{w,i}-z_w)+b,
+\end{equation}
+donde $b$ es el sesgo. El producto $s_as_w$ aparece porque cada producto de códigos representa un producto de valores que han sido escalados por separado. En el caso de pesos por canal, $s_w$ corresponde al canal de salida considerado.
+
+Para sumar el sesgo al acumulador entero debe expresarse en las mismas unidades que los productos. Por ello se emplea $q_b=\operatorname{round}(b/(s_as_w))$, con punto cero nulo, y se define
+\begin{equation}
+A=\sum_i(q_{a,i}-z_a)(q_{w,i}-z_w)+q_b,
+\qquad \widehat y\approx s_as_wA.
+\label{eq:cap3_acumulador}
+\end{equation}
+La aproximación incluye el redondeo del sesgo. Para las convoluciones INT8, LiteRT especifica sesgos INT32 con escala igual al producto de las escalas de entrada y pesos \cite{litertspec}.
+
+El valor $A$ todavía no es el código que recibirá la capa siguiente. Ese código, $q_y$, utiliza una escala de salida $s_y$ y un punto cero $z_y$, de modo que debe satisfacer $s_y(q_y-z_y)\approx s_as_wA$. Dividir por $s_y$, despejar $q_y$ y aplicar redondeo y recorte conduce a
+\begin{equation}
+q_y=\operatorname{clip}\!\left(
+\operatorname{round}\!\left(\frac{s_as_w}{s_y}A\right)+z_y,
+q_{\min},q_{\max}\right).
+\label{eq:cap3_recuant}
+\end{equation}
+Esta operación se denomina \emph{recuantización}: cambia las unidades del acumulador a las unidades del tensor de salida. La deducción sigue la relación entre escalas de la sección 2.2 de Jacob et al. \cite{jacob2018}; aquí se expresa para una salida escalar y se hace explícito el recorte al rango permitido.
+
+La escala $s_y$ es la distancia entre dos niveles reales consecutivos de la salida. No tiene un valor universal asociado a INT8. Si se utiliza calibración por extremos, se obtiene del intervalo observado $[y_{\min},y_{\max}]$ mediante $s_y=(y_{\max}-y_{\min})/255$, junto con el correspondiente $z_y$. Los parámetros quedan registrados en el modelo y se utilizan durante la inferencia. Algunos operadores imponen una representación de salida concreta; en esos casos prevalece su especificación \cite{litertptq,litertspec}.
+
+Como ejemplo didáctico, considérese $s_a=0{,}02$, $s_w=0{,}03$ y una salida en $[0,6]$. Entonces $s_y=6/255\approx0{,}023529$ y $z_y=-128$. Si $A=2000$, la salida reconstruida antes de recuantizar es $0{,}02\cdot0{,}03\cdot2000=1{,}2$. La Ecuación~\ref{eq:cap3_recuant} produce $q_y=\operatorname{round}(51)-128=-77$, que se reconstruye como $(6/255)(-77+128)=1{,}2$. La salida permanece en INT8, pero su código tiene un significado distinto del acumulador.
+
+En una implementación entera, el factor conocido $s_as_w/s_y$ puede aproximarse mediante un multiplicador entero y desplazamientos de bits con redondeo, evitando una multiplicación flotante por cada salida \cite{jacob2018}. Así, una red denominada INT8 puede utilizar operandos de ocho bits y acumuladores de mayor anchura. El nombre describe la precisión principal de pesos y activaciones, no la de todos sus cálculos internos.
+
+\subsection{Calibración de los rangos de activación}
+Los rangos de pesos se obtienen de parámetros conocidos. Las activaciones dependen de las entradas y deben caracterizarse mediante muestras que reproduzcan el uso previsto. La \emph{calibración} ejecuta inferencias para observar esas señales y determinar los parámetros de cuantización. En PTQ estática no actualiza los pesos mediante gradientes y normalmente no requiere etiquetas \cite{litertptq}.
+
+Una estrategia sencilla utiliza los mínimos y máximos observados. También pueden definirse intervalos mediante percentiles o criterios de error de reconstrucción. En todos los casos existe un compromiso entre conservar valores extremos y mejorar la resolución de la región más frecuente. Un conjunto de calibración poco representativo puede producir saturación durante el uso o dedicar demasiados niveles a regiones irrelevantes.
+
+En radiografías, la calibración debe utilizar el mismo tamaño, canal y preprocesamiento empleados durante la inferencia, incluyendo variaciones representativas de ambas clases. En MPC, debe respetar el orden y la normalización de las cuatro variables de estado e incluir estados próximos al equilibrio y transitorios del movimiento. La normalización física de los estados y la escala de cuantización son transformaciones distintas: la primera define las entradas con que se entrenó la política; la segunda aproxima numéricamente sus tensores.
+
+La selección de muestras de calibración se realiza con datos de desarrollo y se distingue de la evaluación final. La cobertura y la distribución son más relevantes que imponer un número universal de muestras. Asimismo, una calibración adecuada no garantiza que una trayectoria cuantizada permanezca dentro de las regiones observadas, porque las propias acciones del controlador modifican los estados futuros.
+
+\subsection{Estrategias de cuantización utilizadas en la memoria}
+\subsubsection{Referencia Float32}
+La referencia mantiene pesos y activaciones en punto flotante de 32 bits y permite medir el cambio introducido por cada estrategia. En radiografías corresponde a la CNN entrenada; en MPC corresponde a la red reconstruida en Keras mediante transferencia de pesos. Float32 no es una técnica de cuantización: proporciona el punto de comparación para separar el error de aproximación original del error adicional de precisión reducida.
+
+\subsubsection{Cuantización posterior al entrenamiento INT8}
+La cuantización posterior al entrenamiento, o PTQ, transforma una red previamente entrenada. En el procedimiento convencional empleado como base de esta memoria, la conversión no incorpora un nuevo entrenamiento por retropropagación: se cuantizan los parámetros disponibles y se calibran los rangos de activación. Los estudios de Krishnamoorthi y de Nagel et al. describen este procedimiento y sus diferencias respecto de QAT \cite{krishnamoorthi2018,nagel2021}. Las escalas, los puntos cero y los tensores convertidos forman parte de la representación que utiliza el evaluador de inferencia \cite{litertptq}.
+
+La granularidad de los pesos es una decisión adicional. La cuantización por canal permite representar por separado filtros con rangos diferentes y puede mejorar la fidelidad frente a una única escala por tensor, aunque el resultado depende de la red; Krishnamoorthi evalúa esta diferencia en redes convolucionales \cite{krishnamoorthi2018}. En esta memoria, la comparación de variantes INT8 permite examinar ese efecto sin confundirlo con un cambio del ancho de palabra.
+
+El tipo de la interfaz también debe distinguirse del cálculo interno. LiteRT permite conservar entradas y salidas Float32 alrededor de operaciones cuantizadas, o configurar una interfaz entera que requiere transformar los datos externamente \cite{litertptq}. Por ello, identificar un modelo como PTQ INT8 no basta para describir cómo recibe sus entradas y entrega sus predicciones.
+
+La ventaja práctica del procedimiento es que evita el costo de una etapa adicional de entrenamiento. Su limitación es que los pesos originales no se reajustan para compensar las aproximaciones introducidas. La literatura muestra que la sensibilidad a esa conversión varía entre arquitecturas y configuraciones de cuantización \cite{krishnamoorthi2018}. En los casos de esta memoria, su aceptación se determina mediante las métricas de clasificación o de control, además de la comparación numérica con Float32.
+
+\subsubsection{Entrenamiento consciente de cuantización INT8}
+El entrenamiento consciente de cuantización, o QAT, introduce durante el ajuste de la red operaciones que imitan la pérdida de resolución de la inferencia cuantizada. Una operación de \emph{cuantización simulada}, o \textit{fake quantization}, cuantiza un valor y lo reconstruye inmediatamente:
+\begin{equation}
+\widetilde r=s\left[\operatorname{clip}\!\left(
+\operatorname{round}(r/s)+z,q_{\min},q_{\max}\right)-z\right].
+\label{eq:cap3_fakequant}
+\end{equation}
+Esta expresión combina las Ecuaciones~\ref{eq:cuant} y \ref{eq:decuant}; reproduce el mecanismo de cuantizar y descuantizar utilizado para simular precisión reducida durante el entrenamiento \cite{tffakequant}.
+
+La \emph{rejilla cuantizada} es el conjunto finito de valores reconstruibles, $\{s(k-z):k=q_{\min},\ldots,q_{\max}\}$. Con $s=0{,}1$ y $z=0$, algunos de esos niveles son $0{,}1$, $0{,}2$ y $0{,}3$, separados siempre por $0{,}1$. Un valor de $0{,}23$ se redondea al código 2 y se reconstruye como $0{,}2$. Aunque este resultado se almacene en Float32, representa un nivel permitido por el cuantizador, dentro de la precisión de la propia aritmética flotante. No se utiliza la resolución completa de Float32 para la señal que atraviesa esa operación.
+
+Durante QAT se conserva además una copia flotante de los pesos que recibe las actualizaciones del optimizador \cite{krishnamoorthi2018}. En el ejemplo anterior, si el peso cambia de $0{,}23$ a $0{,}24$, la propagación hacia adelante sigue utilizando $0{,}2$; cuando llega a $0{,}26$, utiliza $0{,}3$. Las actualizaciones pequeñas se acumulan en el peso flotante hasta cambiar el nivel seleccionado. Las activaciones se someten al mismo mecanismo de aproximación al procesar cada entrada. Si el procedimiento actualiza los rangos de cuantización durante el entrenamiento, también cambian las escalas y, con ellas, los niveles disponibles.
+
+El redondeo tiene derivada nula en el interior de cada intervalo y es discontinuo en sus fronteras. Utilizar esa derivada directamente impediría transmitir gradientes útiles para ajustar los pesos. Por ello se emplea una derivada sustituta, conocida como estimador de paso directo o \textit{straight-through estimator} (STE). Bengio et al. estudian este recurso como una estimación heurística del gradiente; no lo presentan como la derivada exacta de una función discreta \cite{bengio2013}. En QAT es habitual propagar el gradiente como si el redondeo fuera la identidad dentro del intervalo representable, y anularlo fuera de él por efecto del recorte \cite{nagel2021}. Esta elección permite entrenar pese a la discontinuidad del cuantizador.
+
+Al finalizar el ajuste, se exportan los pesos y los parámetros de cuantización a la representación de inferencia. La presencia de operaciones de cuantización simulada durante el entrenamiento no convierte por sí sola el modelo en un archivo entero listo para despliegue \cite{tfqat}. QAT INT8 se evalúa aquí como una estrategia de adaptación al error de ocho bits, sin asumir de antemano que supere a todas las alternativas.
+
+\subsubsection{Activaciones INT16 con pesos INT8: INT16x8}\label{sec:cap3_int16}
+La estrategia INT16$\times$8, también expresada como W8A16, conserva los pesos en ocho bits y amplía a 16 bits la representación de las activaciones. Busca reducir el error sobre las señales que se propagan por la red sin retornar todos los parámetros a Float32. LiteRT contempla esta modalidad de cuantización posterior al entrenamiento, con sesgos de mayor anchura y restricciones propias de los operadores admitidos \cite{litert16}.
+
+Su interés puede observarse comparando dos cuantizadores simétricos que representan el mismo intervalo $[-A,A]$ con punto cero nulo. Usando extremos simétricos, las escalas son
+\begin{equation}
+s_8=\frac{A}{127},\qquad s_{16}=\frac{A}{32767},\qquad
+\frac{s_8}{s_{16}}=\frac{32767}{127}\approx258.
+\end{equation}
+Para ese intervalo, INT16 proporciona un paso aproximadamente 258 veces menor. Esta relación describe la rejilla numérica del ejemplo, no una mejora equivalente en la exactitud o en el error final del controlador. Los pesos siguen cuantizados en INT8 y también intervienen las no linealidades, la calibración y las operaciones de la red.
+
+En una activación acotada entre $-1$ y 1, la escala pasa de aproximadamente $0{,}007874$ a $0{,}000030519$. Una señal de magnitud $0{,}002$ se reconstruiría como cero en el primer cuantizador y como aproximadamente $0{,}002014$ en el segundo. El ejemplo muestra por qué aumentar la resolución de activaciones puede resultar relevante para conservar pequeñas variaciones internas. Las escalas concretas de cada operador, incluidas las activaciones no lineales, dependen de la especificación del formato y no tienen que coincidir con este ejemplo idealizado.
+
+En el aproximador MPC, estas pequeñas variaciones pueden influir en la acción calculada cerca del equilibrio. INT16$\times$8 constituye, por tanto, una alternativa de interés cuando la reducción a ocho bits en activaciones deteriora las trayectorias. Su evaluación en simulación permite determinar si conserva mejor el comportamiento de control antes de analizar el costo de ejecutarla en el dispositivo.
+
+Para un tensor de $N$ activaciones, el almacenamiento de sus datos pasa de $N$ bytes en INT8 a $2N$ bytes en INT16. Esta comparación se limita a ese tensor. La memoria RAM requerida por la inferencia incluye también buffers temporales y estructuras del sistema de ejecución; por ejemplo, la documentación de TensorFlow Lite Micro distingue expresamente estas categorías en su organización de memoria \cite{tflmmemory}. En consecuencia, la memoria total de cada variante debe obtenerse del informe de asignación o de la medición de su implementación.
+
+Conservar pesos INT8 tampoco permite fijar de antemano una reducción de latencia: el tiempo depende de cómo se procesan los operandos, del movimiento de datos y de las rutinas disponibles. CMSIS-NN estudia la optimización conjunta de estas operaciones y del acceso a memoria en Cortex-M \cite{lai2018}. Para INT16$\times$8, la documentación de LiteRT advierte que sus implementaciones no optimizadas pueden resultar más lentas que la referencia flotante \cite{litert16}. Esta observación se refiere a las implementaciones descritas en esa documentación; el comportamiento en la plataforma de esta memoria debe establecerse mediante el despliegue y su medición.
+
+La viabilidad numérica en simulación y la viabilidad de despliegue son condiciones distintas. Un archivo que expresa operaciones INT16$\times$8 requiere que la cadena de compilación y las bibliotecas de ejecución puedan conservar esa representación. Por ello, un resultado favorable en computador deja abierta la cuestión de qué aritmética y qué recursos se utilizarán realmente en la placa. Esta correspondencia se analiza al estudiar Cortex-M55, Helium, Neural-ART y la implementación compilada; la etiqueta del archivo no determina el hardware utilizado.
+
+\subsubsection{Precisión mixta selectiva INT8/Float32}\label{sec:cap3_mixta}
+La precisión mixta selectiva asigna representaciones diferentes a regiones de la red según su sensibilidad. En la variante utilizada en este trabajo se mantiene una base cuantizada INT8 y se conservan determinadas operaciones o regiones en Float32. La selección busca proteger partes cuyo error afecta de forma relevante al resultado, manteniendo la reducción de precisión en el resto del modelo.
+
+Esta estrategia se diferencia de INT16$\times$8: no aumenta de manera general el ancho de las activaciones, sino que preserva el cálculo en punto flotante en regiones concretas. También se distingue de cuantizar únicamente los pesos, puesto que la parte entera puede incluir tanto pesos como activaciones. El formato numérico indica cómo se representan los valores; la asignación a CPU o NPU indica qué unidad ejecuta cada operación. Son decisiones relacionadas, pero diferentes. Un operador INT8 sólo puede asignarse a la NPU si el compilador admite su tipo, dimensiones y configuración; de lo contrario, puede requerir ejecución en la CPU. La documentación del compilador Neural-ART describe la generación de operaciones aceleradas y de operaciones de software según su compatibilidad \cite{stcompiler}. Por ello, una región conservada en Float32 y una región INT8 deben identificarse en el modelo, y su destino de ejecución debe comprobarse por separado en el informe de compilación.
+
+Para identificar regiones candidatas se comparan las activaciones de la referencia con los valores reconstruidos a partir del modelo cuantizado. Se utilizan la misma entrada y los tensores correspondientes en ambas redes. Si $a_{j,k}$ es un valor del tensor de referencia $j$ y $\widehat a_{j,k}$ su aproximación, se calcula
+\begin{equation}
+\operatorname{MSE}_j=\frac{1}{N_j}\sum_{k=1}^{N_j}(a_{j,k}-\widehat a_{j,k})^2,
+\qquad \operatorname{RMSE}_j=\sqrt{\operatorname{MSE}_j}.
+\label{eq:cap3_rmse}
+\end{equation}
+Aquí, $N_j$ cuenta los valores comparados al reunir los elementos de las muestras de evaluación, suponiendo tensores del mismo tamaño por muestra. Es el error cuadrático medio y su raíz, expresada en las unidades de las activaciones.
+
+Para relacionar ese error con la resolución disponible, la guía oficial de \texttt{Quantization\allowbreak Debugger} calcula el cociente entre la raíz del error cuadrático medio y la escala de cuantización, denominado \texttt{rmse/scale} \cite{litertdebug}. Para un tensor cuantizado por tensor, todos sus elementos comparten la misma escala positiva $s_j$; el indicador es
+\begin{equation}
+\rho_j=\frac{\operatorname{RMSE}_j}{s_j}.
+\label{eq:cap3_rho}
+\end{equation}
+Dividir por $s_j$ expresa el error en unidades del paso entre niveles. Por ejemplo, un RMSE de $0{,}02$ y una escala de $0{,}01$ dan $\rho_j=2$: el error cuadrático medio en su forma de raíz equivale a dos pasos de ese cuantizador. Esta normalización ayuda a comparar discrepancias con resoluciones distintas; no establece por sí sola la importancia funcional de cada capa.
+
+Cada escala es un número escalar. En cuantización por canal existen varias escalas, una por canal, agrupadas normalmente en un vector de parámetros. Si se aplica el mismo criterio a ese caso, debe calcularse un indicador por canal, $\rho_{j,c}=\operatorname{RMSE}_{j,c}/s_{j,c}$, y especificar cómo se comparan o agrupan los resultados. Así se evita dividir indiscriminadamente los errores de todos los canales por una sola escala que no les corresponde.
+
+El procedimiento utiliza \texttt{Quantization\allowbreak Debugger} para inspeccionar discrepancias y \texttt{denylisted\_nodes} para excluir regiones seleccionadas de la conversión entera, conforme al mecanismo de cuantización selectiva documentado por la herramienta \cite{litertdebug}. El diagnóstico local se complementa con la evaluación funcional del modelo resultante; los umbrales y las regiones preservadas son decisiones experimentales, no valores universales del método.
+
+En la frontera de una región entera y una flotante se aplican transformaciones de cuantización o descuantización. Estas conversiones pueden añadir tiempo de ejecución, almacenamiento temporal y movimiento de datos. Mantener más regiones en Float32 puede reducir ciertas perturbaciones, pero también disminuir el ahorro de recursos; además, las interacciones entre capas impiden garantizar una mejora monótona del desempeño.
+
+En MPC, la selección se valida mediante trayectorias completas y cumplimiento de restricciones, además del error de salida sobre estados idénticos. En radiografías, se examina si las regiones preservadas permiten mantener la clasificación. En ambos casos, la precisión mixta selectiva ofrece una forma de ajustar el compromiso entre fidelidad y representación reducida. La denominación INT8/Float32 evita confundirla con una red INT8 convencional que utiliza acumuladores INT32.
+
+\subsection{Comparación conceptual de las alternativas}
+La Tabla~\ref{tab:variantes} resume las estrategias estudiadas. El formato indica cómo se busca representar la red convertida; la asignación de operadores y los tipos efectivos de la implementación pertenecen a la evaluación de hardware.
+
+
+
+La comparación considera tres decisiones complementarias: cuántos bits se emplean, qué elementos comparten parámetros de cuantización y en qué etapa se adapta el modelo. PTQ y QAT describen procedimientos; INT8 e INT16 describen representaciones; por tensor y por canal describen granularidad. Mantener estas categorías separadas permite interpretar correctamente diferencias entre variantes.
+
+\begin{table}[H]\centering\small
+\caption{Características de las estrategias evaluadas en la memoria.}\label{tab:variantes}
+\begin{tabularx}{\linewidth}{p{2.0cm}YYY}\toprule
+Variante & Representación objetivo & Preparación & Compromiso principal\\\midrule
+Float32 & Pesos y activaciones Float32 & Modelo de referencia & Fidelidad de comparación y costo de recursos.\\
+PTQ INT8 & Pesos y activaciones INT8 en regiones compatibles & Calibración y conversión & Menor precisión sin adaptar pesos por entrenamiento.\\
+QAT INT8 & Representación INT8 tras exportar & Ajuste con cuantización simulada & Mayor costo de preparación para adaptar la red.\\
+INT16$\times$8 & Pesos INT8 y activaciones INT16 & Calibración y conversión & Mayor resolución de activaciones y exigencias de soporte.\\
+Mixta selectiva & Regiones INT8 y Float32 & Diagnóstico y exclusión selectiva & Preservación de regiones sensibles y costo de conversiones.\\\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Implicancias para clasificación y control}
+En clasificación, el efecto funcional del error numérico depende de si modifica la categoría seleccionada. Los estudios de cuantización de redes convolucionales evalúan precisamente la variación de la exactitud tras convertir pesos y activaciones, y muestran que el resultado depende de la configuración utilizada \cite{krishnamoorthi2018}. Para el clasificador de radiografías interesa, por tanto, comparar las decisiones y las métricas por clase sobre las mismas muestras, además de la discrepancia entre salidas.
+
+La influencia de la separación entre puntuaciones puede explicarse con un caso elemental. Si las puntuaciones de dos clases son $p_1>p_2$, su margen es $m=p_1-p_2$. Si cada puntuación cambia como máximo $\varepsilon$ en valor absoluto, la nueva diferencia es, como mínimo, $m-2\varepsilon$. De esta desigualdad se deduce que $m>2\varepsilon$ es suficiente para conservar la decisión. Un margen menor no implica necesariamente un cambio, pero deja de ofrecer esa garantía. Esta deducción muestra por qué el mismo error puede ser inocuo para una muestra y decisivo para otra próxima a la frontera de clasificación.
+
+En control, la acción calculada modifica el estado que se observará después. Si la política de referencia es $\pi(x)$ y la cuantizada se escribe como $\widehat\pi(x)=\pi(x)+\delta u(x)$, sustituirla en un modelo discreto de la planta conduce a
+\begin{equation}
+x_{k+1}=f\bigl(x_k,\pi(x_k)+\delta u(x_k)\bigr),
+\label{eq:cap3_lazocerrado}
+\end{equation}
+donde $x_k$ es el estado y $f$ describe su evolución entre instantes de muestreo. La perturbación $\delta u(x)$ depende del estado y puede alterar tanto la acción inmediata como las futuras entradas del controlador. La literatura sobre control con información limitada analiza cómo la cuantización y los retardos condicionan la estabilización; una precisión finita puede conducir a una vecindad del equilibrio en lugar de garantizar convergencia exacta \cite{liberzon2009}.
+
+Si la salida del controlador utiliza un cuantizador uniforme de paso $s_u$, distintos valores de acción dentro de un mismo intervalo pueden producir el mismo código. El estado puede variar mientras la acción representable permanece constante; al cruzar un umbral, ésta cambia al nivel vecino. Esto describe una pérdida de resolución de la acción, no una oscilación inevitable. Papadopoulos et al. demuestran, para un integrador discreto con retardo y cuantización en la entrada y en la variable controlada, condiciones de aparición de soluciones periódicas \cite{papadopoulos2018}. Su resultado proporciona un ejemplo formal de la interacción entre cuantización y dinámica, sin constituir una prueba de ese comportamiento para el péndulo estudiado aquí.
+
+En una red con salida Float32, las perturbaciones de capas internas también pueden modificar la acción, pero no debe suponerse que ésta siga una rejilla uniforme de paso único. La interpretación debe corresponder al formato efectivo de cada variante. Asimismo, el recorte numérico del cuantizador y la saturación del actuador son fenómenos distintos: el primero limita valores representables y la segunda limita la acción física aplicable.
+
+La evaluación del controlador debe observar trayectorias, oscilaciones, estabilización, esfuerzo de control y cumplimiento de restricciones. Salamati et al. estudian implementaciones de precisión mixta para MPC explícito robusto y relacionan el error de implementación con el margen de robustez admitido \cite{salamati2019}. Aunque su controlador no corresponde a la política neuronal de esta memoria, ese criterio respalda que la reducción de precisión se examine en función del comportamiento admisible del sistema y no sólo mediante un error medio de regresión.
+
+Para atribuir diferencias a la cuantización deben mantenerse comparables las condiciones iniciales, la dinámica, el período de muestreo y los límites del actuador. Los retardos de cálculo y comunicación se incorporan a la interpretación porque también modifican la evolución en lazo cerrado \cite{liberzon2009}. De este modo, un aumento de oscilaciones o una pérdida de estabilización se contrasta con las condiciones de ejecución, sin identificar automáticamente la cuantización como su única causa.
+
+La selección de estrategia requiere, por tanto, una evaluación sucesiva de fidelidad numérica, desempeño funcional y ejecución efectiva. INT16$\times$8 permite estudiar el beneficio de aumentar la resolución de activaciones; la precisión mixta selectiva permite estudiar el beneficio de preservar regiones sensibles. Las secciones y capítulos posteriores vinculan estas propiedades con los recursos de procesamiento de la STM32N6570-DK y con los resultados de despliegue, para establecer qué alternativas conservan tanto el comportamiento requerido como la representación reducida prevista.

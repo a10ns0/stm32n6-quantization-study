@@ -1,0 +1,9 @@
+============================================================
+CRITERIO ORIGINAL DE LOS AUTORES
+============================================================
+Restricción global |y| < 0.4 m: True
+Restricción de control |u| <= 9 V: True
+Últimas 10: |y| < 0.1 m y |e_alpha| < 0.17 rad: True
+ÉXITO: True
+Inferencia [ms]: media=0.3370, p99=0.3460, máx=0.3480
+RTT [ms]: media=5.0780, p99=5.1769, máx=5.2427

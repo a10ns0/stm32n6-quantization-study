@@ -1,0 +1,16 @@
+Unnamed: 0,op_name,tensor_name,layer,scale,rmse,rmse_scale
+7,TANH,sequential_1/dense_3_1/Tanh,dense_3,0.007812,0.003864,0.494546
+9,TANH,sequential_1/dense_4_1/Tanh,dense_4,0.007812,0.003424,0.438299
+5,TANH,sequential_1/dense_2_1/Tanh,dense_2,0.007812,0.003263,0.417686
+11,TANH,sequential_1/dense_5_1/Tanh,dense_5,0.007812,0.002892,0.370185
+6,FULLY_CONNECTED,sequential_1/dense_3_1/MatMul;sequential_1/den...,dense_3,0.154718,0.052247,0.337691
+10,FULLY_CONNECTED,sequential_1/dense_5_1/MatMul;sequential_1/den...,dense_5,0.129355,0.042478,0.328388
+14,FULLY_CONNECTED,StatefulPartitionedCall_1:0,output_u,0.008099,0.00264,0.325944
+4,FULLY_CONNECTED,sequential_1/dense_2_1/MatMul;sequential_1/den...,dense_2,0.0871,0.028374,0.325767
+3,TANH,sequential_1/dense_1_1/Tanh,dense_1,0.007812,0.002494,0.31926
+8,FULLY_CONNECTED,sequential_1/dense_4_1/MatMul;sequential_1/den...,dense_4,0.170434,0.054274,0.318447
+12,FULLY_CONNECTED,sequential_1/dense_6_1/MatMul;sequential_1/den...,dense_6,0.055973,0.017206,0.307394
+2,FULLY_CONNECTED,sequential_1/dense_1_1/MatMul;sequential_1/den...,dense_1,0.089268,0.025834,0.289398
+0,FULLY_CONNECTED,sequential_1/dense_0_1/MatMul;sequential_1/den...,dense_0,0.045259,0.010642,0.23513
+13,TANH,sequential_1/dense_6_1/Tanh,dense_6,0.007812,0.001721,0.220266
+1,TANH,sequential_1/dense_0_1/Tanh,dense_0,0.007812,0.001622,0.207573

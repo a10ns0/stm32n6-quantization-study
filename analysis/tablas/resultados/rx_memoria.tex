@@ -1,0 +1,16 @@
+\begin{table}[H]
+\centering\small
+\caption{Memoria de red informada durante la generación para radiografías.}\label{tab:rx_memoria}
+\begin{tabularx}{\linewidth}{Yrr}\toprule
+Variante / ruta & Pesos (B) & Activaciones (B)\\\midrule
+INT8 / M55 & 30\,832 & 92\,496\\
+INT8 / Neural-ART & 30\,689 & 112\,500\\
+INT16x8 / M55 & 90\,800 & 533\,652\\
+INT16x8 / Neural-ART & 22\,753 & 180\,000\\
+Mixta-5 / M55 & 26\,000 & 533\,652\\
+Mixta-5 / Neural-ART & 26\,289 & 781\,536\\
+QAT / M55 & 22\,828 & 35\,704\\
+QAT / Neural-ART & 22\,704 & 55\,368\\
+\bottomrule\end{tabularx}
+\fuente{primer resumen de \texttt{generate}; incluye búferes de entrada/salida en activaciones}
+\end{table}

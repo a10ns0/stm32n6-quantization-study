@@ -1,0 +1,12 @@
+op_name,tensor_idx,num_elements,stddev,mean_error,max_abs_error,mean_squared_error,scale,zero_point,tensor_name
+CONV_2D,30,131424.0,0.0011232444,-0.000640075,0.005635379,1.6758594e-06,0.002727586,-128,sequential_1_1/conv2d_4_1/Relu;sequential_1_1/conv2d_4_1/BiasAdd;sequential_1_1/conv2d_4_1/convolution;sequential_1_1/conv2d_4_1/Squeeze1
+MAX_POOL_2D,34,32856.0,0.0,0.0,0.0,0.0,0.002727586,-128,sequential_1_1/max_pooling2d_3_1/MaxPool2d
+CONV_2D,38,31104.0,0.0022179699,0.0002577439,0.0072834995,4.9898326e-06,0.0069052055,-128,sequential_1_1/conv2d_5_1/Relu;sequential_1_1/conv2d_5_1/BiasAdd;sequential_1_1/conv2d_5_1/convolution;sequential_1_1/conv2d_5_1/Squeeze1
+MAX_POOL_2D,42,7776.0,0.0,0.0,0.0,0.0,0.0069052055,-128,sequential_1_1/max_pooling2d_4_1/MaxPool2d
+CONV_2D,46,6936.0,0.001848902,-0.00077066914,0.007078258,4.036717e-06,0.004906821,-128,sequential_1_1/conv2d_6_1/Relu;sequential_1_1/conv2d_6_1/BiasAdd;sequential_1_1/conv2d_6_1/convolution;sequential_1_1/conv2d_6_1/Squeeze1
+MAX_POOL_2D,50,1734.0,0.0,0.0,0.0,0.0,0.004906821,-128,sequential_1_1/max_pooling2d_5_1/MaxPool2d
+CONV_2D,54,1350.0,0.0016260503,3.6587746e-05,0.0049685678,2.6493617e-06,0.0050696703,-128,sequential_1_1/conv2d_7_1/Relu;sequential_1_1/conv2d_7_1/BiasAdd;sequential_1_1/conv2d_7_1/convolution;sequential_1_1/conv2d_7_1/Squeeze1
+RESHAPE,61,1350.0,0.0,0.0,0.0,0.0,0.0050696703,-128,sequential_1_1/flatten_1_1/Reshape
+FULLY_CONNECTED,65,16.0,0.004364254,-0.00035279777,0.009950142,2.1160557e-05,0.017473383,-128,sequential_1_1/dense_2_1/MatMul;sequential_1_1/dense_2_1/Relu;sequential_1_1/dense_2_1/BiasAdd
+FULLY_CONNECTED,69,2.0,0.0065659033,0.010664822,0.017871127,0.00024394471,0.038899165,25,sequential_1_1/dense_3_1/MatMul;sequential_1_1/dense_3_1/BiasAdd
+LOGISTIC,73,2.0,0.0006241305,-7.2742173e-06,0.0012758673,1.2235379e-06,0.00390625,-128,StatefulPartitionedCall_1:0

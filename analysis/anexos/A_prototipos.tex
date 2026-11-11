@@ -1,0 +1,20 @@
+\chapter{Antecedentes y prototipos de control}
+\section{MPC simple y validación del flujo}
+El prototipo inicial utilizó una tarea de control simplificada para verificar generación de datos, aprendizaje de una ley de control y conversión a formatos cuantizados. El informe de alternativa seleccionada describe una red $1$--$16$--$16$--$1$ con activaciones ReLU en las capas ocultas \cite{alternativa2026}. Su función en la memoria es mostrar la construcción del flujo, sin presentarlo como un tercer caso central.
+
+\section{Péndulo con experto LQR}
+Una etapa posterior generó aproximadamente 5000 pares estado--acción mediante un experto LQR. Ese experimento permitió observar sensibilidad a la precisión numérica, pero no equivale al MPC no lineal del cartpole final. Sus parámetros, período de muestreo, unidades de entrada y arquitectura deben conservarse separados.
+
+\begin{table}[H]\centering\small
+\caption{RMSE consignado en el prototipo LQR, no en el MPC final.}
+\begin{tabular}{lr}\toprule Variante & RMSE consignado\\\midrule
+PTQ INT8 & 0,0628\\
+QAT INT8 & 0,2661\\
+INT16x8 & 0,0287\\\bottomrule
+\end{tabular}
+\fuente{informe de alternativa seleccionada; verificar escala y unidad en el cuaderno original}
+\end{table}
+\notaeditorial{Estos valores se incluyen sólo para preservar la historia del proyecto. No se usan en la decisión del caso MPC final ni se combinan con sus tiempos HIL. La afirmación antigua de que QAT es matemáticamente redundante no se conserva: el resultado sólo corresponde a la configuración evaluada.}
+
+\section{Evolución del alcance}
+El proyecto evolucionó desde la implementación de una política de control hacia una metodología para evaluar cuantización en dos aplicaciones. Los informes de resumen y estado del arte documentan el planteamiento inicial \cite{resumen2026,estado2026}. El alcance actualizado mantiene el MPC como caso de estudio y agrega clasificación de radiografías para contrastar sensibilidad funcional y patrones de cómputo.

@@ -1,0 +1,516 @@
+Generate Project
+Copying previous project files from C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1 to C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\generate\backup
+Downloading board template for STM32CubeIDE/NUCLEO-L476RG...
+No board template found for STM32CubeIDE/NUCLEO-L476RG. Proceeding with project generation...
+Calculating memory footprint...
+Generating project for board NUCLEO-L476RG...
+Executing process: C:\Users\Alonso\AppData\Local\Programs\STM32CubeMX\jre\bin\java.exe -jar C:\Users\Alonso\AppData\Local\Programs\STM32CubeMX\STM32CubeMX.exe -q -s
+Executed command: config load "C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\NUCLEO-L476RG.ioc"
+Executed command: project toolchain "STM32CubeIDE"
+Executed command: project set heapsize 0x800
+Executed command: project set stacksize 0x2000
+Executed command: set gpio parameters PA3 GPIO_PuPd GPIO_PULLUP
+Executed command: set pin PA3 USART2_RX
+Executed command: set pin PA2 USART2_TX
+Executed command: set mode USART2 Asynchronous
+Executed command: config save
+Executed command: set ip parameters USART2 BaudRate 115200
+Executed command: set gpio parameters PA3 GPIO_PuPd GPIO_PULLUP
+C:\Users\Alonso\STM32Cube\Repository\STM32Cube_FW_L4_V1.18.2 already exists... Skipping installation...
+Generate project and exit.
+ If stuck here, please check STM32CubeMX opened dialog or Firmware Package.
+Executed command: config save
+Executed command: project toolchainlocation "."
+Executed command: project generate
+Adjusting memory area RAM for pool RAM perfect match of 98304 bytes
+Adjusting memory area RAM2 for pool RAM2 perfect match of 32768 bytes
+Generating code...
+>>> C:\ST\STEdgeAI\4.0\Utilities\windows\stedgeai.exe generate --model C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\modelos\CNN_QAT_INT8.tflite --valinput C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\radiografias_val_8_st.npz --mode target --optimization balanced --name network --verbosity 1 --c-api st-ai --target stm32l4 --workspace C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\st_ai_ws --output C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\st_ai_output --memory-pool C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\mempools.json
+ST Edge AI Core v4.0.1-20581 7ed50de05
+
+Creating c (debug) info json file C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\st_ai_output\network_c_info.json
+
+ Exec/report summary (generate)
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ model file         :   C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\modelos\CNN_QAT_INT8.tflite                
+ type               :   tflite                                                                                                                                                       
+ c_name             :   network                                                                                                                                                      
+ compression        :   lossless                                                                                                                                                     
+ options            :   allocate-inputs, allocate-outputs, multi-heaps, use-lite-runtime, use-st-ai                                                                                  
+ optimization       :   balanced                                                                                                                                                     
+ target/series      :   stm32l4                                                                                                                                                      
+ memory pool        :   C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\mempools.json                                                             
+ workspace dir      :   C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\st_ai_ws                                                                  
+ output dir         :   C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\st_ai_output                                                              
+ vinput files       :   C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\radiografias_val_8_st.npz   
+ model_fmt          :   ss/sa per channel                                                                                                                                            
+ model_name         :   CNN_QAT_INT8                                                                                                                                                 
+ model_hash         :   0xa51e9164608a6653e553be25592d8fdc                                                                                                                           
+ params #           :   22,700 items (22.29 KiB)                                                                                                                                     
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ input 1/1          :   'serving_default_input_10', int8(1x150x150x1), 21.97 KBytes, QLinear(0.003921569,-128,int8), activations                                                     
+ output 1/1         :   'nl_10', int8(1x2), 2 Bytes, QLinear(0.003906250,-128,int8), activations                                                                                     
+ macc               :   3,671,846                                                                                                                                                    
+ weights (ro)       :   22,828 B (22.29 KiB) (1 segment) / -67,972(-74.9%) vs float model                                                                                            
+ activations (rw)   :   57,360 B (56.02 KiB) (1 segment) *                                                                                                                           
+ ram (total)        :   57,360 B (56.02 KiB) = 57,360 + 0 + 0                                                                                                                        
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ (*) 'input'/'output' buffers are allocated in the activations buffer
+  Memory-pools summary (activations/ domain)
+  --------------- -------- ------------------------ --------- 
+  name            id       used                     buffer#   
+  --------------- -------- ------------------------ --------- 
+  RAM             0        56.02 KiB (58.3%)        22        
+  RAM2            unused   -                        0         
+  weights_array   2        22.29 KiB (2282800.0%)   12        
+  --------------- -------- ------------------------ --------- 
+  Warning: ['RAM2'] memory pool is not used
+
+Computing AI RT data/code size (target=stm32l4)..
+
+ Requested memory size by section - "stm32l4" target
+ ------------------------------ -------- -------- ------- --------
+
+ module                             text   rodata    data      bss
+ ------------------------------ -------- -------- ------- --------
+ NetworkRuntime1201_CM4_GCC.a     12,756        0       0        0
+ network.o                         2,022      799   2,844      120
+
+ lib (toolchain)*                  1,652        0       0        0
+ ------------------------------ -------- -------- ------- --------
+ RT total**                       16,430      799   2,844      120
+ ------------------------------ -------- -------- ------- --------
+ weights                               0   22,832       0        0
+
+ activations                           0        0       0   57,360
+ states                                0        0       0        0
+ io                                    0        0       0        0
+ ------------------------------ -------- -------- ------- --------
+ TOTAL                            16,430   23,631   2,844   57,480
+ ------------------------------ -------- -------- ------- --------
+
+ *  toolchain objects (libm/libgcc*)
+ ** RT AI runtime objects (kernels+infrastructure)
+  Summary - "stm32l4" target
+  --------------------------------------------------
+               FLASH (ro)      %*   RAM (rw)      %
+
+  --------------------------------------------------
+  RT total         20,073   46.8%      2,964   4.9%
+  --------------------------------------------------
+  TOTAL            42,905             60,324
+  --------------------------------------------------
+  *  rt/total
+
+ Generated files (5)
+ -------------------------------------------------------------------------------------------------------------------
+ C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\st_ai_output\network_data.h
+ C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\st_ai_output\network_data.c
+ C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\st_ai_output\network.h
+
+ C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\st_ai_output\network.c
+ C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\st_ai_output\network_details.h
+Creating txt report file C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\st_ai_output\network_generate_report.txt
+
+elapsed time (GENERATE): 8.019s
+
+Compiling template bsp_ai.h.hbs...
+Compiling template app_config.h.hbs...
+Compiling template user_init.h.hbs...
+Compiling template user_init.c.hbs...
+Compiling template app_x-cube-ai.h.hbs...
+Compiling template app_x-cube-ai.c.hbs...
+Compiling template weights.h.hbs...
+Compiling template weights.c.hbs...
+Removing static from USART Init in main.c
+Adding include line #include "app_x-cube-ai.h" to main.c
+Adding init function call STM32CubeAI_Studio_AI_Init(); to main.c
+Adding process function call STM32CubeAI_Studio_AI_Process(); to main.c
+Generate project done
+Create.
+
+Opening 'NUCLEO-L476RG'.
+
+16:48:11 **** Build of configuration Release for project NUCLEO-L476RG ****
+
+make -j12 all 
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Middlewares/ST/AI/Validation/Src/aiPbIO.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/ST/AI/Validation/Src/aiPbIO.d" -MT"Middlewares/ST/AI/Validation/Src/aiPbIO.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Validation/Src/aiPbIO.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Middlewares/ST/AI/Validation/Src/aiPbMemRWServices.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/ST/AI/Validation/Src/aiPbMemRWServices.d" -MT"Middlewares/ST/AI/Validation/Src/aiPbMemRWServices.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Validation/Src/aiPbMemRWServices.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Middlewares/ST/AI/Validation/Src/aiPbMgr.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/ST/AI/Validation/Src/aiPbMgr.d" -MT"Middlewares/ST/AI/Validation/Src/aiPbMgr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Validation/Src/aiPbMgr.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Middlewares/ST/AI/Validation/Src/aiValidation_ST_AI.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/ST/AI/Validation/Src/aiValidation_ST_AI.d" -MT"Middlewares/ST/AI/Validation/Src/aiValidation_ST_AI.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Validation/Src/aiValidation_ST_AI.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Middlewares/ST/AI/Validation/Src/pb_common.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/ST/AI/Validation/Src/pb_common.d" -MT"Middlewares/ST/AI/Validation/Src/pb_common.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Validation/Src/pb_common.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Middlewares/ST/AI/Validation/Src/pb_decode.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/ST/AI/Validation/Src/pb_decode.d" -MT"Middlewares/ST/AI/Validation/Src/pb_decode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Validation/Src/pb_decode.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Middlewares/ST/AI/Validation/Src/pb_encode.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/ST/AI/Validation/Src/pb_encode.d" -MT"Middlewares/ST/AI/Validation/Src/pb_encode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Validation/Src/pb_encode.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Middlewares/ST/AI/Validation/Src/stm32msg.pb.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/ST/AI/Validation/Src/stm32msg.pb.d" -MT"Middlewares/ST/AI/Validation/Src/stm32msg.pb.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Validation/Src/stm32msg.pb.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Middlewares/ST/AI/Misc/Src/aiTestHelper_ST_AI.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/ST/AI/Misc/Src/aiTestHelper_ST_AI.d" -MT"Middlewares/ST/AI/Misc/Src/aiTestHelper_ST_AI.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Misc/Src/aiTestHelper_ST_AI.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Middlewares/ST/AI/Misc/Src/aiTestUtility.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/ST/AI/Misc/Src/aiTestUtility.d" -MT"Middlewares/ST/AI/Misc/Src/aiTestUtility.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Misc/Src/aiTestUtility.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Middlewares/ST/AI/Misc/Src/ai_device_adaptor.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/ST/AI/Misc/Src/ai_device_adaptor.d" -MT"Middlewares/ST/AI/Misc/Src/ai_device_adaptor.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Misc/Src/ai_device_adaptor.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Middlewares/ST/AI/Misc/Src/lc_print.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/ST/AI/Misc/Src/lc_print.d" -MT"Middlewares/ST/AI/Misc/Src/lc_print.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Misc/Src/lc_print.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Middlewares/ST/AI/Misc/Src/syscalls.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Middlewares/ST/AI/Misc/Src/syscalls.d" -MT"Middlewares/ST/AI/Misc/Src/syscalls.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Middlewares/ST/AI/Misc/Src/syscalls.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal.d" -MT"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_cortex.d" -MT"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_cortex.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_cortex.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_dma.d" -MT"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_dma.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_dma.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma_ex.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_dma_ex.d" -MT"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_dma_ex.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_dma_ex.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_exti.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_exti.d" -MT"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_exti.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_exti.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_flash.d" -MT"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_flash.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_flash.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_flash_ex.d" -MT"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_flash_ex.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_flash_ex.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ramfunc.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_flash_ramfunc.d" -MT"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_flash_ramfunc.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_flash_ramfunc.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_gpio.d" -MT"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_gpio.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_gpio.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_i2c.d" -MT"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_i2c.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_i2c.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c_ex.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_i2c_ex.d" -MT"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_i2c_ex.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_i2c_ex.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_pwr.d" -MT"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_pwr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_pwr.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_pwr_ex.d" -MT"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_pwr_ex.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_pwr_ex.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_rcc.d" -MT"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_rcc.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_rcc.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_rcc_ex.d" -MT"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_rcc_ex.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_rcc_ex.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_uart.d" -MT"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_uart.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_uart.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart_ex.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_uart_ex.d" -MT"Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_uart_ex.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32L4xx_HAL_Driver/stm32l4xx_hal_uart_ex.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Core/Src/system_stm32l4xx.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/CMSIS/system_stm32l4xx.d" -MT"Drivers/CMSIS/system_stm32l4xx.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/CMSIS/system_stm32l4xx.o"
+
+arm-none-eabi-gcc -mcpu=cortex-m4 -c -x assembler-with-cpp -MMD -MP -MF"Application/User/Startup/startup_stm32l476rgtx.d" -MT"Application/User/Startup/startup_stm32l476rgtx.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Application/User/Startup/startup_stm32l476rgtx.o" "../Application/User/Startup/startup_stm32l476rgtx.s"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Application/User/Core/main.d" -MT"Application/User/Core/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Application/User/Core/main.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Core/Src/stm32l4xx_hal_msp.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Application/User/Core/stm32l4xx_hal_msp.d" -MT"Application/User/Core/stm32l4xx_hal_msp.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Application/User/Core/stm32l4xx_hal_msp.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/Core/Src/stm32l4xx_it.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Application/User/Core/stm32l4xx_it.d" -MT"Application/User/Core/stm32l4xx_it.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Application/User/Core/stm32l4xx_it.o"
+
+arm-none-eabi-gcc "../Application/User/Core/syscalls.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Application/User/Core/syscalls.d" -MT"Application/User/Core/syscalls.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Application/User/Core/syscalls.o"
+
+arm-none-eabi-gcc "../Application/User/Core/sysmem.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Application/User/Core/sysmem.d" -MT"Application/User/Core/sysmem.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Application/User/Core/sysmem.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/AI/App/app_x-cube-ai.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"AI/App/app_x-cube-ai.d" -MT"AI/App/app_x-cube-ai.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "AI/App/app_x-cube-ai.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/AI/App/network.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"AI/App/network.d" -MT"AI/App/network.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "AI/App/network.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/AI/App/network_data.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"AI/App/network_data.d" -MT"AI/App/network_data.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "AI/App/network_data.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/AI/App/network_weights.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"AI/App/network_weights.d" -MT"AI/App/network_weights.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "AI/App/network_weights.o"
+
+arm-none-eabi-gcc "C:/Users/Alonso/.stm32cubeaistudio/workspace/Clasificador_NUCLEO/.ai/run/run-1/AI/App/user_init.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -DHAVE_NETWORK_INFO -c -I../../Core/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc -I../../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../../Drivers/CMSIS/Include -I../../Middlewares/ST/AI/Inc -I../../Middlewares/ST/AI/Misc/Inc -I../../Middlewares/ST/AI/Validation/Inc -I../../Middlewares/ST/AI/Misc/Src -I../../Middlewares/ST/AI/Validation/Src -I../../AI/App -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"AI/App/user_init.d" -MT"AI/App/user_init.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "AI/App/user_init.o"
+
+arm-none-eabi-gcc -o "NUCLEO-L476RG.elf" @"objects.list"  -l:NetworkRuntime1201_CM4_GCC.a -mcpu=cortex-m4 -T"C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\STM32CubeIDE\STM32L476RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="NUCLEO-L476RG.map" -Wl,--gc-sections -static -L../../Middlewares/ST/AI/Lib --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+
+Finished building target: NUCLEO-L476RG.elf
+
+arm-none-eabi-size  NUCLEO-L476RG.elf 
+
+arm-none-eabi-objdump -h -S NUCLEO-L476RG.elf  > "NUCLEO-L476RG.list"
+
+   text	   data	    bss	    dec	    hex	filename
+
+  70136	   3236	  69472	 142844	  22dfc	NUCLEO-L476RG.elf
+
+Finished building: default.size.stdout
+
+Finished building: NUCLEO-L476RG.list
+
+
+16:48:17 Build Finished. 0 errors, 0 warnings. (took 6s.220ms)
+
+
+Saving workspace.
+
+      -------------------------------------------------------------------
+                       STM32CubeProgrammer v2.23.0                  
+
+      -------------------------------------------------------------------
+
+
+ST-LINK SN  : 066BFF505250827867073552
+
+ST-LINK FW  : V2J45M31
+
+Board       : NUCLEO-L476RG
+
+Voltage     : 3.26V
+
+SWD freq    : 4000 KHz
+Connect mode: Under Reset
+
+Reset mode  : Hardware reset
+
+Device ID   : 0x415
+
+Revision ID : Rev 4
+
+Device name : STM32L4x1/STM32L475xx/STM32L476xx/STM32L486xx
+
+NVM size    : 1 MBytes
+
+Device type : MCU
+Device CPU  : Cortex-M4
+
+BL Version  : 0x92
+
+Debug in Low Power mode enabled
+
+
+
+Opening and parsing file: NUCLEO-L476RG.elf
+
+
+
+Memory Programming ...
+  File          : NUCLEO-L476RG.elf
+
+  Size          : 71.66 KB 
+  Address       : 0x08000000
+
+
+
+Erasing memory corresponding to segment 0:
+
+Erasing internal memory sectors [0 35]
+
+Download in Progress:
+
+
+
+File download complete
+Time elapsed during download operation: 00:00:02.641
+
+
+RUNNING Program ... 
+  Address:      : 0x8000000
+
+Application is running, Please Hold on...
+Start operation achieved successfully
+
+Flashing completed
+Device is ready on port COM3
+>>> C:\ST\STEdgeAI\4.0\Utilities\windows\stedgeai.exe validate --model C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\modelos\CNN_QAT_INT8.tflite --valinput C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\radiografias_val_8_st.npz --mode target --optimization balanced --name network --verbosity 1 --c-api st-ai --target stm32l4 --workspace C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\st_ai_ws --output C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\st_ai_output --memory-pool C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\mempools.json --desc serial:COM3:115200 --save-csv
+ST Edge AI Core v4.0.1-20581 7ed50de05
+
+Setting validation data...
+
+ loading file: C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\radiografias_val_8_st.npz
+  available entries: ['x_test', 'y_test'] selector="None"
+
+  selected entries: x_test/y_test
+
+   I[1]: (8, 150, 150, 1)/float32, min/max=[0.000000, 0.974623], mean/std=[0.496833, 0.252869]
+
+    c/I[1] conversion [Q(0.00392157,-128)]-> (8, 150, 150, 1)/int8, min/max=[-128, 121], mean/std=[-1.308400, 64.483796]
+
+    m/I[1] conversion [Q(0.00392157,-128)]-> (8, 150, 150, 1)/int8, min/max=[-128, 121], mean/std=[-1.308400, 64.483796]
+   O[1]: (8, 1, 1, 2)/float32, min/max=[0.000000, 1.000000], mean/std=[0.500000, 0.500000]
+
+Creating c (debug) info json file C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\st_ai_output\network_c_info_valid.json
+
+ Exec/report summary (validate)
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ model file         :   C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\modelos\CNN_QAT_INT8.tflite                
+ type               :   tflite                                                                                                                                                       
+ c_name             :   network                                                                                                                                                      
+ compression        :   lossless                                                                                                                                                     
+ options            :   allocate-inputs, allocate-outputs, multi-heaps, use-lite-runtime, use-st-ai                                                                                  
+ optimization       :   balanced                                                                                                                                                     
+ target/series      :   stm32l4                                                                                                                                                      
+ memory pool        :   C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\mempools.json                                                             
+ workspace dir      :   C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\st_ai_ws                                                                  
+ output dir         :   C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\st_ai_output                                                              
+ vinput files       :   C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\radiografias_val_8_st.npz   
+ model_fmt          :   ss/sa per channel                                                                                                                                            
+ model_name         :   CNN_QAT_INT8                                                                                                                                                 
+ model_hash         :   0xa51e9164608a6653e553be25592d8fdc                                                                                                                           
+ params #           :   22,700 items (22.29 KiB)                                                                                                                                     
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ input 1/1          :   'serving_default_input_10', int8(1x150x150x1), 21.97 KBytes, QLinear(0.003921569,-128,int8), activations                                                     
+ output 1/1         :   'nl_10', int8(1x2), 2 Bytes, QLinear(0.003906250,-128,int8), activations                                                                                     
+ macc               :   3,671,846                                                                                                                                                    
+ weights (ro)       :   22,828 B (22.29 KiB) (1 segment) / -67,972(-74.9%) vs float model                                                                                            
+ activations (rw)   :   57,360 B (56.02 KiB) (1 segment) *                                                                                                                           
+ ram (total)        :   57,360 B (56.02 KiB) = 57,360 + 0 + 0                                                                                                                        
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ (*) 'input'/'output' buffers are allocated in the activations buffer
+  Memory-pools summary (activations/ domain)
+  --------------- -------- ------------------------ --------- 
+  name            id       used                     buffer#   
+  --------------- -------- ------------------------ --------- 
+  RAM             0        56.02 KiB (58.3%)        22        
+  RAM2            unused   -                        0         
+  weights_array   2        22.29 KiB (2282800.0%)   12        
+  --------------- -------- ------------------------ --------- 
+  Warning: ['RAM2'] memory pool is not used
+
+Running the TFlite model...
+
+INFO: Created TensorFlow Lite XNNPACK delegate for CPU.
+
+Running the ST.AI c-model (AI RUNNER)...(name=network, mode=TARGET)
+
+ Proto-buffer driver v2.1 (msg v3.2) (Serial driver v1.0 - COM3:115200) ['network']
+
+  Summary 'network' - ['network']
+  ------------------------------------------------------------------------------------------------------
+  I[1/1] 'input_1'    :   int8[1,150,150,1], 22500 Bytes, QLinear(0.003921569,-128,int8), activations
+
+  O[1/1] 'output_1'   :   int8[1,2], 2 Bytes, QLinear(0.003906250,-128,int8), activations
+  n_nodes             :   9
+  activations         :   57360
+  weights             :   22828
+  macc                :   3671846
+  hash                :   0xa51e9164608a6653e553be25592d8fdc
+  compile_datetime    :   Oct 30 2026 16:48:16
+  ------------------------------------------------------------------------------------------------------
+  protocol            :   Proto-buffer driver v2.1 (msg v3.2) (Serial driver v1.0 - COM3:115200)
+
+  tools               :   ST.AI (st-ai api) v4.0.1
+  runtime lib         :   v12.0.1-92efada9 compiled with GCC 13.3.1 (GCC)
+  capabilities        :   IO_ONLY, PER_LAYER, PER_LAYER_WITH_DATA
+  device.desc         :   stm32 family - 0x415 - STM32L4x6xx @80/80MHz
+  device.attrs        :   fpu,art_lat=4,art_prefetch,art_icache,art_dcache
+  ------------------------------------------------------------------------------------------------------
+
+  ST.AI Profiling results v2.0 - "network"
+  ----------------------------------------------------------------------------------
+
+  nb sample(s)                   :   8
+  duration                       :   289.351 ms by sample (289.313/289.395/0.031)
+  macc                           :   3671846
+  cycles/MACC                    :   6.30
+
+  CPU cycles                     :   [23,148,043]
+  network initialize time (ms)   :   0.007
+  ----------------------------------------------------------------------------------
+
+   Inference time per node
+   --------------------------------------------------------------------------------------------------------------
+
+   c_id    m_id   type                                 dur (ms)        %     cumul  CPU cycles       name
+   --------------------------------------------------------------------------------------------------------------
+   0       1      Conv2dPool (0x109) - Conv2D           184.209   63.66%    63.66%  [ 14,736,734 ]   ai_node_0
+
+   1       3      Conv2dPool (0x109) - Conv2D            81.987   28.33%    92.00%  [  6,558,966 ]   ai_node_1
+   2       5      Conv2dPool (0x109) - Conv2D            19.254    6.65%    98.65%  [  1,540,350 ]   ai_node_2
+   3       6      Conv2D (0x103) - Conv2D                 2.910    1.01%    99.66%  [    232,768 ]   ai_node_3
+   4       6      NL (0x107) - Nonlinearity (relu)        0.154    0.05%    99.71%  [     12,354 ]   ai_node_4
+   5       8      Dense (0x104) - Dense                   0.812    0.28%    99.99%  [     64,920 ]   ai_node_5
+   6       8      NL (0x107) - Nonlinearity (relu)        0.004    0.00%    99.99%  [        336 ]   ai_node_6
+   7       9      Dense (0x104) - Dense                   0.018    0.01%   100.00%  [      1,404 ]   ai_node_7
+   8       10     NL (0x107) - Nonlinearity (lut)         0.003    0.00%   100.00%  [        211 ]   ai_node_8
+
+   --------------------------------------------------------------------------------------------------------------
+   total                                                289.351                     [ 23,148,043 ]
+   --------------------------------------------------------------------------------------------------------------
+
+   Statistic per tensor
+
+   ---------------------------------------------------------------------------------
+   tensor   #   type[shape]:size           min   max      mean      std  name
+   ---------------------------------------------------------------------------------
+   I.0      8   i8[1,150,150,1]:22500     -128   121    -1.308   64.484  input_1
+   O.0      8   i8[1,2]:2                 -125    52   -64.250   51.544  output_1
+
+   ---------------------------------------------------------------------------------
+
+Saving validation data...
+
+ output directory: C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\st_ai_output
+
+ creating C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\st_ai_output\network_val_io.npz
+
+ m_outputs_1: (8, 2)/int8, min/max=[-125, 52], mean/std=[-64.250000, 51.544277], nl_10
+
+ c_outputs_1: (8, 1, 1, 2)/int8, min/max=[-125, 52], mean/std=[-64.250000, 51.544277], scale=0.003906250 zp=-128, nl_10
+
+Computing the metrics...
+
+ Accuracy report #1 for the generated TARGET C-model
+
+ ----------------------------------------------------------------------------------------------------
+ notes: - data type is different: r/float32 instead p/int8
+        - p/int8 data are dequantized with s=0.00390625 zp=-128
+        - computed against the provided ground truth values
+        - 8 samples (2 items per sample)
+
+  acc=75.00% rmse=0.486651570 mae=0.383300781 l2r=1.519655466 mean=0.250977 std=0.430616 snr=3.245337 nse=0.111889 cos=0.807540
+  Confusion matrix (axis=-1) - 2 classes (8 samples)
+  ------------------
+
+  C0        2    2
+  C1        .    4
+
+ Accuracy report #1 for the reference model
+
+ ----------------------------------------------------------------------------------------------------
+ notes: - data type is different: r/float32 instead p/int8
+        - p/int8 data are dequantized with s=0.00390625 zp=-128
+        - computed against the provided ground truth values
+
+        - 8 samples (2 items per sample)
+  acc=75.00% rmse=0.486651570 mae=0.383300781 l2r=1.519655466 mean=0.250977 std=0.430616 snr=3.245337 nse=0.111889 cos=0.807540
+
+  Confusion matrix (axis=-1) - 2 classes (8 samples)
+  ------------------
+  C0        2    2
+  C1        .    4
+
+ Cross accuracy report #1 (reference vs C-model)
+
+ ----------------------------------------------------------------------------------------------------
+ notes: - r/int8 data are dequantized with s=0.00390625 zp=-128
+        - p/int8 data are dequantized with s=0.00390625 zp=-128
+        - ACC metric is not computed ("--classifier" option can be used to force it)
+
+        - the output of the reference model is used as ground truth/reference value
+        - 8 samples (2 items per sample)
+
+  acc=n.a. rmse=0.000000000 mae=0.000000000 l2r=0.000000000 mean=0.000000 std=0.000000 snr=inf nse=1.000000 cos=1.000000
+
+ Evaluation report (summary)
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ Output              acc      rmse          mae           l2r           mean       std        snr        nse        cos        tensor
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ TARGET c-model #1   75.00%   0.486651570   0.383300781   1.519655466   0.250977   0.430616   3.245337   0.111889   0.807540   'nl_10', 8 x int8(1x2), m_id=[10]
+ original model #1   75.00%   0.486651570   0.383300781   1.519655466   0.250977   0.430616   3.245337   0.111889   0.807540   'nl_10', 8 x int8(1x2), m_id=[10]
+
+ X-cross #1          n.a.     0.000000000   0.000000000   0.000000000   0.000000   0.000000   inf        1.000000   1.000000   'nl_10', 8 x int8(1x2), m_id=[10]
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  acc  : Accuracy (class, axis=-1)
+  rmse : Root Mean Squared Error
+  mae  : Mean Absolute Error
+
+  l2r  : L2 relative error
+  mean : Mean error
+  std  : Standard deviation error
+  snr  : Signal-to-Noise Ratio (SNR), bigger is better
+  nse  : Nash-Sutcliffe efficiency criteria, bigger is better, best=1, range=(-inf, 1]
+  cos  : COsine Similarity, bigger is better, best=1, range=(0, 1]
+
+Creating txt report file C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_NUCLEO\.ai\run\run-1\.ai\st_ai_output\network_validate_report.txt
+
+elapsed time (VALIDATE): 37.374s
+

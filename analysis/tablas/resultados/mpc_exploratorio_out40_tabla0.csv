@@ -1,0 +1,2 @@
+Unnamed: 0,RMSE_x,RMSE_theta,RMSE_xdot,RMSE_thetadot,RMSE_u,MAE_u,TV_u_NN,norma_final_NN,t_est_NN_s
+máximo,0.035364,0.024335,0.182211,0.278471,1.488755,0.876435,64.383564,0.358645,3.68

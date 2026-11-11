@@ -1,0 +1,143 @@
+\chapter{Evidencia complementaria de instrucciones compiladas}\label{anexo:instrucciones}
+\input{tablas/resultados/perfil}
+\resfig{perfil_hw_sw.pdf}{Distribución temporal de hardware, software y control software en las implementaciones Neural-ART perfiladas.}{fig:res_perfil}{porcentajes informados por ST; no son porcentajes de operadores}{1}
+
+La comparación conjunta identifica comportamientos diferentes por aplicación y por partición. En radiografías INT8, la fracción hardware es 66,6\% y la reducción temporal respecto de M55 es elevada. En el MPC INT8, la fracción hardware alcanza 98,7\%, aunque la mejora temporal relativa es menor por el distinto costo y tamaño de la red. Por ello, un porcentaje hardware no se traduce en una razón universal de aceleración.
+
+La precisión mixta muestra el efecto contrario: las regiones flotantes y la coordinación entre bloques limitan el aprovechamiento del acelerador. En radiografías domina el tiempo de las convoluciones software; en MPC se acumulan capas densas representadas por operaciones software, activaciones y conversiones. Los perfiles sustentan esta interpretación en las implementaciones medidas, sin atribuir todo el costo a la transferencia de datos o al cambio de motor.
+\FloatBarrier
+\subsection{Alcance de la auditoría de instrucciones}\label{sec:auditoria_helium}
+Se revisaron los 17 archivos \texttt{.list} disponibles en los directorios \path{CasoRadiografia/InstruccionesBinario} y \path{CasoMPC/InstruccionesBinario}: siete corresponden al clasificador y diez al controlador. La búsqueda se aplicó a las instrucciones desensambladas de la sección \texttt{.text}, identificando dirección, función, mnemónico y operandos. Se excluyeron los comentarios y los nombres de símbolos como evidencia suficiente de una instrucción. Los resultados completos, los conteos de posiciones estáticas y las coordenadas de los extractos se conservan en los CSV \path{instrucciones_presencia_conteos.csv}, \path{instrucciones_coincidencias.csv} e \path{instrucciones_extractos.csv}, junto con el programa reproducible de auditoría.
+
+Las Tablas~\ref{tab:helium_rx} y~\ref{tab:helium_mpc} registran existencia, no número de ejecuciones. Un mismo núcleo puede reutilizarse por varias capas y ejecutarse muchas veces dentro de un bucle. Asimismo, una rutina enlazada puede no activarse para una entrada o configuración concreta. Por ello, los conteos de instrucciones no se convierten en porcentajes de uso de Helium ni en factores de aceleración.
+
+La identificación combina mnemónicos y operandos. \texttt{vctp} configura predicación; \texttt{vldrb*} con registros Q realiza cargas vectoriales; \texttt{vmlava.s8} y \texttt{vaddva.s8} identifican acumulaciones y reducciones enteras. En punto flotante se distingue explícitamente la aritmética con registros Q de la que emplea registros S. La interpretación sigue la especificación MVE de Arm \cite{cap4_acle}. Así, encontrar \texttt{vmul.f32} sin examinar sus operandos no basta para clasificar el cálculo como Helium.
+
+\FloatBarrier
+\subsection{Evidencia estática del clasificador de radiografías}\label{sec:helium_rx}
+\input{tablas/resultados/helium_rx}
+Para INT16x8 en Cortex-M55 se conserva el archivo \texttt{.bin}, pero no el listado correspondiente. La marca NE expresa esa falta de evidencia desensamblada y no ausencia de Helium. La tabla incluye los dos listados QAT del clasificador. En las filas NPU, el listado describe las instrucciones del procesador anfitrión y su software de soporte; no es un desensamblado de las unidades internas del acelerador.
+
+\subsubsection{Convoluciones y capas densas INT8 en Cortex-M55}
+En \path{STM32N6570-DK_Appli_PTQ_INT8_CM55.list}, la rutina \texttt{st\_\allowbreak sssa8\_\allowbreak ch\_\allowbreak convolve\_\allowbreak s8} llama a \texttt{st\_\allowbreak sssa8\_\allowbreak ch\_\allowbreak nn\_\allowbreak mat\_\allowbreak mult\_\allowbreak nt\_\allowbreak t\_\allowbreak s8} desde las direcciones \texttt{7010c68c} y \texttt{7010c930}. El Listado~\ref{lst:rx_conv_mve} muestra un tramo contiguo de este último núcleo. Las cargas de bytes alimentan registros Q y las instrucciones de producto-acumulación operan sobre elementos INT8. La relación con una rutina de convolución sitúa la evidencia en el procesamiento de la red.
+
+
+\noindent\begin{minipage}{\linewidth}
+\lstinputlisting[basicstyle=\ttfamily\scriptsize,caption={Radiografías PTQ INT8 en M55: núcleo matricial llamado desde la convolución.},label={lst:rx_conv_mve}]{evidencia/resultados/extractos_revision/rx_int8_conv.asm}
+\end{minipage}
+
+La implementación Mixed-5 también conserva cálculo entero vectorial. En \path{STM32N6570-DK_Appli_PTQ_MIX_INT8x32_SELECTIVE_CM55.list}, \texttt{arm\_\allowbreak fully\_\allowbreak connected\_\allowbreak per\_\allowbreak channel\_\allowbreak s8} llama a \texttt{arm\_\allowbreak nn\_\allowbreak vec\_\allowbreak mat\_\allowbreak mult\_\allowbreak t\_\allowbreak per\_\allowbreak ch\_\allowbreak s8} en \texttt{7010bb1c}. El Listado~\ref{lst:rx_dense_mve} muestra cargas predicadas y acumulaciones en ese núcleo. En ambas variantes M55 se identificó además \texttt{arm\_\allowbreak max\_\allowbreak pool\_\allowbreak s8}, con procesamiento vectorial. Estos resultados documentan el uso de rutinas especializadas en distintas operaciones de la CNN, de acuerdo con el propósito de las implementaciones MVE de CMSIS-NN \cite{cap4_cmsisnn}.
+
+
+\noindent\begin{minipage}{\linewidth}
+\lstinputlisting[basicstyle=\ttfamily\scriptsize,caption={Radiografías Mixed-5 en M55: cálculo INT8 de la capa densa.},label={lst:rx_dense_mve}]{evidencia/resultados/extractos_revision/rx_mixed_dense.asm}
+\end{minipage}
+
+\subsubsection{Cálculo Float32 vectorial y conversiones}
+La misma variante Mixed-5 contiene, en \texttt{forward\_\allowbreak lite\_\allowbreak conv2d\_\allowbreak if32of32wf32}, multiplicaciones y sumas Float32 con operandos Q (Listado~\ref{lst:rx_float_mve}). En las instrucciones siguientes se observan extracciones y sumas escalares que combinan resultados. Por tanto, preservar una convolución en Float32 no implica que todo su cálculo sea escalar: en este ejecutable coexisten operaciones vectoriales y escalares.
+
+
+\noindent\begin{minipage}{\linewidth}
+\lstinputlisting[basicstyle=\ttfamily\scriptsize,caption={Radiografías Mixed-5 en M55: fragmento Float32 vectorial de la convolución.},label={lst:rx_float_mve}]{evidencia/resultados/extractos_revision/rx_mixed_float.asm}
+\end{minipage}
+
+En los listados radiográficos PTQ INT8, INT16x8 y Mixed-5 para la ruta Neural-ART se encontraron predicación y operaciones vectoriales de conversión, pero no \texttt{vmlava.s8} ni \texttt{vaddva.s8}. Por ejemplo, \texttt{lite\_\allowbreak convert\_\allowbreak is8of32} del PTQ INT8 contiene la secuencia del Listado~\ref{lst:rx_npu_convert}. Esta evidencia indica que la presencia de Helium en un proyecto NPU puede corresponder al tratamiento de datos en el Cortex-M55. No identifica por sí sola el motor que realiza las convoluciones ni su contribución temporal.
+
+
+\noindent\begin{minipage}{\linewidth}
+\lstinputlisting[basicstyle=\ttfamily\scriptsize,caption={Radiografías PTQ INT8, ruta Neural-ART: operaciones vectoriales en una rutina de conversión del anfitrión.},label={lst:rx_npu_convert}]{evidencia/resultados/extractos_revision/rx_npu_convert.asm}
+\end{minipage}
+
+En el clasificador mixto para Neural-ART se localizó también aritmética Float32 con Q dentro de \texttt{forward\_\allowbreak lite\_\allowbreak conv2d\_\allowbreak if32of32wf32\_\allowbreak group}. Su presencia es compatible con las convoluciones software del perfil, que acumulan 92,836 ms. La auditoría no asigna ese tiempo exclusivamente a las instrucciones MVE: el perfil incluye el trabajo completo de los operadores. Los 104,700 ms de la ruta Neural-ART y los 52,481 ms de M55 muestran, además, que disponer de núcleos vectoriales en ambos ejecutables no iguala el costo de las dos implementaciones.
+
+
+\subsubsection{QAT: contraste entre los ejecutables M55 y NPU}
+El listado QAT M55 contiene 319 instrucciones con operandos Q y productos-acumulaciones INT8 en núcleos de convolución y capas densas. El Listado~\ref{lst:qat_mve} muestra un tramo de \texttt{st\_\allowbreak sssa8\_\allowbreak ch\_\allowbreak nn\_\allowbreak mat\_\allowbreak mult\_\allowbreak nt\_\allowbreak t\_\allowbreak s8}. El conteo corresponde a posiciones estáticas, no a invocaciones durante una inferencia.
+
+\noindent\begin{minipage}{\linewidth}
+\lstinputlisting[basicstyle=\ttfamily\scriptsize,caption={Radiografías QAT en Cortex-M55: acumulación vectorial INT8 del núcleo matricial.},label={lst:qat_mve}]{evidencia/resultados/extractos_revision/n6_qat_mve.asm}
+\end{minipage}
+En QAT/NPU no se encontraron operandos Q ni las familias de predicación MVE revisadas. Este resultado es coherente con el perfil sin operadores software y con la concentración del tiempo en hardware. Por tanto, la existencia de Helium en el procesador no implica que todo ejecutable generado para él contenga dichas instrucciones; debe comprobarse cada implementación.
+
+\FloatBarrier
+\subsection{Evidencia estática en los archivos compilados del caso MPC}\label{sec:cap4_evidencia}
+\input{tablas/resultados/helium_mpc}
+En las variantes PTQ INT8 por tensor, por canal y QAT sobre M55 aparecen cargas vectoriales, predicación y acumulaciones enteras. Las variantes equivalentes orientadas a NPU no contienen las familias MVE registradas en la tabla ni operandos Q en las instrucciones inspeccionadas. Esto concuerda con sus perfiles, que asignan 98,7\% del tiempo a hardware y 0\% a operadores software. La ausencia se refiere a estos ejecutables y no a una limitación de Helium o a una regla general para todo proyecto Neural-ART.
+
+Los listados Float32 e INT16x8 para M55 tampoco contienen operandos Q ni instrucciones \texttt{vctp}; sí muestran cálculo flotante escalar. Este resultado complementa los informes de generación: la implementación obtenida a partir de INT16x8 tiene el mismo volumen de pesos y activaciones que la referencia Float32. No se identificó una ruta aritmética INT16x8 nativa en estos registros.
+
+Los extractos se cotejaron con los archivos \path{STM32N6570-DK_Appli_PTQ_MIXED_SELECTIVED_CM55.list} y \path{STM32N6570-DK_Appli_PTQ_MIXED_SELECTIVED_NPU.list} de las implementaciones evaluadas. Las direcciones y las instrucciones se conservan como aparecen en estos listados.
+
+\subsubsection{Cálculo INT8 con MVE en la implementación Cortex-M55}
+En el listado de la variante Cortex-M55 se identificó la función \texttt{arm\_\allowbreak fully\_\allowbreak connected\_\allowbreak per\_\allowbreak channel\_\allowbreak s8}, que contiene una llamada a \texttt{arm\_\allowbreak nn\_\allowbreak vec\_\allowbreak mat\_\allowbreak mult\_\allowbreak t\_\allowbreak per\_\allowbreak ch\_\allowbreak s8}. En esta última aparecen cargas sobre registros \texttt{q}, predicación y multiplicaciones con operandos de ocho bits. El Listado~\ref{lst:cap4_mve} reúne instrucciones seleccionadas de la función; las líneas se muestran en su orden original y los saltos entre direcciones corresponden a instrucciones omitidas.
+
+
+
+\noindent\begin{minipage}{\linewidth}
+\lstinputlisting[caption={Extracto del producto matriz-vector INT8 en el listado de la variante mixta M55.},label={lst:cap4_mve}]{evidencia/extracto_cm55_int8.asm}
+\end{minipage}
+
+La instrucción \texttt{vctp.8} y el bloque \texttt{vpst} corresponden al control por predicación. Las cargas \texttt{vldrbt.u8} utilizan registros vectoriales; las instrucciones \texttt{vmlava.s8} y \texttt{vaddva.s8} forman parte del procesamiento aritmético entero observado. Este conjunto evidencia una implementación MVE dentro del núcleo de cálculo INT8 de la capa densa, en coherencia con la finalidad de las rutinas CMSIS-NN \cite{cap4_cmsisnn}.
+
+La cadena de llamadas evita atribuir Helium exclusivamente a código auxiliar o a una biblioteca sin relación identificada con la red. El resultado sigue siendo una constatación sobre el código generado: cuantificar la contribución específica de estas instrucciones requeriría instrumentación adicional o una comparación controlada con MVE deshabilitado.
+
+\subsubsection{Cálculo Float32 en la misma implementación}
+El mismo listado contiene llamadas a \texttt{forward\_\allowbreak lite\_\allowbreak dense\_\allowbreak if32of32wf32}. Dentro de esta función se observaron instrucciones \texttt{vmul.f32} y \texttt{vfma.f32} con registros \texttt{s}, como muestra el Listado~\ref{lst:cap4_f32}.
+
+
+\noindent\begin{minipage}{\linewidth}
+\lstinputlisting[caption={Extracto de cálculo flotante en una capa densa de la variante Cortex-M55.},label={lst:cap4_f32}]{evidencia/extracto_cm55_float32.asm}
+\end{minipage}
+
+En estas instrucciones, los operandos corresponden a valores escalares de punto flotante. Por ello, este fragmento se interpreta como cálculo Float32 escalar y no como una operación vectorial MVE. La conclusión se limita a la secuencia inspeccionada. Junto con el listado anterior, evidencia que la implementación de precisión mixta incluye núcleos de cálculo con características diferentes.
+
+\subsubsection{Rutas software y coordinación en la variante Neural-ART}
+En el listado de la variante mixta Neural-ART se identificaron el planificador \texttt{LL\_\allowbreak ATON\_\allowbreak RT\_\allowbreak RunEpochBlock}, funciones asociadas al controlador de épocas y llamadas a rutinas software. El Listado~\ref{lst:cap4_npu} muestra tres llamadas seleccionadas del bloque \texttt{LL\_\allowbreak ATON\_\allowbreak End\_\allowbreak EpochBlock\_\allowbreak 35}.
+
+
+\noindent\begin{minipage}{\linewidth}
+\lstinputlisting[caption={Llamadas de mantenimiento de caché y cálculo software en la variante Neural-ART.},label={lst:cap4_npu}]{evidencia/extracto_npu_software.asm}
+\end{minipage}
+
+La secuencia contiene una invalidación de caché, una llamada a \texttt{ll\_\allowbreak sw\_\allowbreak forward\_\allowbreak conv} y una limpieza de caché. Por tanto, el ejecutable preparado para la ruta Neural-ART contiene procesamiento software y coordinación de datos. La presencia del nombre \texttt{conv} en una función de implementación no identifica, por sí sola, una capa convolucional en la topología original: la cadena de compilación puede transformar la representación de los operadores.
+
+El listado mixto de Neural-ART incluye además aritmética Float32 vectorial en \texttt{forward\_\allowbreak lite\_\allowbreak conv2d\_\allowbreak if32of32wf32\_\allowbreak group}, como muestra el Listado~\ref{lst:mpc_npu_float}. Esta observación amplía el contraste anterior: el núcleo denso Float32 mostrado para M55 es escalar, mientras que la representación software generada por la otra ruta incluye este fragmento vectorial. No son el mismo núcleo ni una comparación con sólo Helium activado o desactivado.
+
+
+\noindent\begin{minipage}{\linewidth}
+\lstinputlisting[basicstyle=\ttfamily\scriptsize,caption={MPC mixto, ruta Neural-ART: fragmento Float32 vectorial del núcleo software.},label={lst:mpc_npu_float}]{evidencia/resultados/extractos_revision/mpc_npu_float.asm}
+\end{minipage}
+
+También se localizaron funciones de cuantización y descuantización, además de las rutinas del controlador de épocas. Estas observaciones proporcionan evidencia del código de una implementación heterogénea. Para determinar qué regiones fueron asignadas a la NPU y cuánto tiempo consumieron, se utiliza el informe de compilación junto con el perfil por épocas; no se calcula un porcentaje de aceleración a partir del número de símbolos del listado.
+
+Los extractos anteriores se cotejaron con los listados de las implementaciones evaluadas. Su presencia demuestra que esas rutinas forman parte del ejecutable inspeccionado; no cuantifica por sí misma cuánto tiempo se ejecutan ni identifica el binario activo en cada corrida HIL. En particular, la coexistencia de instrucciones Helium y de control Neural-ART no significa que la NPU delegue su aritmética interna en Helium. Los perfiles y las llamadas software permiten distinguir los trabajos asignados a cada motor.
+
+\FloatBarrier
+\subsection{Instrucciones observadas en la NUCLEO-L476RG}\label{sec:evidencia_l476}
+La ampliación incorpora seis listados de Cortex-M4: QAT para radiografías y cinco variantes MPC. No se encontraron operandos Q ni predicación MVE en sus instrucciones desensambladas. Este resultado concuerda con la arquitectura de la STM32L476RG, que incorpora FPU de precisión simple y extensión DSP, pero no Helium \cite{res_stl476}. La revisión comprende los 23 listados disponibles entre las dos placas; los conteos y las coordenadas de las coincidencias se conservan en \path{auditoria_23_listados.csv} e \path{instrucciones_23_coincidencias.csv}.
+\input{tablas/resultados/helium_nucleo}
+
+La ausencia de Helium no significa que todo el procesamiento del Cortex-M4 sea escalar. En cinco de los seis listados L476 se identificaron \texttt{smlad} y operaciones de extensión de signo \texttt{sxtb16}/\texttt{sxtab16}. \texttt{smlad} realiza productos-acumulaciones duales sobre operandos de 16 bits empaquetados en registros de propósito general. Estas instrucciones DSP permiten paralelismo de datos sin registros vectoriales Q. El trabajo de Lai, Suda y Chandra documenta este tipo de núcleos y el uso de \texttt{SMLAD} y \texttt{SXTB16} para inferencia cuantizada \cite{lai2018}.
+
+En radiografías QAT, \texttt{st\_\allowbreak sssa8\_\allowbreak ch\_\allowbreak nn\_\allowbreak mat\_\allowbreak mult\_\allowbreak kernel\_\allowbreak opt} contiene la secuencia del Listado~\ref{lst:l476_rx}. El resultado identifica cálculo DSP dentro del núcleo matricial; no corresponde a una operación MVE.
+
+\noindent\begin{minipage}{\linewidth}
+\lstinputlisting[basicstyle=\ttfamily\scriptsize,caption={Radiografías QAT en L476: productos-acumulaciones DSP con registros generales.},label={lst:l476_rx}]{evidencia/resultados/extractos_revision/nucleo_rx_dsp.asm}
+\end{minipage}
+
+El PTQ por tensor de MPC contiene \texttt{st\_\allowbreak sssa8\_\allowbreak fully\_\allowbreak connected}, con extensión de signo y acumulación dual (Listado~\ref{lst:l476_mpc}). También se identificaron operaciones DSP en las variantes por canal, QAT y mixta. El nombre INT8 del modelo es compatible con que un núcleo expanda operandos antes de efectuar productos de 16 bits; ello no transforma el archivo de origen en una red INT16x8.
+
+\noindent\begin{minipage}{\linewidth}
+\lstinputlisting[basicstyle=\ttfamily\scriptsize,caption={MPC PTQ por tensor en L476: preparación de operandos y acumulación dual.},label={lst:l476_mpc}]{evidencia/resultados/extractos_revision/nucleo_mpc_dsp.asm}
+\end{minipage}
+
+La excepción en esta auditoría es el MPC importado como INT16x8: no contiene las instrucciones DSP seleccionadas y sí presenta \texttt{vmul.f32} y \texttt{vfma.f32} con registros S en \texttt{forward\_\allowbreak lite\_\allowbreak dense\_\allowbreak if32of32wf32}. El Listado~\ref{lst:l476_float} documenta cálculo flotante escalar. Este hallazgo coincide con la generación de pesos Float32 y con la salida \texttt{f32} informada por la validación. En consecuencia, no se presenta como una ejecución INT16x8 nativa en L476.
+
+\noindent\begin{minipage}{\linewidth}
+\lstinputlisting[basicstyle=\ttfamily\scriptsize,caption={MPC importado como INT16x8 en L476: aritmética Float32 escalar.},label={lst:l476_float}]{evidencia/resultados/extractos_revision/nucleo_mpc_float.asm}
+\end{minipage}
+
+La distinción empírica es, por tanto, entre cálculo escalar y DSP en Cortex-M4, núcleos escalares y MVE en Cortex-M55, y ejecución heterogénea con Neural-ART. Los listados establecen qué instrucciones existen; los perfiles temporales permiten comparar el costo total de cada implementación.
+
+\FloatBarrier
+\clearpage

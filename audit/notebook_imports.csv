@@ -1,0 +1,298 @@
+notebook,cell_1based,statement
+cases/radiography/notebooks/red_clasificadorRadio.ipynb,3,import sys
+cases/radiography/notebooks/red_clasificadorRadio.ipynb,5,"from __future__ import absolute_import, division, print_function, unicode_literals"
+cases/radiography/notebooks/red_clasificadorRadio.ipynb,5,import pandas as pd
+cases/radiography/notebooks/red_clasificadorRadio.ipynb,5,import tensorflow as tf
+cases/radiography/notebooks/red_clasificadorRadio.ipynb,5,"from tensorflow.keras import datasets, layers, models"
+cases/radiography/notebooks/red_clasificadorRadio.ipynb,5,import matplotlib.pyplot as plt
+cases/radiography/notebooks/red_clasificadorRadio.ipynb,5,import numpy as np
+cases/radiography/notebooks/red_clasificadorRadio.ipynb,5,import os
+cases/radiography/notebooks/red_clasificadorRadio.ipynb,5,from tqdm import tqdm #barra de progreso`
+cases/radiography/notebooks/red_clasificadorRadio.ipynb,5,import cv2
+cases/radiography/notebooks/red_clasificadorRadio.ipynb,5,from glob import glob
+cases/radiography/notebooks/red_clasificadorRadio.ipynb,5,import sklearn
+cases/radiography/notebooks/red_clasificadorRadio.ipynb,5,import skimage
+cases/radiography/notebooks/red_clasificadorRadio.ipynb,5,from skimage.transform import resize
+cases/radiography/notebooks/red_clasificadorRadio.ipynb,5,import random
+cases/radiography/notebooks/red_clasificadorRadio.ipynb,5,import datetime
+cases/radiography/notebooks/red_clasificadorRadio.ipynb,5,from imblearn.over_sampling import RandomOverSampler
+cases/radiography/notebooks/red_clasificadorRadio.ipynb,5,from imblearn.under_sampling import RandomUnderSampler
+cases/radiography/notebooks/red_clasificadorRadio.ipynb,5,from skimage.color import rgb2gray
+cases/radiography/notebooks/red_clasificadorRadio.ipynb,6,import datetime
+cases/radiography/notebooks/red_clasificadorRadio.ipynb,12,import seaborn as sns
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,3,import sys
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,5,"from __future__ import absolute_import, division, print_function, unicode_literals"
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,5,import pandas as pd
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,5,import tensorflow as tf
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,5,"from tensorflow.keras import datasets, layers, models"
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,5,import matplotlib.pyplot as plt
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,5,import numpy as np
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,5,import os
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,5,from tqdm import tqdm #barra de progreso`
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,5,import cv2
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,5,from glob import glob
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,5,import sklearn
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,5,import skimage
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,5,from skimage.transform import resize
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,5,import random
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,5,import datetime
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,5,from imblearn.over_sampling import RandomOverSampler
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,5,from imblearn.under_sampling import RandomUnderSampler
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,5,from skimage.color import rgb2gray
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,6,import datetime
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,12,import seaborn as sns
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,26,from sklearn.metrics import accuracy_score
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,32,import pandas as pd
+cases/radiography/notebooks/Pipeline_Radiografias.ipynb,32,import matplotlib.pyplot as plt
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,3,import sys
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,5,"from __future__ import absolute_import, division, print_function, unicode_literals"
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,5,import pandas as pd
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,5,import tensorflow as tf
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,5,"from tensorflow.keras import datasets, layers, models"
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,5,import matplotlib.pyplot as plt
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,5,import numpy as np
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,5,import os
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,5,from tqdm import tqdm #barra de progreso`
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,5,import cv2
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,5,from glob import glob
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,5,import sklearn
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,5,import skimage
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,5,from skimage.transform import resize
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,5,import random
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,5,import datetime
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,5,from imblearn.over_sampling import RandomOverSampler
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,5,from imblearn.under_sampling import RandomUnderSampler
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,5,from skimage.color import rgb2gray
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,6,import datetime
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,12,import seaborn as sns
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,24,from pathlib import Path
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,24,from IPython.display import display
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,35,from sklearn.metrics import accuracy_score
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,41,import pandas as pd
+cases/radiography/notebooks/Pipeline_Radiografias(1).ipynb,41,import matplotlib.pyplot as plt
+cases/radiography/notebooks/generacion_data_xray_st_studio.ipynb,3,from pathlib import Path
+cases/radiography/notebooks/generacion_data_xray_st_studio.ipynb,3,import cv2
+cases/radiography/notebooks/generacion_data_xray_st_studio.ipynb,3,import numpy as np
+cases/radiography/notebooks/generacion_data_xray_st_studio.ipynb,3,from skimage.color import rgb2gray
+cases/radiography/notebooks/generacion_data_xray_st_studio.ipynb,3,from skimage.transform import resize
+cases/radiography/notebooks/red_clasificadorRadio(1).ipynb,3,import sys
+cases/radiography/notebooks/red_clasificadorRadio(1).ipynb,5,"from __future__ import absolute_import, division, print_function, unicode_literals"
+cases/radiography/notebooks/red_clasificadorRadio(1).ipynb,5,import pandas as pd
+cases/radiography/notebooks/red_clasificadorRadio(1).ipynb,5,import tensorflow as tf
+cases/radiography/notebooks/red_clasificadorRadio(1).ipynb,5,"from tensorflow.keras import datasets, layers, models"
+cases/radiography/notebooks/red_clasificadorRadio(1).ipynb,5,import matplotlib.pyplot as plt
+cases/radiography/notebooks/red_clasificadorRadio(1).ipynb,5,import numpy as np
+cases/radiography/notebooks/red_clasificadorRadio(1).ipynb,5,import os
+cases/radiography/notebooks/red_clasificadorRadio(1).ipynb,5,from tqdm import tqdm #barra de progreso`
+cases/radiography/notebooks/red_clasificadorRadio(1).ipynb,5,import cv2
+cases/radiography/notebooks/red_clasificadorRadio(1).ipynb,5,from glob import glob
+cases/radiography/notebooks/red_clasificadorRadio(1).ipynb,5,import sklearn
+cases/radiography/notebooks/red_clasificadorRadio(1).ipynb,5,import skimage
+cases/radiography/notebooks/red_clasificadorRadio(1).ipynb,5,from skimage.transform import resize
+cases/radiography/notebooks/red_clasificadorRadio(1).ipynb,5,import random
+cases/radiography/notebooks/red_clasificadorRadio(1).ipynb,5,import datetime
+cases/radiography/notebooks/red_clasificadorRadio(1).ipynb,5,from imblearn.over_sampling import RandomOverSampler
+cases/radiography/notebooks/red_clasificadorRadio(1).ipynb,5,from imblearn.under_sampling import RandomUnderSampler
+cases/radiography/notebooks/red_clasificadorRadio(1).ipynb,5,from skimage.color import rgb2gray
+cases/radiography/notebooks/red_clasificadorRadio(1).ipynb,6,import datetime
+cases/radiography/notebooks/red_clasificadorRadio(1).ipynb,12,import seaborn as sns
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,3,import sys
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,5,"from __future__ import absolute_import, division, print_function, unicode_literals"
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,5,import pandas as pd
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,5,import tensorflow as tf
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,5,"from tensorflow.keras import datasets, layers, models"
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,5,import matplotlib.pyplot as plt
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,5,import numpy as np
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,5,import os
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,5,from tqdm import tqdm #barra de progreso`
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,5,import cv2
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,5,from glob import glob
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,5,import sklearn
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,5,import skimage
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,5,from skimage.transform import resize
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,5,import random
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,5,import datetime
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,5,from imblearn.over_sampling import RandomOverSampler
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,5,from imblearn.under_sampling import RandomUnderSampler
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,5,from skimage.color import rgb2gray
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,6,import datetime
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,12,import seaborn as sns
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,24,from pathlib import Path
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,24,from IPython.display import display
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,35,from sklearn.metrics import accuracy_score
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,41,import pandas as pd
+cases/radiography/notebooks/Pipeline_Radiografias (1).ipynb,41,import matplotlib.pyplot as plt
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,3,import sys
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,5,"from __future__ import absolute_import, division, print_function, unicode_literals"
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,5,import pandas as pd
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,5,import tensorflow as tf
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,5,"from tensorflow.keras import datasets, layers, models"
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,5,import matplotlib.pyplot as plt
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,5,import numpy as np
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,5,import os
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,5,from tqdm import tqdm #barra de progreso`
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,5,import cv2
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,5,from glob import glob
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,5,import sklearn
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,5,import skimage
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,5,from skimage.transform import resize
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,5,import random
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,5,import datetime
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,5,from imblearn.over_sampling import RandomOverSampler
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,5,from imblearn.under_sampling import RandomUnderSampler
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,5,from skimage.color import rgb2gray
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,6,import datetime
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,12,import seaborn as sns
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,24,from pathlib import Path
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,24,from IPython.display import display
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,35,from sklearn.metrics import accuracy_score
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,41,import pandas as pd
+cases/radiography/notebooks/Pipeline_Radiografias(2).ipynb,41,import matplotlib.pyplot as plt
+cases/radiography/notebooks/comparacion_modelos_resumen.ipynb,1,from pathlib import Path
+cases/radiography/notebooks/comparacion_modelos_resumen.ipynb,1,from time import perf_counter
+cases/radiography/notebooks/comparacion_modelos_resumen.ipynb,1,import numpy as np
+cases/radiography/notebooks/comparacion_modelos_resumen.ipynb,1,import pandas as pd
+cases/radiography/notebooks/comparacion_modelos_resumen.ipynb,1,import matplotlib.pyplot as plt
+cases/radiography/notebooks/comparacion_modelos_resumen.ipynb,1,import tensorflow as tf
+cases/radiography/notebooks/comparacion_modelos_resumen.ipynb,1,import keras as keras_original
+cases/radiography/notebooks/comparacion_modelos_resumen.ipynb,1,import tf_keras as keras_qat
+cases/radiography/notebooks/comparacion_modelos_resumen.ipynb,1,import tensorflow_model_optimization as tfmot
+cases/radiography/notebooks/comparacion_modelos_resumen.ipynb,1,from IPython.display import display
+cases/radiography/notebooks/comparacion_modelos_resumen.ipynb,1,from sklearn.model_selection import train_test_split
+cases/radiography/notebooks/comparacion_modelos_resumen.ipynb,1,from sklearn.metrics import (
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32_ReplayMPC.ipynb,3,import sys
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32_ReplayMPC.ipynb,4,from pathlib import Path
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32_ReplayMPC.ipynb,4,import csv
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32_ReplayMPC.ipynb,4,import pickle
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32_ReplayMPC.ipynb,4,import yaml
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32_ReplayMPC.ipynb,4,import numpy as np
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32_ReplayMPC.ipynb,4,import pandas as pd
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32_ReplayMPC.ipynb,4,import matplotlib.pyplot as plt
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32_ReplayMPC.ipynb,4,import jax
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32_ReplayMPC.ipynb,4,import jax.numpy as jnp
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32_ReplayMPC.ipynb,4,import equinox as eqx
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32_ReplayMPC.ipynb,4,from scipy.integrate import odeint
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32_ReplayMPC.ipynb,13,import math
+cases/mpc/notebooks/Notebook_MPC_CartPole_Validacion_y_Cuantizacion.ipynb,2,from pathlib import Path
+cases/mpc/notebooks/Notebook_MPC_CartPole_Validacion_y_Cuantizacion.ipynb,2,"import math, time, pickle, yaml"
+cases/mpc/notebooks/Notebook_MPC_CartPole_Validacion_y_Cuantizacion.ipynb,2,import numpy as np
+cases/mpc/notebooks/Notebook_MPC_CartPole_Validacion_y_Cuantizacion.ipynb,2,import pandas as pd
+cases/mpc/notebooks/Notebook_MPC_CartPole_Validacion_y_Cuantizacion.ipynb,2,import matplotlib.pyplot as plt
+cases/mpc/notebooks/Notebook_MPC_CartPole_Validacion_y_Cuantizacion.ipynb,2,import jax
+cases/mpc/notebooks/Notebook_MPC_CartPole_Validacion_y_Cuantizacion.ipynb,2,import jax.numpy as jnp
+cases/mpc/notebooks/Notebook_MPC_CartPole_Validacion_y_Cuantizacion.ipynb,2,import equinox as eqx
+cases/mpc/notebooks/Notebook_MPC_CartPole_Validacion_y_Cuantizacion.ipynb,2,from scipy.integrate import odeint
+cases/mpc/notebooks/Notebook_MPC_CartPole_Validacion_y_Cuantizacion.ipynb,38,import tensorflow as tf
+cases/mpc/notebooks/Notebook_MPC_CartPole_Validacion_y_Cuantizacion.ipynb,47,import numpy as np
+cases/mpc/notebooks/Notebook_MPC_CartPole_Validacion_y_Cuantizacion.ipynb,47,import pandas as pd
+cases/mpc/notebooks/Notebook_MPC_CartPole_Validacion_y_Cuantizacion.ipynb,47,from pathlib import Path
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,2,from pathlib import Path
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,2,"import math, time, pickle, yaml"
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,2,import numpy as np
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,2,import pandas as pd
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,2,import matplotlib.pyplot as plt
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,2,import jax
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,2,import jax.numpy as jnp
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,2,import equinox as eqx
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,2,from scipy.integrate import odeint
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,38,import tensorflow as tf
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,41,import os
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,48,import numpy as np
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,48,import pandas as pd
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,48,from pathlib import Path
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,51,import time
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,58,import tensorflow as tf
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,58,import tensorflow_model_optimization as tfmot
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,58,import tf_keras
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,63,import tensorflow as tf
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,63,import numpy as np
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,63,import pandas as pd
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,63,import re
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,63,from pathlib import Path
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,67,import numpy as np
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores (1).ipynb,67,import matplotlib.pyplot as plt
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original.ipynb,2,from pathlib import Path
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original.ipynb,2,"import math, time, pickle, yaml"
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original.ipynb,2,import numpy as np
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original.ipynb,2,import pandas as pd
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original.ipynb,2,import matplotlib.pyplot as plt
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original.ipynb,2,import jax
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original.ipynb,2,import jax.numpy as jnp
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original.ipynb,2,import equinox as eqx
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original.ipynb,2,from scipy.integrate import odeint
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original.ipynb,38,import tensorflow as tf
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32 (1).ipynb,3,import sys
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32 (1).ipynb,4,from pathlib import Path
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32 (1).ipynb,4,import csv
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32 (1).ipynb,4,import pickle
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32 (1).ipynb,4,import yaml
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32 (1).ipynb,4,import numpy as np
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32 (1).ipynb,4,import pandas as pd
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32 (1).ipynb,4,import matplotlib.pyplot as plt
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32 (1).ipynb,4,import jax
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32 (1).ipynb,4,import jax.numpy as jnp
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32 (1).ipynb,4,import equinox as eqx
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32 (1).ipynb,4,from scipy.integrate import odeint
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32 (1).ipynb,13,import math
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32.ipynb,3,import sys
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32.ipynb,4,from pathlib import Path
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32.ipynb,4,import csv
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32.ipynb,4,import pickle
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32.ipynb,4,import yaml
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32.ipynb,4,import numpy as np
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32.ipynb,4,import pandas as pd
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32.ipynb,4,import matplotlib.pyplot as plt
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32.ipynb,4,import jax
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32.ipynb,4,import jax.numpy as jnp
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32.ipynb,4,import equinox as eqx
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32.ipynb,4,from scipy.integrate import odeint
+cases/mpc/notebooks/Notebook_MPC_CartPole_NN_Float32.ipynb,13,import math
+cases/mpc/notebooks/Notebook_MPC_CartPole_Analisis_Dataset.ipynb,2,from pathlib import Path
+cases/mpc/notebooks/Notebook_MPC_CartPole_Analisis_Dataset.ipynb,2,import csv
+cases/mpc/notebooks/Notebook_MPC_CartPole_Analisis_Dataset.ipynb,2,import numpy as np
+cases/mpc/notebooks/Notebook_MPC_CartPole_Analisis_Dataset.ipynb,2,import pandas as pd
+cases/mpc/notebooks/Notebook_MPC_CartPole_Analisis_Dataset.ipynb,2,import matplotlib.pyplot as plt
+cases/mpc/notebooks/Notebook_MPC_CartPole_Analisis_Dataset (1).ipynb,2,from pathlib import Path
+cases/mpc/notebooks/Notebook_MPC_CartPole_Analisis_Dataset (1).ipynb,2,import csv
+cases/mpc/notebooks/Notebook_MPC_CartPole_Analisis_Dataset (1).ipynb,2,import numpy as np
+cases/mpc/notebooks/Notebook_MPC_CartPole_Analisis_Dataset (1).ipynb,2,import pandas as pd
+cases/mpc/notebooks/Notebook_MPC_CartPole_Analisis_Dataset (1).ipynb,2,import matplotlib.pyplot as plt
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,2,from pathlib import Path
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,2,"import math, time, pickle, yaml"
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,2,import numpy as np
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,2,import pandas as pd
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,2,import matplotlib.pyplot as plt
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,2,import jax
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,2,import jax.numpy as jnp
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,2,import equinox as eqx
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,2,from scipy.integrate import odeint
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,38,import tensorflow as tf
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,41,import os
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,48,import numpy as np
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,48,import pandas as pd
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,48,from pathlib import Path
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,51,import time
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,58,import tensorflow as tf
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,58,import tensorflow_model_optimization as tfmot
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,58,import tf_keras
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,63,import tensorflow as tf
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,63,import numpy as np
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,63,import pandas as pd
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,63,import re
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,63,from pathlib import Path
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,67,import numpy as np
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores_resultados.ipynb,67,import matplotlib.pyplot as plt
+cases/mpc/notebooks/Generador_Dataset_Validacion.ipynb,2,import numpy as np
+cases/mpc/notebooks/Generador_Dataset_Validacion.ipynb,2,import pandas as pd
+cases/mpc/notebooks/Generador_Dataset_Validacion.ipynb,2,import tensorflow as tf
+cases/mpc/notebooks/Generador_Dataset_Validacion.ipynb,2,from pathlib import Path
+cases/mpc/notebooks/Generador_Dataset_Validacion.ipynb,2,import pickle
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores.ipynb,2,from pathlib import Path
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores.ipynb,2,"import math, time, pickle, yaml"
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores.ipynb,2,import numpy as np
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores.ipynb,2,import pandas as pd
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores.ipynb,2,import matplotlib.pyplot as plt
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores.ipynb,2,import jax
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores.ipynb,2,import jax.numpy as jnp
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores.ipynb,2,import equinox as eqx
+cases/mpc/notebooks/Notebook_MPC_CartPole_Baseline_Original_Autores.ipynb,2,from scipy.integrate import odeint

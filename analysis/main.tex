@@ -1,0 +1,59 @@
+% !TeX program = xelatex
+% Archivo principal: compilar con XeLaTeX + BibTeX.
+\documentclass[12pt,letterpaper,oneside]{report}
+\input{config/datos}
+\input{config/formato}
+\usepackage{xcolor,listings}
+% Estilo de los listados: marco, fondo gris y fuente monoespaciada.
+\lstset{
+ basicstyle=\ttfamily\footnotesize,
+ breaklines=true,
+ columns=fullflexible,
+ keepspaces=true,
+ frame=single,
+ rulecolor=\color{gray},
+ backgroundcolor=\color{gray!4},
+ captionpos=b,
+ aboveskip=10pt,
+ belowskip=10pt
+}
+\renewcommand{\lstlistingname}{Listado}
+\setlength{\parindent}{0pt}
+\begin{document}
+\hypersetup{pageanchor=false}
+%\input{preliminares/cubierta}
+\input{preliminares/portada}
+\clearpage\hypersetup{pageanchor=true}
+\pagenumbering{roman}
+% Descomentar si se desea incluir estas páginas optativas:
+\input{preliminares/agradecimientos}
+\input{preliminares/dedicatoria}
+\input{preliminares/resumen}
+\input{preliminares/abstract}
+\input{preliminares/glosario}
+\tableofcontents
+\listoffigures
+\listoftables
+% Estructura solicitada por el profesor guía: seis bloques principales.
+\clearpage\pagenumbering{arabic}
+\input{preliminares/introduccion}
+\input{capitulos/marco_teorico}
+\input{capitulos/estado_del_arte}
+\input{capitulos/metodologia}
+\input{capitulos/09_resultados}
+\input{capitulos/10_seleccion_discusion}
+% Conservado, sin activar, como en el proyecto recibido:
+%\input{capitulos/conclusiones}
+\clearpage\phantomsection\addcontentsline{toc}{chapter}{REFERENCIAS}
+\bibliographystyle{unsrt}
+\bibliography{referencias}
+\appendix
+\input{anexos/F_auditoria_instrucciones}
+%\input{anexos/A_prototipos}
+%\input{anexos/B_detalles_mpc}
+%\input{anexos/C_reproducibilidad}
+%\input{anexos/D_registros}
+\ifnotaseditoriales
+%\input{anexos/E_control_editorial}
+\fi
+\end{document}

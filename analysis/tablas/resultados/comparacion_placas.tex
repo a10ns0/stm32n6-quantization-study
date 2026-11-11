@@ -1,0 +1,14 @@
+\begin{table}[H]
+\centering\small
+\caption{Latencias medias de modelos con igual hash informado por ST.}\label{tab:comparacion_placas}
+\begin{tabularx}{\linewidth}{Yrrrrr}\toprule
+Caso / modelo & L476 (ms) & M55 (ms) & NPU (ms) & $t_{L4}/t_{M55}$ & $t_{L4}/t_{NPU}$\\\midrule
+RX / QAT INT8 & 289,351 & 14,814 & 0,290 & 19,53 & 997,76\\
+MPC / INT8 tensor & 0,741 & 0,128 & 0,067 & 5,79 & 11,06\\
+MPC / INT8 canal & 1,183 & 0,237 & 0,067 & 4,99 & 17,66\\
+MPC / QAT INT8 & 0,747 & 0,136 & 0,067 & 5,49 & 11,15\\
+MPC / INT16x8 importado & 2,838 & 0,303 & ND & 9,37 & ND\\
+MPC / Mixta & 2,401 & 0,326 & 0,480 & 7,37 & 5,00\\
+\bottomrule\end{tabularx}
+\fuente{medias registradas; razones calculadas con los valores redondeados. ND: sin registro}
+\end{table}

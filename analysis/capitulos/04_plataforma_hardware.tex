@@ -1,0 +1,226 @@
+\section{Plataforma STM32N6570-DK: Helium y aceleración Neural-ART}\label{cap:hw}\label{cap:plataforma}
+La representación numérica de una red neuronal condiciona los recursos que pueden utilizarse para ejecutarla. Un modelo con buen comportamiento en simulación requiere, además, una implementación compatible con el procesador, las bibliotecas y el compilador de destino. En esta memoria, la relación entre cuantización y hardware se estudia sobre la STM32N6570-DK, tanto para la clasificación de radiografías como para la aproximación neuronal del controlador predictivo del péndulo invertido.
+
+Esta sección explica el funcionamiento del núcleo Cortex-M55, su extensión vectorial Helium y el acelerador Neural-ART. Se desarrolla el proceso mediante el cual las operaciones de la red se asignan a estos recursos y se examina el significado de los fallbacks. Finalmente, se presentan extractos del código compilado del caso MPC que permiten reconocer las rutas de cálculo de dos implementaciones de precisión mixta. Los perfiles de ejecución y las métricas de cada aplicación completan este análisis en el capítulo de resultados.
+
+\subsection{Plataforma heterogénea y condiciones de utilización}\label{sec:cap4_plataforma}
+La STM32N6570-DK es una placa de desarrollo basada en el microcontrolador STM32N657X0H3Q, que integra un núcleo Arm Cortex-M55 y el acelerador neuronal Neural-ART \cite{cap4_board}. Se denomina \emph{heterogénea} porque reúne recursos de procesamiento con características diferentes. La CPU proporciona flexibilidad para ejecutar el programa de aplicación; la NPU dispone de unidades especializadas para determinados cálculos de inferencia. Helium amplía las instrucciones de la CPU y forma parte de este núcleo, mientras que Neural-ART constituye un recurso de procesamiento independiente dentro del microcontrolador.
+
+La CPU ejecuta la lógica de la aplicación, gestiona las comunicaciones y participa en el entorno de ejecución de la red. Puede calcular operadores mediante instrucciones escalares, operaciones de punto flotante o instrucciones vectoriales. La NPU procesa las operaciones que el compilador consigue asignar a sus unidades. En consecuencia, la participación de la CPU durante una inferencia acelerada puede corresponder tanto a coordinación como a cálculo neuronal en software.
+
+
+
+Las versiones de las herramientas forman parte de la configuración reproducible del experimento. Su combinación permitió completar la generación, integración y validación de las implementaciones estudiadas. La descripción del entorno Conda, las dependencias de Python y el flujo de conversión se desarrolla en el capítulo metodológico. Para interpretar el soporte de Neural-ART en esta sección se utiliza la documentación oficial de ST Edge AI Core, versión 4.0.1.
+
+\begin{figure}[H]
+\centering
+% El diagrama conserva su interlineado, independientemente del formato general.
+\setstretch{1}
+\begin{tikzpicture}[>=Latex,
+ box/.style={draw=black!65,rounded corners=2pt,align=center,font=\small,inner sep=7pt},
+ ctl/.style={->,thick,dashed},dat/.style={->,thick},
+ lab/.style={font=\scriptsize,align=center,fill=white,inner sep=3pt}]
+\node[anchor=west,font=\small\bfseries] at (-6.4,1.45) {(a) Control de la ejecución};
+\node[box,text width=3.55cm,minimum height=1.65cm,fill=black!3] (cpuC) at (-4.4,0) {\textbf{CPU Cortex-M55}\\Aplicación y software\\de ejecución};
+\node[box,text width=3.55cm,minimum height=1.65cm,fill=black!3] (npuC) at (4.4,0) {\textbf{NPU Neural-ART}\\Configuración y ejecución\\de bloques hardware};
+\draw[ctl] ([yshift=0.38cm]cpuC.east) -- node[lab,above]{configura e inicia} ([yshift=0.38cm]npuC.west);
+\draw[ctl] ([yshift=-0.38cm]npuC.west) -- node[lab,below]{fin de bloque: estado\\o interrupción} ([yshift=-0.38cm]cpuC.east);
+\node[anchor=west,font=\small\bfseries] at (-6.4,-2.2) {(b) Lectura, cálculo y escritura de datos};
+\node[box,text width=5.0cm,minimum height=1.3cm,fill=black!3] (cpuD) at (-3.25,-3.55) {\textbf{CPU Cortex-M55}\\Operadores software: cálculo\\escalar, FPU o Helium};
+\node[box,text width=5.0cm,minimum height=1.3cm,fill=black!3] (npuD) at (3.25,-3.55) {\textbf{NPU Neural-ART}\\Operadores hardware\\Unidades de cálculo propias\\y motores de transferencia};
+\node[box,text width=12.0cm,minimum height=1.55cm] (mem) at (0,-7.25) {\textbf{Memorias accesibles según la configuración}\\Constantes del modelo: pesos y sesgos\\Buffers en RAM: entradas, activaciones intermedias y salidas};
+\draw[dat] ([xshift=-4.6cm]mem.north) -- node[lab,text width=1.95cm]{CPU lee\\operandos} ([xshift=-1.35cm]cpuD.south);
+\draw[dat] ([xshift=1.35cm]cpuD.south) -- node[lab,text width=1.95cm]{CPU escribe\\resultados} ([xshift=-1.9cm]mem.north);
+\draw[dat] ([xshift=1.9cm]mem.north) -- node[lab,text width=1.95cm]{NPU lee\\operandos} ([xshift=-1.35cm]npuD.south);
+\draw[dat] ([xshift=1.35cm]npuD.south) -- node[lab,text width=1.95cm]{NPU escribe\\resultados} ([xshift=4.6cm]mem.north);
+\node[font=\scriptsize,align=center,text width=12.8cm] at (0,-9.0) {Líneas discontinuas: control y notificación. Líneas continuas: acceso a datos.\\Los paneles muestran las mismas unidades; no representan procesadores adicionales.};
+\end{tikzpicture}
+\caption{Relación funcional entre CPU, NPU y memorias. Cada unidad realiza el cálculo que le corresponde; los búferes permiten intercambiar resultados. Esquema de elaboración propia basado en ST \cite{cap4_stconcepts}. Se omiten buses y cachés para destacar las funciones, sin suponer que todas las memorias tengan igual acceso o latencia.}\label{fig:hw}
+\end{figure}
+
+La Figura~\ref{fig:hw} separa dos relaciones. El \emph{control} indica quién configura e inicia el trabajo y cómo se reconoce su finalización; el \emph{flujo de datos} muestra quién lee los operandos y dónde escribe los resultados. Así, una orden de la CPU no representa el envío de cada multiplicación a través de Helium. La NPU accede a los búferes asignados y calcula con sus unidades; la CPU accede a memoria para ejecutar la aplicación y los operadores software \cite{cap4_stconcepts}.
+
+\subsection{Cortex-M55 y tecnología MVE/Helium}\label{sec:cap4_helium}
+\subsubsection{Procesamiento escalar, punto flotante y procesamiento vectorial}
+Una instrucción escalar opera sobre valores individuales. En un producto interno, su implementación puede recorrer los datos y acumular un producto en cada paso. Una instrucción vectorial expresa operaciones sobre varios elementos agrupados, reduciendo la cantidad de instrucciones necesarias para describir determinados cálculos repetitivos. Esta organización se conoce como SIMD, del inglés \textit{Single Instruction, Multiple Data}.
+
+La guía oficial de Arm proporciona la base conceptual de esta sección \cite{cap4_armcomplete}. Helium es el nombre de la extensión MVE, \textit{M-Profile Vector Extension}, de la arquitectura Armv8.1-M. Su propósito es favorecer cargas de procesamiento digital de señales y aprendizaje automático en microcontroladores \cite{cap4_armoverview}. El número de elementos de un vector depende de su representación numérica. Por ello, el cambio de Float32 a INT8 puede modificar tanto el almacenamiento como la forma de organizar las operaciones.
+
+La unidad de punto flotante, o FPU, permite operar con números flotantes, pero una instrucción flotante puede ser escalar o vectorial. Para diferenciarlas se examinan el mnemónico y los registros utilizados. Las designaciones \texttt{S} y \texttt{Q} proceden de la nomenclatura de Arm: el manual técnico del Cortex-M55, Secciones~3.4 y~14.1.1, identifica \texttt{S0--S31} como 32 registros de una palabra de 32 bits y \texttt{Q0--Q7} como ocho registros vectoriales de 128 bits. Son vistas de un mismo banco de registros de extensión \cite{cap4_armtrm}.
+
+En una operación escalar Float32, un registro \texttt{S} contiene un valor de precisión simple. Un registro \texttt{Q} agrupa varios elementos, por ejemplo cuatro Float32 o dieciséis INT8. Las letras minúsculas \texttt{s} y \texttt{q} de los listados son la escritura de esas designaciones en el desensamblado. Por tanto, las instrucciones \texttt{vmul.f32} y \texttt{vfma.f32} con operandos \texttt{s} de la Sección~\ref{sec:cap4_evidencia} corresponden a cálculo flotante escalar; la interpretación vectorial requiere identificar una instrucción MVE y sus operandos. Esto no significa que todo registro escalar se denomine \texttt{S}: Arm también define registros generales \texttt{R} \cite{cap4_armtrm}.
+
+\subsubsection{Registros, vectores, elementos y carriles}
+Un \emph{registro} es un espacio de almacenamiento de acceso inmediato para las instrucciones del procesador. En MVE, un registro vectorial contiene 128 bits. Un \emph{vector} es el conjunto de valores contenidos en ese registro y cada valor es un \emph{elemento}. El \emph{carril}, o \textit{lane}, identifica una posición correspondiente entre los vectores sobre los que se realiza una operación \cite{cap4_armregisters}.
+
+La Tabla~\ref{tab:cap4_vectores} relaciona el ancho de cada elemento con el número de posiciones del registro. Los 128 bits se mantienen; cambia su interpretación. Cuatro valores Float32 y dieciséis valores INT8 ocupan, respectivamente, un registro vectorial completo. La existencia de dieciséis posiciones INT8 no implica que toda instrucción termine en un ciclo ni garantiza una aceleración de dieciséis veces: el tiempo también depende de las cargas, los almacenamientos, las dependencias y la implementación de cada instrucción.
+
+\begin{table}[H]\centering\small
+\caption{Organización de un registro MVE de 128 bits para los formatos de interés. Elaboración a partir de la documentación de Arm \cite{cap4_armregisters}.}\label{tab:cap4_vectores}
+\begin{tabularx}{\linewidth}{lccY}\toprule
+Formato & Bits por elemento & Elementos & Ejemplo de utilización\\\midrule
+INT8 & 8 & 16 & Pesos o activaciones cuantizados.\\
+INT16 & 16 & 8 & Señales enteras de mayor resolución.\\
+INT32 & 32 & 4 & Resultados enteros de mayor anchura.\\
+Float32 & 32 & 4 & Valores de punto flotante.\\\bottomrule
+\end{tabularx}
+\end{table}
+
+Como ejemplo conceptual, al sumar dos vectores de cuatro elementos, la posición cero del primer vector se suma con la posición cero del segundo y el resultado se almacena en la posición cero del destino. Las demás posiciones siguen la misma regla. Si una capa contiene más elementos que los disponibles en un registro, el cálculo se organiza por bloques sucesivos.
+
+\subsubsection{Predicación y tratamiento del último bloque}
+La \emph{predicación} permite seleccionar qué posiciones participan en una operación vectorial. Una máscara indica los elementos activos y los inactivos. Arm describe variantes que conservan un valor previo, asignan cero o dejan sin especificar el contenido de las posiciones inactivas, según la operación \cite{cap4_armpredication}.
+
+Considérese una operación sobre 18 valores INT8. Un bloque puede procesar los primeros 16 y un segundo bloque contiene solamente dos valores válidos. La máscara de predicación del segundo bloque habilita esas dos posiciones. Las restantes se tratan conforme a la semántica de la instrucción, evitando que contribuyan indebidamente al resultado o que se realicen accesos no válidos. Este mecanismo permite manejar longitudes que no son múltiplos del número de elementos del vector.
+
+En el código ensamblador, instrucciones como \texttt{vctp.8} crean un predicado según la cantidad de elementos de ocho bits pendientes; \texttt{vpst} introduce la predicación de las instrucciones vectoriales siguientes. En un desensamblado, su presencia junto con cargas vectoriales permite reconocer el tratamiento de bloques y de sus elementos finales. En este contexto, un intrínseco es una función reconocida por el compilador que permite expresar una operación específica del procesador. Las extensiones de lenguaje de Arm proporcionan intrínsecos para expresar estas operaciones desde C o C++ \cite{cap4_acle}.
+
+\subsubsection{Multiplicación y acumulación: VMLA y VMLADAVA}
+La multiplicación y acumulación aparece de forma recurrente en capas densas y convolucionales. Sin embargo, existen instrucciones que conservan un resultado por posición e instrucciones que reúnen varios productos en un resultado escalar. Distinguirlas permite relacionar el código máquina con el cálculo de una neurona.
+
+En el ejemplo \texttt{VMLA} presentado por Arm, un vector se multiplica por un escalar y se suma al vector acumulador \cite{cap4_armvmla}. Su efecto puede escribirse como
+\begin{equation}
+d_i^{\mathrm{nuevo}}=d_i^{\mathrm{previo}}+a_i\,c,
+\qquad i=0,\ldots,L-1,
+\label{eq:cap4_vmla}
+\end{equation}
+donde $L$ es el número de elementos, $a_i$ pertenece al vector de entrada, $c$ es un escalar y $d_i$ es cada elemento del acumulador. Para el ejemplo didáctico $d=[1,1,1,1]$, $a=[2,3,4,5]$ y $c=2$, el resultado es $[5,7,9,11]$. Se conservan cuatro resultados, uno por posición.
+
+La operación descrita mediante \texttt{VMLADAV} multiplica elementos correspondientes y suma los productos para producir un escalar. \texttt{VMLADAVA} añade ese resultado al valor previo del acumulador escalar \cite{cap4_armvmladava}:
+\begin{equation}
+A_{\mathrm{nuevo}}=A_{\mathrm{previo}}+\sum_{i=0}^{L-1}a_iw_i.
+\label{eq:cap4_vmladava}
+\end{equation}
+La suma entre posiciones se denomina \emph{reducción}. Por ejemplo, con $a=[1,2,3,4]$, $w=[2,-1,0,3]$ y $A_{\mathrm{previo}}=5$, la suma de productos es $2-2+0+12=12$ y el acumulador final vale 17. Esta forma de cálculo coincide con la estructura de un producto interno, aunque una capa completa también requiere sesgo, escalado y activación.
+
+Las Ecuaciones~\ref{eq:cap4_vmla} y \ref{eq:cap4_vmladava} expresan el comportamiento conceptual descrito por Arm, suponiendo que no existe desbordamiento. Los anchos de operandos y acumuladores, así como las variantes disponibles, dependen de la instrucción concreta. Los nombres encontrados en el binario se conservan tal como aparecen; no se sustituye un mnemónico observado por el utilizado en un ejemplo teórico.
+
+\subsubsection{Bibliotecas de inferencia y utilización efectiva de Helium}
+Las instrucciones vectoriales pueden incorporarse mediante código ensamblador, intrínsecos o transformaciones del compilador. Una biblioteca de inferencia organiza estos recursos en rutinas para convoluciones, capas densas y otras operaciones. CMSIS-NN ofrece implementaciones destinadas a distintos grupos de Cortex-M, incluidas variantes para procesadores con MVE; la selección depende de las características habilitadas al compilar \cite{cap4_cmsisnn}.
+
+En esta memoria, la presencia de Helium se estudia en las funciones enlazadas al firmware. El tipo numérico del modelo constituye un antecedente, pero no demuestra qué instrucciones se generaron. Una implementación Float32 puede contener cálculo escalar o vectorial, y una INT8 puede combinar rutinas vectoriales con código escalar de control. La evidencia debe asociarse con funciones concretas y con su relación con la red.
+
+\subsection{Organización y funcionamiento de Neural-ART}\label{sec:cap4_neuralart}
+\subsubsection{Unidades especializadas y flujo de datos}
+Neural-ART es un acelerador de inferencia reconfigurable. La configuración Neural-ART 14 integrada en STM32N6 reúne unidades de convolución, activación, aritmética y agrupamiento, conectadas mediante un flujo de datos. Los motores de transferencia, o \textit{stream engines}, suministran operandos y escriben resultados en memoria. Una vez iniciada una configuración, el acelerador realiza su procesamiento sin que la CPU ejecute cada multiplicación \cite{cap4_stconcepts}.
+
+La Tabla~\ref{tab:cap4_unidades} presenta sus componentes principales. El agrupamiento, o \textit{pooling}, reduce una región mediante operaciones como máximo o promedio. Las operaciones elemento a elemento actúan sobre posiciones correspondientes de los tensores. La convolución combina regiones de entrada con filtros, mientras que la activación aplica la transformación no lineal requerida por la red.
+
+\begin{table}[H]\centering\small
+\caption{Unidades de procesamiento de Neural-ART 14 descritas por ST \cite{cap4_stconcepts}.}\label{tab:cap4_unidades}
+\begin{tabularx}{\linewidth}{lcY}\toprule
+Unidad & Cantidad & Función principal\\\midrule
+\texttt{CONV\_\allowbreak ACC} & 4 & Cálculos de convolución mediante multiplicación y acumulación.\\
+\texttt{POOL\_\allowbreak ACC} & 2 & Operaciones de agrupamiento.\\
+\texttt{ACTIV\_\allowbreak ACC} & 2 & Funciones de activación.\\
+\texttt{ARITH\_\allowbreak ACC} & 4 & Operaciones aritméticas y transformaciones afines.\\
+\texttt{STREAM\_\allowbreak ENG} & 10 & Lectura y escritura de flujos de datos; cinco por puerto.\\\bottomrule
+\end{tabularx}
+\end{table}
+
+Puede entenderse el procesamiento mediante una cadena conceptual: se leen las activaciones y los pesos, se calculan las sumas ponderadas y se aplican las transformaciones necesarias para producir la salida. El compilador adapta esa cadena a los recursos disponibles. La ubicación de los datos influye en cuánto tiempo se tarda en alimentar las unidades, por lo que disponer de capacidad aritmética no garantiza que ésta permanezca ocupada durante toda la inferencia.
+
+Para el clasificador de radiografías, las convoluciones concentran operaciones repetidas sobre mapas de características. En la red MPC, las capas densas calculan productos entre matrices de pesos y vectores de estado o activaciones. En ambos casos importa el \emph{tamaño de los tensores}: sus dimensiones determinan cuántos datos deben almacenarse y transferirse, así como la cantidad y organización del cálculo. Por ejemplo, un mapa hipotético de $32\times32\times16$ contiene 16\,384 elementos: ocupa 16\,384 bytes en INT8 y 65\,536 bytes en Float32, antes de considerar alineamiento u otros búferes. Este ejemplo ilustra almacenamiento de datos, no memoria total del firmware.
+
+Un tensor pequeño puede ofrecer poco trabajo para ocupar las unidades paralelas y amortizar la preparación de un bloque. Uno mayor puede proporcionar más paralelismo, pero también exigir más transferencias o particiones si supera la memoria disponible. Por ello, ``mayor tamaño'' no equivale automáticamente a ``mayor aceleración''. Sze et al. explican que las dimensiones de las capas, su asignación a las unidades de procesamiento y la reutilización de datos condicionan el aprovechamiento del hardware y los accesos a memoria \cite{cap4_sze2017}; ST describe estos límites de cómputo y memoria específicamente para Neural-ART \cite{cap4_stconcepts}.
+
+La \emph{continuidad de las regiones} se refiere a una sucesión de operaciones conectadas en el grafo que puede permanecer en la NPU, sin intercalar un operador que deba calcular la CPU. No significa contigüidad de direcciones de memoria. Como ejemplo conceptual, una convolución, su activación y un agrupamiento compatibles pueden formar una región acelerada. Si entre dos regiones aparece un cálculo Float32, es necesario hacer disponible el resultado para la CPU y posteriormente para la NPU; según los formatos, también se requieren conversiones. Estas fronteras añaden trabajo de coordinación y pueden limitar el beneficio global. Chen et al. analizan cómo la agrupación de operadores reduce accesos intermedios y costos de invocación \cite{cap4_tvm2018}; para Neural-ART, las rutas software y la agrupación de épocas se rigen por el modelo de ejecución de ST \cite{cap4_stconcepts}. Una región continua puede abarcar varias épocas y no implica que todos sus resultados permanezcan dentro de las unidades aritméticas.
+
+\subsubsection{Épocas de ejecución y coordinación con la CPU}
+El grafo puede superar los recursos que la NPU utiliza simultáneamente. El compilador lo divide entonces en unidades de ejecución denominadas \emph{épocas}. En este contexto, una época es un bloque del programa de inferencia y no una pasada de entrenamiento sobre el conjunto de datos.
+
+ST distingue épocas hardware, software e híbridas, además de metaépocas que agrupan secuencias hardware bajo el controlador de épocas. Las primeras ejecutan el cálculo asignado en Neural-ART; las software utilizan el procesador anfitrión; las híbridas combinan intervención de software y recursos hardware \cite{cap4_stconcepts}. Esta terminología permite describir el reparto del procesamiento sin reducirlo a una etiqueta única para toda la red.
+
+Una \emph{dependencia de datos} aparece cuando una operación necesita el resultado de otra. Por ejemplo, si una capa densa produce un vector y la siguiente aplica una activación a ese vector, esta última necesita los valores calculados por la primera. El orden de ejecución debe asegurar que los datos requeridos estén disponibles antes de consumirlos. Esto también ocurre si la capa densa se asigna a la NPU y la activación a la CPU: cambiar de procesador no elimina la dependencia.
+
+ST establece un orden fijo de épocas para preservar esas relaciones en el grafo. El entorno de ejecución prepara un bloque, inicia su procesamiento y comprueba la finalización de sus transferencias antes de cerrar la etapa. Los resultados que deben persistir entre épocas se conservan en el subsistema de memoria externo a las unidades de cálculo de la NPU; esta expresión puede incluir SRAM interna del microcontrolador y no implica necesariamente memoria fuera del chip. Dentro de una época pueden existir unidades conectadas por flujos de datos, por lo que esta explicación no presupone un almacenamiento completo entre cada par de operadores \cite{cap4_stconcepts}.
+
+El controlador de épocas puede ejecutar una secuencia de configuraciones hardware generada previamente, reduciendo la intervención de la CPU entre esos bloques. La CPU sigue gestionando la aplicación y los bloques software. Es útil distinguir \emph{coordinar} una operación de \emph{calcularla}: iniciar la NPU desde Cortex-M55 no significa que Cortex-M55 efectúe sus productos y sumas. Cuando el compilador asigna un operador a Neural-ART, el cálculo se realiza en sus unidades especializadas; cuando genera una ruta software, el entorno de ejecución invoca una función en Cortex-M55, que puede emplear Helium si su implementación está vectorizada \cite{cap4_stconcepts,cap4_cmsisnn}.
+
+En consecuencia, encontrar instrucciones MVE en un firmware que también utiliza la NPU evidencia código destinado a la CPU. Ese código puede corresponder a un operador software, una conversión u otra tarea. No demuestra que una operación ya asignada a las unidades aritméticas de Neural-ART se ejecute mediante Helium. El reparto se establece en el código y las configuraciones generados por el compilador, y su ejecución se comprueba con los perfiles; el acelerador no decide trasladar cada multiplicación a la CPU durante la inferencia \cite{cap4_stconcepts,cap4_stcompiler}.
+
+\subsection{Compilación y compatibilidad de operadores}\label{sec:cap4_compilacion}
+\subsubsection{Del modelo convertido a la implementación ejecutable}
+El modelo exportado describe operadores, conexiones y parámetros numéricos. Para ejecutarlo en la placa, la cadena de herramientas transforma esa descripción en código, datos y configuraciones adaptados al destino. El compilador de Neural-ART utiliza una descripción del acelerador, las propiedades del procesador anfitrión y los pools de memoria disponibles. En el flujo documentado por ST, las representaciones intermedias ONNX y JSON transportan el grafo y su información de cuantización \cite{cap4_stcompiler}.
+
+Durante este proceso pueden reorganizarse operaciones, combinarse transformaciones y generarse buffers que no coinciden uno a uno con los tensores originales. Por ello, una capa del modelo de alto nivel no tiene que corresponder a una única época ni a una única función del binario. La interpretación experimental debe relacionar el modelo de entrada, la representación generada y el perfil de ejecución.
+
+La asignación depende tanto del operador como de sus dimensiones, parámetros y tipo numérico. Una convolución puede ser compatible en una configuración y requerir una descomposición o una ruta software en otra. La compilación satisfactoria demuestra que se obtuvo una implementación; comprobar su precisión efectiva y sus resultados exige revisar los artefactos generados y validar la inferencia.
+
+\subsubsection{Formatos admitidos y alcance de la compatibilidad}
+La compatibilidad se determina por el conjunto formado por operador, dimensiones, parámetros y representación numérica. La Sección \emph{Inference Model Constraints} de ST Edge AI Core 4.0.1 establece las siguientes condiciones para el flujo Neural-ART \cite{cap4_stoperators}:
+\begin{enumerate}
+\item \textbf{Solo inferencia.} La NPU ejecuta redes ya preparadas; no dispone de un modo de entrenamiento.
+\item \textbf{Formas estáticas.} Las dimensiones de entrada y salida deben quedar definidas al compilar. Son sus tamaños los que permanecen fijos, no los valores de cada muestra.
+\item \textbf{Lote variable interpretado como uno.} Una dimensión de lote declarada como \texttt{None} se considera de tamaño 1 en este flujo.
+\item \textbf{Conectividad válida.} No se admite un operador cuya salida esté sin conectar en la representación del grafo presentada al compilador.
+\item \textbf{Operandos cuantizados.} Un operador híbrido, por ejemplo con pesos INT8 y activaciones Float32, no tiene asignación directa a la NPU; ambos deben estar cuantizados.
+\item \textbf{Formato INT8.} Para pesos y activaciones se especifica INT8 con escala y punto cero, bajo el esquema \texttt{ss/sa} y las reglas por canal correspondientes.
+\item \textbf{Float32 en software.} Una operación solicitada en Float32 se asigna al procesador anfitrión.
+\end{enumerate}
+
+La notación \texttt{ss/sa} identifica pesos con signo y cuantización simétrica, y activaciones con signo y cuantización asimétrica. ST distingue la escala por canal de los pesos, en los operadores que la emplean, de la escala por tensor de las activaciones; no significa que cada activación tenga su propia escala \cite{cap4_stquant}. La restricción sobre operadores híbridos tampoco equivale a prohibir un \emph{modelo de precisión mixta}: este puede combinar operadores INT8 completos con otros Float32 separados. Los primeros son candidatos a la NPU si cumplen las demás condiciones; los segundos se ejecutan en CPU, con conversiones en las fronteras que las requieran \cite{cap4_stoperators,cap4_stquant}.
+
+Estas condiciones permiten anticipar la dificultad de INT16$\times$8: aunque sus pesos sean INT8, sus activaciones INT16 no satisfacen el esquema de ocho bits para ambos tensores que requiere la asignación directa descrita. Esta observación identifica una incompatibilidad con el flujo documentado, pero no determina por sí sola qué transformación realizará el compilador en cada modelo. Esa transformación se establece mediante los informes y el código generado.
+
+Debe distinguirse, además, el formato que admite el compilador de los anchos internos del circuito. ST describe rutas enteras de 8, 16 y 24 bits y multiplicaciones de $16\times16$ bits en Neural-ART \cite{cap4_stconcepts}. La presencia de esos recursos físicos no implica que el flujo TFLite INT16$\times$8 esté implementado: también se necesitan las reglas de escalado, los operadores y las transformaciones que permitan asignar ese modelo al hardware. En consecuencia, la compatibilidad se atribuye a la variante y a la versión de herramientas utilizadas, mientras que su representación efectiva después de compilar se verifica experimentalmente.
+
+\begin{table}[H]\centering\small
+\caption{Ejemplos de asignación de operadores TensorFlow Lite en ST Edge AI Core 4.0.1. La ruta hardware supone una configuración cuantizada compatible \cite{cap4_stoperators}.}\label{tab:cap4_operadores}
+\begin{tabularx}{\linewidth}{p{3.5cm}lY}\toprule
+Operador & Ruta documentada & Consideración\\\midrule
+\texttt{CONV\_\allowbreak 2D} & HW & Pesos constantes y restricciones de configuración.\\
+\texttt{FULLY\_\allowbreak CONNECTED} & HW & Parámetros y tensores compatibles.\\
+\texttt{RELU}, \texttt{TANH} & HW & Su nombre no obliga a ejecutarlos en CPU; importa su representación.\\
+\texttt{MAX\_\allowbreak POOL\_\allowbreak 2D} & HW & Puede requerir descomposición según la ventana.\\
+\texttt{SOFTMAX} & HW o SW & Hardware con \texttt{--expand-softmax}; software entero en caso contrario.\\
+\texttt{QUANTIZE}, \texttt{DEQUANTIZE} & SW Float32 & Fronteras entre punto flotante y enteros.\\\bottomrule
+\end{tabularx}
+\end{table}
+
+La presencia de \texttt{TANH} en la red MPC no implica por sí misma un fallback: su variante cuantizada aparece en el soporte hardware publicado. Si una activación se preserva en Float32 o forma parte de una región que no cumple las condiciones de asignación, su ejecución debe interpretarse conforme a esa configuración. Esta precisión evita atribuir una limitación al nombre de la función cuando el factor determinante es su representación o su contexto.
+
+\subsection{Memoria, transferencias y coherencia de datos}\label{sec:cap4_memoria}
+Los pesos son parámetros de la red; las activaciones son resultados que cambian con cada entrada. Ambos deben estar accesibles para la unidad que los consume. Un \emph{pool de memoria} describe una región disponible y sus propiedades, como dirección, tamaño, latencia y capacidad de transferencia. El compilador utiliza esa información para ubicar buffers y constantes \cite{cap4_stcompiler}.
+
+En los experimentos de esta memoria se conservó la asignación generada por las herramientas para cada modelo. La memoria reportada depende de esa asignación y de las transformaciones de compilación. El tamaño serializado de un archivo \texttt{.tflite} y el almacenamiento de su implementación compilada son magnitudes distintas: el firmware incorpora código, constantes, alineamientos y estructuras de ejecución.
+
+La caché conserva copias de datos para reducir determinados accesos a memoria. Cuando CPU y NPU intercambian buffers, esas copias deben corresponder a los datos válidos. Una limpieza de caché, o \textit{clean}, escribe datos modificados hacia la memoria correspondiente; una invalidación descarta copias para que no se reutilice información desactualizada. La documentación del compilador contempla la generación de mantenimiento de caché para las regiones compartidas \cite{cap4_stcompiler}.
+
+Este mantenimiento tiene una función de corrección, además de un costo temporal. En los extractos experimentales de la Sección~\ref{sec:cap4_evidencia} aparecen llamadas a rutinas de invalidación y limpieza alrededor de operaciones software. Su presencia evidencia que la implementación generada incluye esa coordinación; no permite deducir por sí sola toda la configuración de caché ni su contribución temporal.
+
+\subsection{Fallback y relación con las estrategias de cuantización}\label{sec:cap4_fallback}
+\subsubsection{Fallback de procesamiento y cambio de representación}
+Un \emph{fallback} es una ruta alternativa utilizada cuando una operación no se asigna a la implementación inicialmente prevista. En el flujo de Neural-ART, ST documenta alternativas asistidas por hardware, rutinas enteras en software y rutinas flotantes con conversiones cuando corresponde. Si no existe una implementación admisible, la generación puede terminar con un error \cite{cap4_stconcepts}.
+
+Resulta útil distinguir dos efectos. El primero es un cambio de unidad de procesamiento: una operación INT8 puede ejecutarse en Cortex-M55 mediante una rutina entera. El segundo es un cambio de representación: el cálculo puede realizarse en Float32, con las conversiones necesarias en sus fronteras. La ejecución en CPU no implica automáticamente punto flotante, y la existencia de datos INT8 no implica automáticamente ejecución en NPU.
+
+En una red de precisión mixta, preservar deliberadamente regiones Float32 introduce una decisión adicional. Su cálculo software responde a la representación seleccionada para conservar fidelidad numérica. El análisis debe distinguir esas regiones de las operaciones que permanecen cuantizadas pero requieren CPU por restricciones del compilador o del operador.
+
+\subsubsection{INT16x8: fidelidad numérica y representación desplegada}
+El estudio del controlador identificó INT16$\times$8 como una alternativa de interés en simulación, al ofrecer mayor resolución para las activaciones que INT8. Sin embargo, en el despliegue evaluado en este trabajo, los informes de generación identifican una representación flotante y el código inspeccionado es consistente con cálculo Float32 en Cortex-M55. Este resultado corresponde a la implementación obtenida con la cadena de herramientas utilizada y se desarrolla cuantitativamente en el capítulo de resultados.
+
+Por ello, esa ejecución no constituye una evaluación de inferencia nativa INT16$\times$8 sobre Neural-ART. Tampoco debe interpretarse el cambio de tipo como una recuperación automática de los pesos originales: reconstruir en Float32 un parámetro previamente cuantizado conserva la aproximación introducida por la cuantización. La precisión aritmética del firmware y la fidelidad respecto del modelo de referencia son propiedades que se comprueban por separado.
+
+El hallazgo motiva evaluar una alternativa que mantenga parte del procesamiento cuantizado después de compilar. La conclusión no se obtiene únicamente del formato del archivo exportado, sino de la representación generada y de la ejecución observada en la plataforma.
+
+\subsubsection{Justificación de la precisión mixta selectiva}
+La precisión mixta selectiva conserva una base INT8 y mantiene determinadas regiones sensibles en Float32. Desde el punto de vista numérico, busca reducir perturbaciones que afectan el comportamiento del controlador. Desde el punto de vista de implementación, permite conservar regiones compatibles con el flujo INT8 de Neural-ART mientras otras se ejecutan en software.
+
+La relación con INT16$\times$8 es funcional: ambas estrategias buscan evitar que la pérdida de resolución deteriore el control, mediante decisiones numéricas diferentes. La precisión mixta no reproduce necesariamente sus valores internos ni garantiza las mismas trayectorias. Su utilidad se determina mediante la evaluación en lazo cerrado y la verificación del formato efectivo de la implementación.
+
+Las regiones Float32 se ejecutan en CPU según el soporte documentado por ST \cite{cap4_stoperators}. Cada frontera efectiva INT8/Float32 requiere adaptar los datos entre representaciones. Si se preservan demasiadas regiones o se fragmenta el cálculo en bloques pequeños, las conversiones, las transferencias y la coordinación pueden reducir la ganancia de aceleración. La selección implementada se basa en el diagnóstico de error numérico y en reglas explícitas de conservación de capas; su costo de ejecución se evalúa posteriormente. El indicador utilizado es una heurística y no acredita por sí solo sensibilidad funcional. La aceptación del controlador requiere comprobar las exigencias del ensayo: seleccionar una alternativa para investigarla no implica que ya las satisfaga en todas las condiciones.
+
+\subsection{Interpretación de los perfiles y relación con los resultados}\label{sec:cap4_perfiles}
+La documentación del perfilador de ST distingue la duración de cada época, sus fases de preparación y finalización, los ciclos de la CPU y los ciclos del núcleo NPU. También presenta indicadores para la ejecución completa \cite{cap4_stprofiler}. Esta separación permite diferenciar tiempo de cálculo acelerado, operaciones software y sobrecarga de coordinación.
+
+Como descripción contable de una ejecución secuencial, el tiempo de inferencia puede escribirse como
+\begin{equation}
+T_{\mathrm{inf}}=T_{\mathrm{inicio}}+\sum_{j=1}^{E}T_j+T_{\mathrm{cierre}},
+\label{eq:cap4_tiempo}
+\end{equation}
+donde $E$ es el número de bloques considerados y cada $T_j$ incluye todas las fases de ese bloque, contabilizadas una sola vez. Esta expresión organiza las mediciones y no presupone que toda la duración de una época hardware corresponda a multiplicaciones útiles. Si el instrumento ya incluye preparación y cierre dentro de su duración total, esos intervalos no deben sumarse nuevamente.
+
+El número de épocas hardware tampoco equivale a la fracción temporal acelerada: un bloque puede concentrar la mayor parte del cálculo, mientras otros realizan operaciones breves. Del mismo modo, la latencia de inferencia debe distinguirse del tiempo de intercambio por UART. En el banco de control, el tiempo de respuesta del sistema incluye además comunicación, procesamiento de entradas y entrega de la acción a la simulación.
+
+La selección de una variante se apoya así en tres evidencias complementarias: el modelo convertido describe la representación numérica propuesta; el código y los informes de compilación muestran su implementación; las pruebas en placa y en lazo cerrado establecen su costo y su comportamiento funcional. El estudio de Helium, Neural-ART y los fallbacks permite interpretar por qué una alternativa favorable en simulación puede cambiar al desplegarse y por qué la precisión mixta selectiva requiere analizar conjuntamente fidelidad y ejecución efectiva.

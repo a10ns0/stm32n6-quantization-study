@@ -1,0 +1,12 @@
+CSV guardado: C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Adaptative MPC\MPC_HIL_STM32\PC\hil_mpc_20261019_214452.csv
+Deadlines RTT perdidos: 0
+Ciclos tardíos del PC (incluye gráfico): 100
+============================================================
+CRITERIO ORIGINAL DE LOS AUTORES
+============================================================
+Restricción global |y| < 0.4 m: True
+Restricción de control |u| <= 9 V: True
+Últimas 10: |y| < 0.1 m y |e_alpha| < 0.17 rad: True
+ÉXITO: True
+Inferencia [ms]: media=0.3368, p99=0.3480, máx=0.3500
+RTT [ms]: media=5.0849, p99=5.2013, máx=5.2873

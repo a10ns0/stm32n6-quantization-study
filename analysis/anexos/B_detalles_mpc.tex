@@ -1,0 +1,38 @@
+\chapter{Detalles del modelo y contrato del controlador}
+\section{Parámetros de referencia}
+\begin{table}[H]\centering\small
+\caption{Parámetros nominales del artículo de cartpole.}
+\begin{tabularx}{\linewidth}{p{2cm}p{3.5cm}Y}\toprule
+Parámetro & Valor & Descripción\\\midrule
+$m_{\mathrm{add}}$ & 0,02 kg & Masa añadida\\
+$M$ & 0,506 kg & Masa equivalente del carro\\
+$C_1$ & $-3,96$ N\,s/m & Coeficiente de velocidad en la fuerza\\
+$C_2$ & 1,3 N/V & Conversión de tensión a fuerza\\
+$C_3$ & 0,0002 N\,m\,s/rad & Fricción rotacional\\
+$m,l,J$ & \ND & Obtener del modelo exacto utilizado\\\bottomrule
+\end{tabularx}
+\fuente{Hose et al.; valores nominales, no identificación propia de una planta}
+\end{table}
+\pendiente{Incorporar masas, longitudes e inercias del código final, integrador y paso interno. No reemplazarlos por los parámetros $M=0,5$, $m=0,2$, $l=0,3$ del prototipo temprano.}
+
+\section{Contrato de entradas y salida}
+\begin{table}[H]\centering\small
+\caption{Contrato numérico que debe acompañar el binario del controlador.}
+\begin{tabularx}{\linewidth}{p{4cm}Y}\toprule
+Campo & Valor a congelar\\\midrule
+Orden de estados & \ND; permutación entre planta y red\\
+Unidades & m, rad, m/s, rad/s en el orden declarado\\
+Ángulo de entrada & Continuo o envuelto, según entrenamiento\\
+Normalización & Media, escala u otra transformación exacta\\
+Cuantización de entrada & Tipo, escala y punto cero por tensor\\
+Salida de la red & Escalar o primera componente de una secuencia\\
+Desnormalización & Transformación exacta a voltios\\
+Saturación & Límites y lugar de aplicación\\
+Identidad & Huellas de modelo y binario\\\bottomrule
+\end{tabularx}\end{table}
+
+\section{Precisión de la salida y efecto en el actuador}
+Si una salida entera de escala $s_u$ se expresa directamente en voltios, el paso de tensión es $s_u$. Si existe una desnormalización afín $u=a\widehat r+b$, el paso efectivo es $|a|s_u$. La resolución física debe calcularse sobre esa composición, no a partir de 256 niveles sin indicar el rango.
+
+\section{Criterio reproducible de éxito}
+Se archivará una función de evaluación que tome toda la trayectoria y devuelva éxito, violaciones de posición, saturaciones, errores finales y fallos temporales. Debe declarar si comprueba restricciones sólo en instantes de muestreo o también en los pasos internos del integrador. Las mismas reglas se aplicarán a todas las variantes.

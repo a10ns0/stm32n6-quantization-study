@@ -1,0 +1,41 @@
+\section{Implementación y validación en la placa}\label{cap:implementacion}
+\subsection{Trazabilidad del entorno de desarrollo}
+El proyecto combina herramientas de entrenamiento, conversión, compilación y programación. Se conservará un manifiesto por ensayo. Las versiones citadas en distintas etapas no se fusionarán en un único entorno supuesto: los prototipos usaron configuraciones diferentes.
+
+\begin{table}[H]\centering\small
+\caption{Herramientas mencionadas en el desarrollo y verificación pendiente.}
+\begin{tabularx}{\linewidth}{p{4cm}Y}\toprule
+Componente & Registro de trabajo\\\midrule
+ST Edge AI Core & 4.0.1; conservar salida de versión y opciones\\
+STM32CubeIDE & 1.18.1 en los ensayos registrados\\
+STM32Cube.AI & 12.0.1-RC2 en registros de desarrollo\\
+TensorFlow / Keras / TFMOT & Exportar versiones efectivas de cada entorno; no asumir compatibilidad entre registros\\
+Biblioteca de ejecución & Conservar archivo y huella de la variante CM55 utilizada\\
+Sistema anfitrión y compilador & Registrar versión, arquitectura y opciones de optimización\\\bottomrule
+\end{tabularx}\end{table}
+
+\subsection{Exportación, análisis y generación}
+El artefacto de entrada se valida antes de pasar a ST Edge AI. Se conservarán el reporte de análisis, código generado, descriptores de memoria y mensajes de conversión. La etapa se considera satisfactoria cuando el modelo compilado conserva la calidad necesaria, no únicamente cuando la compilación termina sin errores.
+
+El análisis registrará qué operadores se ejecutan en hardware y cuáles en software. Si la herramienta promueve una red INT16x8 a Float32, se genera una fila distinta en la comparación de implementaciones. La latencia de esa fila pertenece a Float32 compilado a partir de INT16x8, y no a una inferencia INT16x8 nativa.
+
+\subsection{Proyecto STM32 y arranque}
+La integración utiliza el flujo de aplicación y arranque configurado para STM32N6. En los ensayos se trabajó con el flujo \termino{Trusted}, incluyendo aplicación y datos de red. Direcciones de memoria, cargador externo y archivos de programación se obtendrán del proyecto generado y de su mapa de memoria, sin fijarlas por analogía con otro ejemplo.
+
+El anexo técnico conservará la función de entrada de inferencia, inicialización de búferes, tratamiento de errores y configuración UART. Se documentarán también la primera etapa de arranque y la relación entre los binarios programados. No se copiarán módulos entre proyectos de arranque sin verificar su función.
+
+\subsection{Interfaces y contrato numérico}
+Cada entrada tendrá nombre, unidad, orden, forma, tipo, escala y punto cero. En radiografías se fijará el orden NHWC y la normalización. En MPC se fijará explícitamente la permutación de estados, el tratamiento del ángulo y la conversión de salida a voltios.
+
+La validación compara el resultado en placa con el del intérprete para la misma entrada serializada. Se registrará el error antes y después de descuantizar. Este control ayuda a separar un error de comunicación o de orden de canales de un efecto real de la cuantización.
+
+\subsection{Instrumentación temporal}
+El temporizador DWT o el mecanismo temporal disponible permite medir ciclos de ejecución. La conversión requiere una frecuencia efectiva conocida:
+\begin{equation}t_{\mathrm{inf}}=\frac{n_{\mathrm{ciclos}}}{f_{\mathrm{CPU}}}.\end{equation}
+En una inferencia NPU, el intervalo CPU debe abarcar la finalización de la operación asíncrona para representar el tiempo transcurrido completo. Se documentarán el desbordamiento del contador, el calentamiento y el costo del instrumento. Los mensajes de depuración se excluyen del intervalo cuando se pretende medir sólo la inferencia.
+
+\subsection{UART, repetición e integridad de los registros}
+Los ensayos utilizaron COM4 a 115200 baudios como configuración de trabajo del computador. El puerto no es parte de la definición científica del método y debe poder modificarse. Se conservarán número de secuencia, tiempos, estado de recepción y el registro íntegro de cada corrida.
+
+Una inferencia de aproximadamente 0,34 ms, un RTT cercano a 5 ms y un período de 160 ms son tres magnitudes compatibles y distintas. La diferencia incluye transmisión, planificación del computador y lógica de aplicación. Para demostrar operación en tiempo real del lazo completo se medirá el ciclo efectivo y el número de incumplimientos.
+\pendiente{Adjuntar proyecto final, mapa de memoria, exportación de perfil, huellas de los modelos y ejemplos mínimos de llamada a inferencia. El código de producción debe provenir del proyecto validado.}

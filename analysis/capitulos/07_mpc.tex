@@ -1,0 +1,69 @@
+\section{Caso de estudio: aproximación neuronal de MPC}\label{cap:mpc}
+\subsection{Origen del caso final y alcance de la reproducción}
+El caso final se basa en el cartpole del trabajo de Hose, Gräfe y Trimpe \cite{hose2024} y su implementación asociada \cite{hoserepo}. El artículo utiliza una política nominal y una aproximación de sensibilidades para adaptar la acción ante variaciones de parámetros. La memoria debe distinguir esa propuesta completa de la política nominal o adaptada que efectivamente se exportó.
+
+El avance del proyecto describe la reproducción de un modelo JAX/Equinox en Keras y una salida escalar de control. La evidencia del modelo exportado debe indicar si se conserva alguna corrección por sensibilidades. No se afirmará reproducción de la adaptación completa sólo por utilizar un modelo proveniente del mismo repositorio.
+
+\subsection{Planta, variables y unidades}
+La posición del carro se representa por $y$, el ángulo por $\alpha$ y sus derivadas por $\dot y$ y $\dot\alpha$. La posición vertical superior corresponde a $\alpha=0$ módulo $2\pi$; la inferior corresponde a $\alpha=\pi$ módulo $2\pi$. La entrada $u$ es la tensión del motor en voltios.
+
+En la notación del artículo, el estado es $x=[y,\dot y,\alpha,\dot\alpha]^\mathsf T$. Algunos registros del proyecto muestran el orden $[y,\alpha,\dot y,\dot\alpha]$. Ambas convenciones son válidas si se aplica la permutación correspondiente, pero no son intercambiables al alimentar la red.
+
+Las ecuaciones de movimiento del modelo de referencia son
+\begin{align}
+ml\cos\alpha\,\ddot y+(ml^2+J)\ddot\alpha-mgl\sin\alpha&=-C_3\dot\alpha,\label{eq:pend1}\\
+(M+m)\ddot y+ml\cos\alpha\,\ddot\alpha-ml\sin\alpha\,\dot\alpha^2&=F,\label{eq:pend2}\\
+F&=C_1\dot y+C_2u.\label{eq:motor}
+\end{align}
+Por tanto, $u$ no se obtiene cambiando arbitrariamente la unidad de una fuerza: el vínculo depende de $C_1$, $C_2$ y la velocidad. Si la salida de la red está normalizada, se debe invertir además el escalamiento aprendido.
+
+\subsection{MPC experto y obtención de la política}
+El MPC busca una secuencia de acciones que minimiza un costo sujeto a dinámica y restricciones. En una formulación general,
+\begin{equation}
+\begin{aligned}
+\min_{u_{0:N-1}}\quad &\sum_{j=0}^{N-1}\ell(x_j,u_j)+V_f(x_N)\\
+\text{sujeto a}\quad &x_{j+1}=f_d(x_j,u_j),\quad x_0=x_k,\\
+&x_j\in\mathcal X,\quad u_j\in\mathcal U,\quad x_N\in\mathcal X_f.
+\end{aligned}
+\end{equation}
+Sólo se aplica la primera acción y se repite el cálculo desde el estado actualizado. Esta ecuación organiza la exposición; el costo, las restricciones y la discretización exactos se obtendrán del código utilizado.
+
+El artículo usa horizonte $N=25$, entradas constantes en intervalos de 160 ms y una formulación orientada al levantamiento del péndulo. El banco HIL del proyecto trabajó con $T_s=0,16$ s. Debe distinguirse esa discretización del período de ejecución de los experimentos físicos del artículo; no se asume que sean idénticos.
+
+\subsection{Datos, conversión y arquitectura neuronal}
+El aprendizaje aproxima pares estado--acción del experto MPC. El archivo \texttt{X0.csv} se utilizó como referencia de estados de calibración y la primera acción de la secuencia se considera objetivo para la salida escalar, previa verificación del orden de columnas.
+
+El informe de agosto describe cuatro entradas, siete capas ocultas de 50 neuronas con activación tangente hiperbólica y una salida lineal \cite{avance2026}. Esa arquitectura se tratará como la réplica del proyecto y se contrastará con el resumen y los pesos exportados; el artículo y el repositorio pueden utilizar otras profundidades o una salida de secuencia completa.
+
+Para la arquitectura escalar descrita, el conteo nominal de productos es
+\begin{equation}N_{\mathrm{MAC,densas}}=4\cdot50+6\cdot50^2+50\cdot1=15\,250.\end{equation}
+Este conteo no incluye activaciones ni conversiones y puede diferir del contador del compilador. Se validará la equivalencia JAX/Equinox--Keras con entradas idénticas y se separará esa prueba de la evaluación posterior de cuantización.
+
+\subsection{Restricciones y criterio de éxito}
+Los ensayos del proyecto utilizan límites de posición y actuación y un criterio final de estabilización. La Tabla~\ref{tab:limites} conserva los valores de trabajo recuperados, pendientes de cotejo con el script congelado del ensayo. No se debe presentar un criterio de evaluación del proyecto como teorema o restricción universal del artículo.
+\begin{table}[H]\centering\small
+\caption{Restricciones y tolerancias de trabajo del caso HIL.}\label{tab:limites}
+\begin{tabularx}{\linewidth}{p{3.3cm}p{3.1cm}Y}\toprule
+Variable & Valor de trabajo & Interpretación\\\midrule
+Posición & $|y_k|<0,4$ m & Límite durante la trayectoria\\
+Acción & $|u_k|\leq9$ V & Límite del actuador\\
+Posición final & $|y_k|<0,1$ m & Últimas 10 muestras\\
+Error angular final & $|e_{\alpha,k}|<0,17$ rad & Últimas 10 muestras\\
+Período HIL & $T_s=0,16$ s & Discretización usada en el banco\\\bottomrule
+\end{tabularx}\end{table}
+\notaeditorial{Confirmar límites, desigualdades estrictas/no estrictas, número de muestras finales y evaluación entre muestras en el código del ensayo. El artículo de referencia escribe las restricciones de forma paramétrica; no todos estos umbrales aparecen explícitos en su texto.}
+
+Se define el error angular mediante
+\begin{equation}e_{\alpha,k}=\operatorname{atan2}(\sin\alpha_k,\cos\alpha_k).\end{equation}
+Un ángulo cercano a $2\pi$ puede representar una orientación cercana a la vertical; ello no elimina los desplazamientos del carro ni las violaciones de restricciones durante una vuelta completa. Por ello se mostrarán tanto el ángulo continuo como su error envuelto.
+
+\subsection{Evaluación comparativa en lazo cerrado}
+Se ejecutan las variantes desde las mismas condiciones iniciales. La simulación debe conservar integrador, paso interno, saturación, normalización y parámetros físicos. Se reporta éxito si se cumple el criterio completo; un final próximo al equilibrio no compensa una violación previa de posición si ésta forma parte del criterio.
+
+Se analizarán PTQ por tensor, PTQ por canal, QAT, INT16x8 y precisión mixta selectiva. El error de regresión se complementa con tasa de estabilización, violaciones, tiempo de establecimiento y variación de la acción. No se deduce estabilidad formal a partir de RMSE ni de 200 ensayos finitos.
+
+\subsection{Banco HIL y representación gráfica}
+El computador integra la planta, envía el estado y recibe la acción de la STM32. La placa ejecuta la política y reporta tiempos. La interfaz debe conservar identificadores y detectar respuestas atrasadas, pérdidas y desincronización.
+
+Los gráficos se presentan en paneles separados: posición $y$ en metros, ángulo $\alpha$ y error $e_\alpha$ en radianes, y acción $u$ en voltios. Esta última se dibuja como señal escalonada con retención de orden cero. Se incorporan líneas de restricciones y bandas de tolerancia. La latencia se muestra en una figura separada para no sustituir la señal de control.
+\figurapendiente{Trayectoria real: posición, ángulo, error angular y control escalonado con límites}{Evolución temporal del cartpole en el banco HIL.}{fig:hil}

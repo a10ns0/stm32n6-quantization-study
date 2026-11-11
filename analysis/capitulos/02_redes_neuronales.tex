@@ -1,0 +1,86 @@
+\section{Fundamentos de redes neuronales y evaluación}\label{cap:fundamentos}
+Esta sección presenta los fundamentos de los modelos de referencia. La preparación de los modelos se describe en la sección~\ref{sec:preparacion_casos} y su evaluación experimental, en el capítulo~\ref{cap:resultados}.
+
+\subsection{Aprendizaje supervisado y modelos de referencia}
+Una red neuronal parametrizada por $\theta$ aproxima una relación entrada--salida a partir de ejemplos. En aprendizaje supervisado se dispone de pares $(x_i,y_i)$ y se ajustan los parámetros para reducir una función de pérdida:
+\begin{equation}
+\theta^*\approx\operatorname*{arg\,min}_{\theta}\frac{1}{n}\sum_{i=1}^{n}\mathcal L\big(y_i,f_\theta(x_i)\big).
+\end{equation}
+El entrenamiento modifica los parámetros, mientras que la inferencia evalúa el modelo con parámetros fijos. En clasificación, $y_i$ identifica una categoría; en regresión, representa una magnitud continua. En esta memoria, las categorías son NORMAL y PNEUMONIA, y la magnitud de control es el voltaje aplicado al motor del carro.
+
+La separación entre entrenamiento, validación y prueba permite distinguir el ajuste del modelo de su evaluación. La validación orienta decisiones como la selección de época o hiperparámetros; un conjunto de prueba independiente permite evaluar la alternativa seleccionada. Los datos de calibración de PTQ cumplen otra función: caracterizar rangos numéricos antes del despliegue. Estas funciones se distinguen en la comparación de las estrategias de cuantización.
+
+\subsection{Perceptrón multicapa y redes convolucionales}
+\subsubsection{Capas densas y funciones de activación}
+Una red neuronal artificial está formada por unidades de cálculo denominadas \emph{neuronas}, organizadas en capas. Cada neurona recibe valores numéricos, los combina y produce una salida que puede utilizarse como entrada de otras neuronas. La denominación proviene de una analogía con los sistemas biológicos; en esta aplicación, su funcionamiento corresponde a una secuencia de operaciones matemáticas implementadas en software y hardware.
+
+Para una neurona $j$ que recibe $n$ entradas, el cálculo se expresa como
+\begin{equation}
+z_j=\sum_{i=1}^{n}w_{ji}a_i+b_j,\qquad h_j=\phi(z_j),\label{eq:neurona}
+\end{equation}
+donde $a_i$ es la entrada $i$, $w_{ji}$ es el peso asociado a esa entrada y $b_j$ es el sesgo de la neurona. Los pesos determinan cómo contribuye cada entrada a la combinación: su signo puede aumentar o disminuir el resultado, mientras que su magnitud regula la intensidad de esa contribución. El sesgo añade un desplazamiento independiente de las entradas y permite ajustar la respuesta sin exigir que la transformación pase por el origen. Los pesos y sesgos constituyen los parámetros que se ajustan durante el entrenamiento.
+
+El valor $z_j$ se denomina preactivación porque corresponde al resultado anterior a la aplicación de $\phi$. La función $\phi$, denominada \emph{función de activación}, transforma ese valor y determina la salida $h_j$. Esta salida también se conoce como activación de la neurona. Para la cuantización se distinguen los parámetros de las activaciones: los primeros permanecen fijos durante una inferencia, mientras que las segundas cambian con cada imagen o estado del sistema.
+
+Una capa es \emph{densa}, o completamente conectada, cuando cada una de sus neuronas recibe todas las salidas de la capa anterior. El cálculo conjunto de sus neuronas puede escribirse en forma matricial como
+\begin{equation}
+\mathbf h^{(l)}=\phi_l\!\left(W^{(l)}\mathbf h^{(l-1)}+\mathbf b^{(l)}\right),\label{eq:densa}
+\end{equation}
+donde $l$ identifica la capa, $\mathbf h^{(l-1)}$ contiene sus entradas, $W^{(l)}$ agrupa los pesos y $\mathbf b^{(l)}$ reúne los sesgos. La activación se aplica a cada componente del vector resultante. En esta convención, la matriz tiene una fila por neurona de salida y una columna por entrada.
+
+La capa de entrada representa las variables que recibe el modelo; las capas ocultas construyen representaciones intermedias, y la capa de salida produce la predicción. Se denominan ocultas porque sus salidas son representaciones intermedias, distintas de las variables objetivo del aprendizaje. Un \emph{perceptrón multicapa}, abreviado MLP, encadena varias capas densas. El procesamiento avanza desde la entrada hasta la salida, de modo que cada capa transforma la representación obtenida por la anterior.
+
+En el controlador estudiado, la primera capa recibe cuatro valores: posición del carro, ángulo del péndulo y sus respectivas velocidades. Cada una de sus 50 neuronas forma una combinación distinta de esos cuatro valores y aplica una activación. Sus salidas constituyen 50 características internas que las capas siguientes vuelven a combinar para calcular la acción de control. Estas características se aprenden conjuntamente y no tienen que corresponder, individualmente, a una variable física identificable.
+
+Una capa con $n_{\mathrm{in}}$ entradas y $n_{\mathrm{out}}$ neuronas contiene $n_{\mathrm{in}}n_{\mathrm{out}}$ pesos y $n_{\mathrm{out}}$ sesgos. Su número total de parámetros es, por tanto,
+\begin{equation}
+N_{\mathrm{par}}=(n_{\mathrm{in}}+1)n_{\mathrm{out}}.
+\end{equation}
+La primera capa del controlador tiene $(4+1)50=250$ parámetros. Este conteo permite relacionar la arquitectura con el almacenamiento necesario y con las multiplicaciones y acumulaciones ejecutadas durante la inferencia.
+
+Las funciones de activación permiten representar relaciones no lineales entre entradas y salidas. Si todas las capas aplicaran únicamente combinaciones afines, su composición podría reducirse a una sola transformación de la forma $W\mathbf x+\mathbf b$. En ese caso, añadir capas no permitiría representar una relación más compleja. La introducción de no linealidades amplía la capacidad de aproximación de la red, necesaria tanto para reconocer patrones en imágenes como para aproximar una política de control no lineal.
+
+La unidad lineal rectificada, conocida como ReLU, se define mediante
+\begin{equation}
+\operatorname{ReLU}(z)=\max(0,z).
+\end{equation}
+Esta función anula los valores negativos y conserva los positivos. Su cálculo es sencillo y permite que la respuesta de una neurona sea nula para determinadas entradas. En la CNN de radiografías se utiliza después de las convoluciones y en la capa densa intermedia. Así se transforman las respuestas de los filtros antes de combinarlas en las etapas siguientes.
+
+La tangente hiperbólica se expresa como
+\begin{equation}
+\tanh(z)=\frac{e^z-e^{-z}}{e^z+e^{-z}}.
+\end{equation}
+Su salida pertenece al intervalo $(-1,1)$ y conserva el signo de la entrada. Cerca del origen varía de forma aproximadamente lineal; para magnitudes grandes se aproxima a sus límites y cambia con menor intensidad. Este último comportamiento se denomina saturación de la activación. La función es suave y se emplea en las siete capas ocultas de la MLP del controlador. Que sus activaciones estén acotadas no implica que los estados de la planta también lo estén ni garantiza la estabilidad del lazo de control.
+
+La función sigmoide se define como
+\begin{equation}
+\sigma(z)=\frac{1}{1+e^{-z}}.
+\end{equation}
+Transforma la entrada al intervalo $(0,1)$: los valores muy negativos producen salidas próximas a cero, y los muy positivos, salidas próximas a uno. En el clasificador se utiliza en las dos neuronas finales para generar puntuaciones asociadas a NORMAL y PNEUMONIA. La interpretación de esas puntuaciones depende de la función de pérdida y de la regla de decisión utilizada; la activación, por sí sola, no garantiza probabilidades calibradas.
+
+Finalmente, una activación lineal o identidad cumple $\phi(z)=z$. La neurona de salida del controlador utiliza esta función para representar una acción normalizada que puede tomar valores positivos y negativos sin imponer una cota adicional. Posteriormente se recupera el voltaje mediante la desnormalización y se aplica el límite del actuador. De este modo, la transformación aprendida por la red y la restricción física sobre la acción corresponden a etapas diferenciadas.
+
+\subsubsection{Convolución, reducción espacial y clasificación}
+Una red neuronal convolucional, abreviada CNN, procesa la organización espacial de una imagen mediante filtros. Un filtro es un conjunto pequeño de pesos que se desplaza sobre la entrada y calcula una combinación de los valores de cada vecindad. El mismo conjunto de pesos se reutiliza en distintas posiciones, lo que permite detectar un patrón sin asignar parámetros independientes a cada ubicación. La matriz de respuestas producida por un filtro se denomina \emph{mapa de características}.
+
+Los canales representan componentes de la entrada o mapas generados por una capa. Una imagen en escala de grises tiene un canal de intensidad; una capa con seis filtros produce seis mapas de características. Durante el entrenamiento se ajustan los filtros para obtener representaciones útiles para la tarea. En las primeras etapas pueden responder a variaciones locales de intensidad, mientras que las capas sucesivas combinan sus respuestas en patrones más complejos.
+
+Con filtros de tamaño $k_h\times k_w$, $C_{\mathrm{in}}$ canales de entrada y $C_{\mathrm{out}}$ filtros, el número de parámetros es
+\begin{equation}
+N_{\mathrm{par,conv}}=(k_hk_wC_{\mathrm{in}}+1)C_{\mathrm{out}},
+\end{equation}
+incluyendo un sesgo por filtro. El costo de cálculo también depende del número de posiciones donde se aplica cada filtro, por lo que una capa con pocos parámetros puede requerir numerosas operaciones.
+
+La reducción por máximo local, denominada \termino{max pooling}, conserva el mayor valor de cada región de un mapa. En la red estudiada se utilizan regiones de $2\times2$, reduciendo las dimensiones espaciales y el volumen de datos que reciben las capas posteriores. Esta operación no introduce pesos entrenables. A continuación, la operación \termino{flatten} reorganiza los mapas como un vector sin cambiar sus valores, para entregarlos a las capas densas de clasificación.
+
+La clase estimada corresponde a la mayor puntuación de salida. En el modelo utilizado, las dos salidas sigmoidales se calculan de manera independiente y no necesariamente suman uno. Esto las diferencia de una capa \termino{softmax}, que normaliza conjuntamente sus salidas para que su suma sea uno. La regla de decisión del clasificador se basa en comparar las puntuaciones, conservando la configuración con que se entrenó la referencia.
+
+\subsection{Función de la red neuronal en el control predictivo}
+El controlador se basa en una política neuronal preentrenada procedente del trabajo de MPC aproximado de Hose, Gräfe y Trimpe \cite{hose2024}. Una política de control es una función que transforma el estado del sistema en la acción que se aplicará al actuador. En este caso, la red recibe cuatro variables de estado y calcula una acción escalar. La implementación estudiada utiliza la política nominal, sin incorporar una red adicional de corrección por sensibilidades.
+
+El control predictivo basado en modelo, denominado MPC por sus siglas en inglés, determina una secuencia de acciones mediante la predicción del comportamiento del sistema sobre un horizonte futuro. De esa secuencia se aplica la primera acción y el cálculo se repite cuando se dispone de un nuevo estado. En el caso estudiado, la red neuronal aproxima la relación entre el estado actual y la acción que proporcionaría el controlador de referencia. Así, durante su evaluación, el cálculo de la acción se realiza mediante las operaciones de la red, sin resolver en cada instante el problema de optimización del MPC.
+
+Esta tarea corresponde a un problema de regresión: la salida es una magnitud continua asociada al accionamiento del carro. A diferencia del clasificador de radiografías, que produce puntuaciones para dos categorías, el controlador debe entregar un valor cuyo signo y magnitud permitan modificar la evolución del sistema. La acción calculada afecta al estado siguiente; por ello, los errores de aproximación pueden propagarse a lo largo de una trayectoria. La evaluación de esta red considera tanto la discrepancia numérica de sus salidas como el comportamiento del sistema en lazo cerrado.
+
+
+Para interpretar esa evaluación se distinguen tres comparaciones: el error de aproximación de la política neuronal respecto del controlador que la origina, el cambio introducido por la cuantización respecto de la red de referencia y la discrepancia entre el modelo exportado y su implementación compilada. Un error pequeño en esta última comparación acredita concordancia de implementación sobre las entradas evaluadas; no demuestra por sí solo que la política conserve el comportamiento de control. Asimismo, el cumplimiento de restricciones en trayectorias finitas constituye evidencia experimental y no una prueba formal de estabilidad. Esta distinción conecta la aproximación neuronal con las evaluaciones estáticas y de lazo cerrado de la metodología.

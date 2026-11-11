@@ -1,0 +1,172 @@
+ST Edge AI Core v4.0.1-20581 7ed50de05
+Created date          : 2026-08-18 15:53:37
+Parameters            : generate --model C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\modelos\CNN_PTQ_MIXED_SELECTIVE_5_NODES.tflite --valinput C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\radiografias_val_8_st.npz --mode target --st-neural-art user_profile@C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-3\.ai\profile-neural-art.json --name network --verbosity 1 --c-api st-ai --target stm32n6 --workspace C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-3\.ai\st_ai_ws --output C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-3\.ai\st_ai_output
+
+Model name - CNN_PTQ_MIXED_SELECTIVE_5_NODES
+------ ----------------------------------- ----------------------- --------------- ----------- -------------------------------- 
+m_id   layer (original)                    oshape                  param/size             macc                     connected to 
+------ ----------------------------------- ----------------------- --------------- ----------- -------------------------------- 
+0      serving_default_input_layer_10 ()   [b:1,h:150,w:150,c:1]                                                                
+       conversion_0 (DEQUANTIZE)           [b:1,h:150,w:150,c:1]                        45,000   serving_default_input_layer_10 
+------ ----------------------------------- ----------------------- --------------- ----------- -------------------------------- 
+1      conv2d_1 (CONV_2D)                  [b:1,h:148,w:148,c:6]   60/240            1,182,822                     conversion_0 
+       nl_1_nl (CONV_2D)                   [b:1,h:148,w:148,c:6]                       131,424                         conv2d_1 
+------ ----------------------------------- ----------------------- --------------- ----------- -------------------------------- 
+2      conversion_2 (QUANTIZE)             [b:1,h:148,w:148,c:6]                       262,848                          nl_1_nl 
+------ ----------------------------------- ----------------------- --------------- ----------- -------------------------------- 
+3      pool_3 (MAX_POOL_2D)                [b:1,h:74,w:74,c:6]                         131,424                     conversion_2 
+------ ----------------------------------- ----------------------- --------------- ----------- -------------------------------- 
+4      conversion_4 (DEQUANTIZE)           [b:1,h:74,w:74,c:6]                          65,712                           pool_3 
+------ ----------------------------------- ----------------------- --------------- ----------- -------------------------------- 
+5      conv2d_5 (CONV_2D)                  [b:1,h:72,w:72,c:6]     330/1,320         1,679,622                     conversion_4 
+       nl_5_nl (CONV_2D)                   [b:1,h:72,w:72,c:6]                          31,104                         conv2d_5 
+------ ----------------------------------- ----------------------- --------------- ----------- -------------------------------- 
+6      conversion_6 (QUANTIZE)             [b:1,h:72,w:72,c:6]                          62,208                          nl_5_nl 
+------ ----------------------------------- ----------------------- --------------- ----------- -------------------------------- 
+7      pool_7 (MAX_POOL_2D)                [b:1,h:36,w:36,c:6]                          31,104                     conversion_6 
+------ ----------------------------------- ----------------------- --------------- ----------- -------------------------------- 
+8      conversion_8 (DEQUANTIZE)           [b:1,h:36,w:36,c:6]                          15,552                           pool_7 
+------ ----------------------------------- ----------------------- --------------- ----------- -------------------------------- 
+9      conv2d_9 (CONV_2D)                  [b:1,h:34,w:34,c:6]     330/1,320           374,550                     conversion_8 
+       nl_9_nl (CONV_2D)                   [b:1,h:34,w:34,c:6]                           6,936                         conv2d_9 
+------ ----------------------------------- ----------------------- --------------- ----------- -------------------------------- 
+10     conversion_10 (QUANTIZE)            [b:1,h:34,w:34,c:6]                          13,872                          nl_9_nl 
+------ ----------------------------------- ----------------------- --------------- ----------- -------------------------------- 
+11     pool_11 (MAX_POOL_2D)               [b:1,h:17,w:17,c:6]                           6,936                    conversion_10 
+------ ----------------------------------- ----------------------- --------------- ----------- -------------------------------- 
+12     conversion_12 (DEQUANTIZE)          [b:1,h:17,w:17,c:6]                           3,468                          pool_11 
+------ ----------------------------------- ----------------------- --------------- ----------- -------------------------------- 
+13     conv2d_13 (CONV_2D)                 [b:1,h:15,w:15,c:6]     330/1,320            72,906                    conversion_12 
+       nl_13_nl (CONV_2D)                  [b:1,h:15,w:15,c:6]                           1,350                        conv2d_13 
+------ ----------------------------------- ----------------------- --------------- ----------- -------------------------------- 
+14     conversion_14 (QUANTIZE)            [b:1,h:15,w:15,c:6]                           2,700                         nl_13_nl 
+------ ----------------------------------- ----------------------- --------------- ----------- -------------------------------- 
+18     reshape_18 (RESHAPE)                [b:1,c:1350]                                                           conversion_14 
+------ ----------------------------------- ----------------------- --------------- ----------- -------------------------------- 
+19     sequential_1_1_den..2_1_MatMul ()   [b:16,c:1350]           21,600/21,600                                                
+       sequential_1_1_den.._1_BiasAdd ()   [b:16]                  16/64                                                        
+       gemm_19 (FULLY_CONNECTED)           [b:1,c:16]                                   21,616                       reshape_18 
+                                                                                                 sequential_1_1_den..2_1_MatMul 
+                                                                                                 sequential_1_1_den.._1_BiasAdd 
+       nl_19_nl (FULLY_CONNECTED)          [b:1,c:16]                                       16                          gemm_19 
+------ ----------------------------------- ----------------------- --------------- ----------- -------------------------------- 
+20     conversion_20 (DEQUANTIZE)          [b:1,c:16]                                       32                         nl_19_nl 
+------ ----------------------------------- ----------------------- --------------- ----------- -------------------------------- 
+21     sequential_1_1_den..3_1_MatMul ()   [b:2,c:16]              32/128                                                       
+       sequential_1_1_den.._1_BiasAdd ()   [b:2]                   2/8                                                          
+       gemm_21 (FULLY_CONNECTED)           [b:1,c:2]                                        34                    conversion_20 
+                                                                                                 sequential_1_1_den..3_1_MatMul 
+                                                                                                 sequential_1_1_den.._1_BiasAdd 
+------ ----------------------------------- ----------------------- --------------- ----------- -------------------------------- 
+22     conversion_22 (QUANTIZE)            [b:1,c:2]                                         4                          gemm_21 
+------ ----------------------------------- ----------------------- --------------- ----------- -------------------------------- 
+23     nl_23 (LOGISTIC)                    [b:1,c:2]                                        20                    conversion_22 
+------ ----------------------------------- ----------------------- --------------- ----------- -------------------------------- 
+model: macc=4,143,260 weights=26,000 activations=-- io=--
+
+
+
+
+
+Compilation details
+------------------------------------------------------------------------------------
+Compiler version: 1.1.3-275
+Compiler arguments:  -i C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-3\.ai\st_ai_output\CNN_PTQ_MIXED_SELECTIVE_5_NODES_OE_3_3_1.onnx --json-quant-file C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-3\.ai\st_ai_output\CNN_PTQ_MIXED_SELECTIVE_5_NODES_OE_3_3_1_Q.json -g network.c --load-mdesc C:\ST\STEdgeAI\4.0\Utilities\configs\stm32n6.mdesc --load-mpool C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-3\.ai\memory_pool.mpool --load-cdesc C:\ST\STEdgeAI\4.0\Utilities\configs\cortex-m55.cdesc --save-mpool-file C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-3\.ai\st_ai_ws\neural_art__network\memory_pool.mpool --out-dir-prefix C:\Users\Alonso\.stm32cubeaistudio\workspace\Clasificador_Neumonia\.ai\run\run-3\.ai\st_ai_ws\neural_art__network/ --network-name network --native-float --cache-maintenance --Ocache-opt --enable-virtual-mem-pools --Os --Oauto-sched --enable-epoch-controller --output-info-file c_info.json --generate-stai
+====================================================================================
+
+Memory usage information  (input/output buffers are included in activations)
+------------------------------------------------------------------------------------
+	flexMEM    [0x34000000 - 0x34000000]:          0  B /          0  B  (  0.00 % used) -- weights:          0  B (  0.00 % used)  activations:          0  B (  0.00 % used)
+	cpuRAM1    [0x34064000 - 0x34064000]:          0  B /          0  B  (  0.00 % used) -- weights:          0  B (  0.00 % used)  activations:          0  B (  0.00 % used)
+	cpuRAM2    [0x34100000 - 0x34200000]:    513.375 kB /      1.000 MB  ( 50.13 % used) -- weights:          0  B (  0.00 % used)  activations:    513.375 kB ( 50.13 % used)
+	npuRAM3    [0x34200000 - 0x34270000]:          0  B /    448.000 kB  (  0.00 % used) -- weights:          0  B (  0.00 % used)  activations:          0  B (  0.00 % used)
+	npuRAM4    [0x34270000 - 0x342E0000]:          0  B /    448.000 kB  (  0.00 % used) -- weights:          0  B (  0.00 % used)  activations:          0  B (  0.00 % used)
+	npuRAM5    [0x342E0000 - 0x34350000]:    249.844 kB /    448.000 kB  ( 55.77 % used) -- weights:          0  B (  0.00 % used)  activations:    249.844 kB ( 55.77 % used)
+	npuRAM6    [0x34350000 - 0x343C0000]:          0  B /    448.000 kB  (  0.00 % used) -- weights:          0  B (  0.00 % used)  activations:          0  B (  0.00 % used)
+	octoFlash  [0x71000000 - 0x78000000]:     25.673 kB /    112.000 MB  (  0.02 % used) -- weights:     25.673 kB (  0.02 % used)  activations:          0  B (  0.00 % used)
+	hyperRAM   [0x90000000 - 0x92000000]:          0  B /     32.000 MB  (  0.00 % used) -- weights:          0  B (  0.00 % used)  activations:          0  B (  0.00 % used)
+---
+Total:                                           788.892 kB                                  -- weights:     25.673 kB                  activations:    763.219 kB                   
+====================================================================================
+
+
+Used memory ranges
+------------------------------------------------------------------------------------
+	cpuRAM2    [0x34100000 - 0x34200000]: 0x34100000-0x34180580
+	npuRAM5    [0x342E0000 - 0x34350000]: 0x342E0000-0x3431E760
+	octoFlash  [0x71000000 - 0x78000000]: 0x71000000-0x710066C0
+====================================================================================
+
+Epochs details
+------------------------------------------------------------------------------------
+Total number of epochs                               26
+>> pure software (SW) epochs                         20
+>> hybrid epochs (using both software and hardware)   0
+>> pure hardware (HW or EC) epochs                    6  (implemented in 8 epoch controller blobs/meta epochs)
+---
++----------------------+------+------------------+
+| epoch ID             | Type |     Details      |
++----------------------+------+------------------+
+| <no executed epochs> |  EC  |                  |
+| epoch_2              |  SW  | DequantizeLinear |
+| epoch_3              |  SW  |   Conv(float)    |
+| epoch_4              |  SW  |   Relu(float)    |
+| epoch_5              |  SW  |  QuantizeLinear  |
+| epochs    6 -> 6     |  EC  |                  |
+| epoch_7              |  SW  | DequantizeLinear |
+| epoch_8              |  SW  |   Conv(float)    |
+| epoch_9              |  SW  |   Relu(float)    |
+| epoch_10             |  SW  |  QuantizeLinear  |
+| epochs   11 -> 11    |  EC  |                  |
+| epoch_12             |  SW  | DequantizeLinear |
+| epoch_13             |  SW  |   Conv(float)    |
+| epoch_14             |  SW  |   Relu(float)    |
+| epoch_15             |  SW  |  QuantizeLinear  |
+| epochs   16 -> 16    |  EC  |                  |
+| epoch_17             |  SW  | DequantizeLinear |
+| epoch_18             |  SW  |   Conv(float)    |
+| epoch_19             |  SW  |   Relu(float)    |
+| epoch_20             |  SW  |  QuantizeLinear  |
+| epochs   22 -> 23    |  EC  |                  |
+| epoch_24             |  SW  | DequantizeLinear |
+| <no executed epochs> |  EC  |                  |
+| epoch_26             |  SW  |   Conv(float)    |
+| <no executed epochs> |  EC  |                  |
+| epoch_28             |  SW  |    Add(float)    |
+| epoch_29             |  SW  |  QuantizeLinear  |
+| epochs   30 -> 30    |  EC  |                  |
++----------------------+------+------------------+
+==================================================================================== 
+ Requested memory size by section - "stm32n6npu" target
+ ------------------------------- -------- -------- ------ --------- 
+ module                              text   rodata   data       bss 
+ ------------------------------- -------- -------- ------ --------- 
+ network_atonbuf.xSPI2.o                0   26,296      0         0 
+ NetworkRuntime1201_CM55_GCC.a     14,076        0      0         0 
+ network.o                          3,040    3,659      0         0 
+ EC Blobs                              10    4,544      0     1,984 
+ stai_network.o                         0        0      0         0 
+ lib (toolchain)*                  12,296    2,262      0         0 
+ ll atonn runtime                   7,048    2,844      0        13 
+ ------------------------------- -------- -------- ------ --------- 
+ RT total**                        36,470   39,605      0     1,997 
+ ------------------------------- -------- -------- ------ --------- 
+ weights                                0   26,289      0         0 
+ activations                            0        0      0   781,536 
+ io                                     0        0      0         0 
+ ------------------------------- -------- -------- ------ --------- 
+ TOTAL                             36,470   65,894      0   783,533 
+ ------------------------------- -------- -------- ------ --------- 
+ *  toolchain objects (libm/libgcc*)
+ ** RT AI runtime objects (kernels+infrastructure)
+  
+  Summary - "stm32n6npu" target
+  --------------------------------------------------
+               FLASH (ro)      %*   RAM (rw)      % 
+  --------------------------------------------------
+  RT total         76,075   74.3%      1,997   0.3% 
+  --------------------------------------------------
+  TOTAL           102,364            783,533        
+  --------------------------------------------------
+  *  rt/total
+

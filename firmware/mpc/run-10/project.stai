@@ -1,0 +1,21 @@
+{
+  "toolchain": "STM32CubeIDE",
+  "variant": "Validation",
+  "fromMx": false,
+  "isGenerated": true,
+  "name": "run-10",
+  "createdAt": 1787596061028,
+  "lastModified": 1787600823965,
+  "lastAccessed": 1787600823965,
+  "path": "C:\\Users\\Alonso\\.stm32cubeaistudio\\workspace\\MPC_CartPole",
+  "board": "STM32N6570-DK",
+  "mcu": "STM32N657X0H3Q",
+  "type": "BYOM",
+  "context": "Appli",
+  "contextProject": "FullSecure",
+  "uartInstance": {
+    "usart": "USART1",
+    "txpin": "PE5",
+    "rxpin": "PE6"
+  }
+}

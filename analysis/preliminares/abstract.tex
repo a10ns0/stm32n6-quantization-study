@@ -1,0 +1,11 @@
+\preliminar{ABSTRACT}
+\begin{otherlanguage}{english}
+Deploying neural networks on microcontrollers requires balancing application performance, latency, and memory. This thesis evaluates quantization strategies on the STM32N6570-DK through two case studies: chest X-ray classification and neural approximation of model predictive control (MPC) for a cart-pole system. Float32 models are compared with INT8 post-training quantization, INT8 quantization-aware training, INT16×8, and selective mixed precision. Evaluation includes simulation, compilation analysis, and on-board testing, distinguishing Cortex-M55 execution with Helium support from Neural-ART NPU acceleration and CPU fallback operations.
+
+For X-ray classification, INT8 post-training quantization achieved 80.93\% accuracy versus 79.81\% for Float32, while reducing the compared model file size by 59.41\%. For MPC, INT8 variants reduced inference latency from approximately 0.303 ms to 0.067 ms but achieved only 25–37\% closed-loop success, compared with 99.5\% for Float32. INT16×8 retained 99\% success in simulation; however, deployment required complete conversion to Float32 on the CPU, eliminating native quantized execution. Selective mixed precision achieved 78\% success and inference times of 326–347 µs in hardware-in-the-loop experiments.
+
+The results show that faster inference does not necessarily preserve application performance. When quantized computation must be retained, selective mixed precision provides a viable deployment alternative among the evaluated MPC models, subject to the application's tolerance for reduced control success. Strategy selection must therefore consider functional requirements and the numerical representation actually executed on the hardware.
+
+
+\textbf{Keywords:} edge artificial intelligence; quantization; STM32N6; Helium; Neural-ART; chest X-ray classification; predictive control.
+\end{otherlanguage}

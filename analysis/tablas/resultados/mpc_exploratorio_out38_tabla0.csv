@@ -1,0 +1,2 @@
+Unnamed: 0,RMSE_x,RMSE_theta,RMSE_xdot,RMSE_thetadot,RMSE_u,MAE_u,TV_u_NN,norma_final_NN,t_est_NN_s
+media,0.016493,0.012899,0.071686,0.111875,0.589764,0.411835,41.036254,0.135882,3.04

@@ -1,0 +1,128 @@
+[1/16] C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\NORMAL\NORMAL2-IM-1427-0001.jpeg
+STM32> ACK,HEADER
+STM32> ACK,PAYLOAD
+STM32> ACK,RUNNING
+STM32> Timestamp    : SysTick + DWT (delay(1)=1.005 ms)
+STM32> RESULT,id=1,class=0,label=NORMAL,normal_milli=180,pneumonia_milli=180,latency_us=105661
+
+[2/16] C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\NORMAL\NORMAL2-IM-1430-0001.jpeg
+STM32> READY
+STM32> ACK,HEADER
+STM32> ACK,PAYLOAD
+STM32> ACK,RUNNING
+STM32> Timestamp    : SysTick + DWT (delay(1)=1.009 ms)
+STM32> RESULT,id=2,class=1,label=PNEUMONIA,normal_milli=199,pneumonia_milli=246,latency_us=106222
+
+[3/16] C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\NORMAL\NORMAL2-IM-1431-0001.jpeg
+STM32> READY
+STM32> ACK,HEADER
+STM32> ACK,PAYLOAD
+STM32> ACK,RUNNING
+STM32> Timestamp    : SysTick + DWT (delay(1)=1.000 ms)
+STM32> RESULT,id=3,class=0,label=NORMAL,normal_milli=395,pneumonia_milli=102,latency_us=105954
+
+[4/16] C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\NORMAL\NORMAL2-IM-1436-0001.jpeg
+STM32> READY
+STM32> ACK,HEADER
+STM32> ACK,PAYLOAD
+STM32> ACK,RUNNING
+STM32> Timestamp    : SysTick + DWT (delay(1)=1.001 ms)
+STM32> RESULT,id=4,class=1,label=PNEUMONIA,normal_milli=137,pneumonia_milli=246,latency_us=105712
+
+[5/16] C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\NORMAL\NORMAL2-IM-1437-0001.jpeg
+STM32> READY
+STM32> ACK,HEADER
+STM32> ACK,PAYLOAD
+STM32> ACK,RUNNING
+STM32> Timestamp    : SysTick + DWT (delay(1)=1.001 ms)
+STM32> RESULT,id=5,class=1,label=PNEUMONIA,normal_milli=59,pneumonia_milli=520,latency_us=105712
+
+[6/16] C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\NORMAL\NORMAL2-IM-1438-0001.jpeg
+STM32> READY
+STM32> ACK,HEADER
+STM32> ACK,PAYLOAD
+STM32> ACK,RUNNING
+STM32> Timestamp    : SysTick + DWT (delay(1)=1.008 ms)
+STM32> RESULT,id=6,class=1,label=PNEUMONIA,normal_milli=180,pneumonia_milli=223,latency_us=105825
+
+[7/16] C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\NORMAL\NORMAL2-IM-1440-0001.jpeg
+STM32> READY
+STM32> ACK,HEADER
+STM32> ACK,PAYLOAD
+STM32> ACK,RUNNING
+STM32> Timestamp    : SysTick + DWT (delay(1)=1.003 ms)
+STM32> RESULT,id=7,class=0,label=NORMAL,normal_milli=191,pneumonia_milli=102,latency_us=106179
+
+[8/16] C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\NORMAL\NORMAL2-IM-1442-0001.jpeg
+STM32> READY
+STM32> ACK,HEADER
+STM32> ACK,PAYLOAD
+STM32> ACK,RUNNING
+STM32> Timestamp    : SysTick + DWT (delay(1)=1.003 ms)
+STM32> RESULT,id=8,class=0,label=NORMAL,normal_milli=281,pneumonia_milli=82,latency_us=105689
+
+[9/16] C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\PNEUMONIA\person1946_bacteria_4874.jpeg
+STM32> READY
+STM32> ACK,HEADER
+STM32> ACK,PAYLOAD
+STM32> ACK,RUNNING
+STM32> Timestamp    : SysTick + DWT (delay(1)=1.003 ms)
+STM32> RESULT,id=9,class=1,label=PNEUMONIA,normal_milli=23,pneumonia_milli=625,latency_us=106248
+
+[10/16] C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\PNEUMONIA\person1946_bacteria_4875.jpeg
+STM32> READY
+STM32> ACK,HEADER
+STM32> ACK,PAYLOAD
+STM32> ACK,RUNNING
+STM32> Timestamp    : SysTick + DWT (delay(1)=1.007 ms)
+STM32> RESULT,id=10,class=1,label=PNEUMONIA,normal_milli=59,pneumonia_milli=480,latency_us=105768
+
+[11/16] C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\PNEUMONIA\person1947_bacteria_4876.jpeg
+STM32> READY
+STM32> ACK,HEADER
+STM32> ACK,PAYLOAD
+STM32> ACK,RUNNING
+STM32> Timestamp    : SysTick + DWT (delay(1)=1.005 ms)
+STM32> RESULT,id=11,class=1,label=PNEUMONIA,normal_milli=16,pneumonia_milli=641,latency_us=105762
+
+[12/16] C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\PNEUMONIA\person1949_bacteria_4880.jpeg
+STM32> READY
+STM32> ACK,HEADER
+STM32> ACK,PAYLOAD
+STM32> ACK,RUNNING
+STM32> Timestamp    : SysTick + DWT (delay(1)=1.006 ms)
+STM32> RESULT,id=12,class=1,label=PNEUMONIA,normal_milli=145,pneumonia_milli=250,latency_us=104885
+
+[13/16] C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\PNEUMONIA\person1950_bacteria_4881.jpeg
+STM32> READY
+STM32> ACK,HEADER
+STM32> ACK,PAYLOAD
+STM32> ACK,RUNNING
+STM32> Timestamp    : SysTick + DWT (delay(1)=1.000 ms)
+STM32> RESULT,id=13,class=1,label=PNEUMONIA,normal_milli=70,pneumonia_milli=367,latency_us=105922
+
+[14/16] C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\PNEUMONIA\person1951_bacteria_4882.jpeg
+STM32> READY
+STM32> ACK,HEADER
+STM32> ACK,PAYLOAD
+STM32> ACK,RUNNING
+STM32> Timestamp    : SysTick + DWT (delay(1)=1.004 ms)
+STM32> RESULT,id=14,class=1,label=PNEUMONIA,normal_milli=23,pneumonia_milli=703,latency_us=105750
+
+[15/16] C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\PNEUMONIA\person1952_bacteria_4883.jpeg
+STM32> READY
+STM32> ACK,HEADER
+STM32> ACK,PAYLOAD
+STM32> ACK,RUNNING
+STM32> Timestamp    : SysTick + DWT (delay(1)=1.007 ms)
+STM32> RESULT,id=15,class=1,label=PNEUMONIA,normal_milli=199,pneumonia_milli=258,latency_us=105885
+
+[16/16] C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias\chest_xray\val\PNEUMONIA\person1954_bacteria_4886.jpeg
+STM32> READY
+STM32> ACK,HEADER
+STM32> ACK,PAYLOAD
+STM32> ACK,RUNNING
+STM32> Timestamp    : SysTick + DWT (delay(1)=1.000 ms)
+STM32> RESULT,id=16,class=1,label=PNEUMONIA,normal_milli=27,pneumonia_milli=480,latency_us=105003
+
+(CNN) C:\Users\Alonso\Jupyter\Tesis\Test_Modelos_Cuantizacion\Red_clasificacion_Imagenes\Red_clasificacion_Radiografias>

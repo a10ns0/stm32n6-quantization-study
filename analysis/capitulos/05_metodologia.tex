@@ -1,0 +1,449 @@
+\chapter{Metodología experimental}
+\label{cap:metodologia}\label{cap:metodologia_general}
+
+La evaluación se organizó como un proceso que conecta la preparación de los datos, la obtención del modelo de referencia, la generación de variantes cuantizadas y su ejecución en la plataforma STM32N6570-DK. Se aplicó a dos tareas con exigencias diferentes: clasificación de radiografías y aproximación neuronal de un controlador MPC. En la primera interesa conservar la capacidad de clasificación; en la segunda, preservar el comportamiento del sistema realimentado dentro de las restricciones del ensayo.
+
+Este capítulo establece las condiciones de comparación y los procedimientos de medida. Las arquitecturas, el entrenamiento inicial y la transferencia del controlador se describen en la sección~\ref{sec:preparacion_casos}. Los fundamentos de cuantización y de ejecución en CPU/NPU se desarrollan en las secciones~\ref{cap:cuant} y~\ref{cap:plataforma}. Las cifras de desempeño y su interpretación se reservan para el capítulo de resultados.
+
+\section{Diseño experimental y pipeline general}
+\label{sec:diseno_experimental}
+
+Se adoptó un diseño comparativo dentro de cada caso de estudio, mediante los mismos datos o condiciones iniciales dentro de cada banco. En MPC, las variantes se relacionan con la política neuronal de referencia transferida a Keras. En radiografías se comparan los modelos identificados en la campaña: el PTQ INT8 desplegado presenta ocho canales y 30\,682 parámetros, frente a seis canales y 22\,700 parámetros en las otras topologías descritas. Por ello, esta comparación caracteriza alternativas completas y no aísla exclusivamente el efecto de la cuantización. En QAT se añade además un ajuste de pesos, de modo que sus diferencias respecto de PTQ tampoco se atribuyen únicamente al número de bits.
+
+La interpretación de la selección considera conjuntamente desempeño funcional, concordancia entre el modelo y su implementación, latencia y memoria. No se aplica una función ponderada de optimización ni un umbral clínico de aceptación. En MPC se distingue la alternativa parcialmente cuantizada investigada mediante HIL de la referencia con mayor desempeño en simulación. Estos criterios organizan la lectura de los resultados y no representan un protocolo de selección registrado previamente.
+
+El procedimiento comprendió cinco etapas: preparación de entradas y particiones; obtención de la referencia Float32; conversión y, cuando correspondió, ajuste QAT; evaluación funcional en el computador; y compilación, validación e integración en placa. Cada etapa produjo un elemento identificable: arreglos de datos, pesos de referencia, archivos TensorFlow Lite, registros de evaluación o firmware. Esta secuencia permite relacionar los resultados con los artefactos identificados; en HIL, la asociación con el firmware se apoya en el procedimiento y los registros disponibles, sin identificación mediante hash por ensayo~\cite{cap5_registros}.
+
+La comparación distingue tres niveles. La evaluación en el computador mide el efecto de la conversión sobre la tarea. La validación de una red compilada contrasta sus salidas frente a entradas conocidas. Finalmente, la integración por UART comprueba el intercambio de datos con la aplicación y, en MPC, incorpora el controlador ejecutado en placa al lazo con la planta simulada. Una coincidencia de salidas en el segundo nivel no sustituye la evaluación del lazo cerrado en el tercero.
+
+Se mantuvo también la separación entre el formato del modelo exportado y la representación ejecutada después de compilar. La asignación a CPU o NPU se determinó mediante los informes de las herramientas y la evidencia de implementación de la sección~\ref{sec:cap4_evidencia}. No se dedujo aceleración hardware únicamente del nombre de un archivo o de la opción de conversión seleccionada.
+
+\section{Entorno y configuración experimental}
+\label{sec:entorno_experimental}
+
+\subsection{Entorno de desarrollo y bibliotecas}
+
+El procesamiento y la evaluación se desarrollaron en Python, mediante cuadernos Jupyter y programas auxiliares, dentro del entorno Conda denominado \texttt{CNN}. Su configuración se conservó en una exportación YAML con los canales \texttt{conda-forge} y \texttt{defaults}. La tabla~\ref{tab:entorno_cap5} recoge las dependencias principales del entorno experimental~\cite{cap5_entorno}. Esta exportación caracteriza la configuración registrada; no acredita por sí sola que todas las ejecuciones históricas se hayan realizado con idénticas versiones.
+
+\begin{table}[htbp]
+\centering
+\caption{Versiones registradas del entorno de trabajo.}
+\label{tab:entorno_cap5}
+\begingroup\small\setstretch{1.05}
+\begin{tabularx}{\textwidth}{@{}p{3.8cm}p{3.0cm}Y@{}}
+\toprule
+Componente & Versión & Función en el procedimiento \\
+\midrule
+Python & 3.10.20 & Ejecución de programas. \\
+TensorFlow / Keras & 2.21.0 / 3.12.4 & Modelado, conversión e inferencia. \\
+\texttt{tf-keras} / TFMOT & 2.21.0 / 0.8.1 & Ajuste consciente de cuantización. \\
+JAX / Equinox & 0.6.2 / 0.13.8 & Carga del controlador de referencia. \\
+NumPy / SciPy & 2.2.6 / 1.15.3 & Arreglos e integración de la planta. \\
+scikit-learn & 1.7.2 & Particiones y métricas. \\
+scikit-image / OpenCV & 0.25.2 / 5.0.0.93 & Preparación de radiografías. \\
+JupyterLab / PySerial & 4.5.9 / 3.5 & Ejecución interactiva y enlace serie. \\
+\bottomrule
+\end{tabularx}
+\endgroup
+\end{table}
+
+Se distinguieron Keras y \texttt{tf-keras}, porque el ajuste QAT utilizó la interfaz compatible con TensorFlow Model Optimization. En radiografías se reconstruyó el modelo en esa interfaz, se copiaron los pesos y se comprobó la correspondencia de sus salidas antes del ajuste. Así, el cambio de biblioteca no se confundió con el efecto del entrenamiento cuantizado.
+
+\subsection{Herramientas STM32 y configuración de la placa}
+
+Durante los experimentos se mantuvieron los parámetros de reloj de los proyectos utilizados, sin modificaciones manuales de frecuencia. La placa se alimentó mediante una conexión USB-C. La asignación de pesos y activaciones fue realizada por el compilador del flujo de STM32Cube AI Studio, dentro de los pools de memoria definidos para la plataforma. La ocupación resultante se examinó en los informes de análisis, generación y validación de cada modelo. Estas condiciones describen el procedimiento experimental; no constituyen un estudio de ajuste de frecuencia, alimentación o ubicación manual de búferes.
+
+La configuración registrada incluye ST Edge AI Core 4.0.1, STM32CubeMX 6.18.1, STM32CubeIDE 2.2.0 y STM32CubeProgrammer 2.23.0~\cite{cap5_entorno}. CubeMX y las herramientas de IA se emplearon para preparar el proyecto y generar la implementación de la red; CubeIDE, para compilar e integrar la aplicación; y CubeProgrammer, para programar la placa. No se asigna una versión a la interfaz Studio ni a Anaconda Navigator, pues esas versiones no quedaron registradas en la configuración experimental. Esta configuración no se atribuye retrospectivamente a todas las ejecuciones: cuando un registro identifica versiones de una campaña concreta, esas versiones prevalecen para describirla.
+
+La generación del código se realizó para STM32N6570-DK, conservando la configuración del proyecto asociada a cada ensayo. La distribución de parámetros y activaciones se obtuvo de los informes de compilación y de los recursos de memoria seleccionados por la cadena ST~\cite{cap5_stcompiler}. Para comparar latencias se requiere identificar conjuntamente el modelo, el destino CPU/NPU y la configuración compilada; los resultados de proyectos distintos no se agrupan como si difirieran únicamente en la cuantización.
+
+La comunicación con el computador utilizó USART1 a 115200 bit/s, con ocho bits de datos, sin paridad y un bit de parada, a través del puerto serie virtual. El proyecto MPC inicializa las cachés y la interfaz de inferencia antes de atender solicitudes. La inicialización de recursos de NPU no se considera, por sí sola, evidencia de que todos los operadores se ejecuten en ella.
+
+\section{Preparación de los casos de estudio}\label{sec:preparacion_casos}
+
+Esta sección documenta cómo se obtuvieron los dos modelos de referencia de la memoria. La CNN de radiografías se entrenó en el entorno del proyecto. La MLP del controlador MPC se obtuvo a partir de un modelo preentrenado de los autores y se reconstruyó en Keras mediante transferencia de sus parámetros. Por tanto, la evidencia de referencia corresponde a curvas de aprendizaje en el primer caso y a pruebas de fidelidad de transferencia en el segundo.
+
+La caracterización de ambas referencias distingue el error de construcción o transferencia del modelo del introducido por la cuantización. Así se evita atribuir a la reducción de precisión una diferencia previa entre implementaciones.
+
+
+
+
+\subsection{Clasificación de radiografías}\label{sec:cnn_base}
+
+La tarea consiste en asignar a cada radiografía una de dos clases: normalidad o neumonía. El conjunto de entrenamiento procesado contiene 2682 imágenes, distribuidas en 1341 por clase; el conjunto de evaluación contiene 624, de las cuales 234 corresponden a normalidad y 390 a neumonía. Esta separación permite distinguir los datos empleados para ajustar los parámetros de aquellos utilizados para comparar las predicciones finales de las variantes.
+
+El preprocesamiento homogeneiza imágenes de diferentes tamaños y características de lectura para obtener una entrada compatible con la CNN. Se conservó el orden del programa original: lectura de la imagen, redimensionamiento y transformación a escala de grises. Cada muestra se representó mediante un tensor de $150\times150\times1$, donde las dos primeras dimensiones indican alto y ancho y la tercera corresponde al único canal de intensidad. Los valores se llevaron al intervalo $[0,1]$. Al ejecutar una muestra se añadió la dimensión de lote, obteniendo $1\times150\times150\times1$. Se mantuvo el mismo tratamiento para las variantes, evitando que un cambio de preprocesamiento se confundiera con un efecto de cuantización.
+
+La referencia Float32 se obtuvo mediante el entrenamiento de cinco épocas descrito en la sección~\ref{sec:cnn_entrenamiento}. Para el ajuste QAT se dividió el conjunto de entrenamiento de forma estratificada, con semilla 42, en 2279 imágenes de ajuste y 403 de validación. La estratificación conserva aproximadamente la proporción de clases en ambas particiones; el subconjunto de validación permite supervisar el ajuste y seleccionar los pesos. Las 624 imágenes de evaluación se mantuvieron para comparar las variantes finales. Este último conjunto también se había empleado como validación durante el entrenamiento Float32 inicial; por tanto, sus métricas no se interpretan como una estimación sobre un conjunto completamente ajeno al desarrollo.
+
+La preparación para la validación ST utilizó adicionalmente ocho imágenes, cuatro de cada clase. Se exportaron entradas y etiquetas en el formato requerido por el validador, conservando la correspondencia entre cada imagen y su clase. La validación de la implementación compilada comprueba que la interfaz acepta el tensor y que sus salidas concuerdan con las del modelo de referencia exportado; las etiquetas permiten contrastar también la decisión de clasificación. Este subconjunto es una comprobación funcional y no sustituye la evaluación sobre las 624 imágenes. En las interfaces INT8, la imagen preprocesada se transforma utilizando la escala y el punto cero del modelo; esta adaptación numérica no altera la etiqueta ni constituye un nuevo entrenamiento. La integración concreta y sus parámetros se describen en la sección~\ref{sec:validacion_st}.
+
+\subsubsection{Datos y arquitectura implementada}
+Las etiquetas se codifican como 0 para NORMAL y 1 para PNEUMONIA.
+
+La arquitectura combina cuatro capas convolucionales de seis filtros de $3\times3$, tres etapas de reducción por máximo local y dos capas densas. Las convoluciones extraen representaciones espaciales de la imagen, mientras que las capas densas combinan esas características para obtener las dos puntuaciones de clasificación. La Tabla~\ref{tab:cap2_cnn} presenta sus dimensiones y el número de parámetros por capa.
+
+\begin{table}[H]\centering\small
+\caption{Arquitectura de la CNN Float32 de radiografías.}\label{tab:cap2_cnn}
+\begin{tabularx}{\linewidth}{Yp{2.7cm}p{1.9cm}r}\toprule
+Capa & Salida sin lote & Activación & Parámetros\\\midrule
+Entrada & $150\times150\times1$ & -- & 0\\
+Conv2D, 6 filtros $3\times3$ & $148\times148\times6$ & ReLU & 60\\
+MaxPooling2D, $2\times2$ & $74\times74\times6$ & -- & 0\\
+Conv2D, 6 filtros $3\times3$ & $72\times72\times6$ & ReLU & 330\\
+MaxPooling2D, $2\times2$ & $36\times36\times6$ & -- & 0\\
+Conv2D, 6 filtros $3\times3$ & $34\times34\times6$ & ReLU & 330\\
+MaxPooling2D, $2\times2$ & $17\times17\times6$ & -- & 0\\
+Conv2D, 6 filtros $3\times3$ & $15\times15\times6$ & ReLU & 330\\
+Flatten & $1350$ & -- & 0\\
+Dense, 16 neuronas & $16$ & ReLU & 21\,616\\
+Dense, 2 neuronas & $2$ & Sigmoide & 34\\\midrule
+\multicolumn{3}{l}{Total entrenable} & 22\,700\\\bottomrule
+\end{tabularx}
+\fuente{elaboración propia a partir de la arquitectura del clasificador}
+\end{table}
+Las convoluciones reducen cada dimensión espacial en dos posiciones, de acuerdo con el tamaño de filtro y las dimensiones mostradas. La capa densa de 16 neuronas concentra 21\,616 parámetros, aproximadamente el 95,22\% del total. Esta distribución es relevante para analizar almacenamiento, aunque no equivale a la distribución del costo computacional: los filtros convolucionales se reutilizan en muchas posiciones.
+
+Los 22\,700 parámetros ocupan 90\,800 bytes si cada uno se almacena en Float32, equivalentes a 88,67 KiB. Esta cifra corresponde únicamente a los parámetros. No representa el tamaño completo de un archivo Keras/TFLite ni el consumo de Flash o SRAM de la aplicación compilada.
+
+\subsubsection{Configuración de entrenamiento}\label{sec:cnn_entrenamiento}
+El entrenamiento se realizó en TensorFlow 2.21.0 mediante el optimizador Adam y la función de pérdida de entropía cruzada categórica dispersa. Esta pérdida utiliza etiquetas enteras e incrementa la penalización cuando el modelo asigna una puntuación relativa baja a la clase correcta. La exactitud se utilizó como indicador complementario para expresar la proporción de imágenes clasificadas correctamente.
+
+El ajuste de los parámetros requiere determinar cómo cambia la pérdida cuando se modifica cada peso o sesgo. Esa información se obtiene mediante el gradiente, calculado por retropropagación a través de las capas. Adam utiliza estimaciones acumuladas del gradiente y de su cuadrado para adaptar la actualización de cada parámetro \cite{adam}. Se empleó su configuración predeterminada, con tasa de aprendizaje $10^{-3}$, coeficientes $\beta_1=0,9$ y $\beta_2=0,999$, y constante numérica $\epsilon=10^{-7}$. La tasa de aprendizaje regula la magnitud de los cambios aplicados a los parámetros en cada actualización.
+
+El proceso comprendió cinco épocas. Una época corresponde a un recorrido del conjunto de entrenamiento; este recorrido se divide en grupos de muestras denominados lotes, que permiten estimar el gradiente y actualizar los parámetros de forma sucesiva. Se utilizó el tamaño de lote predeterminado de 32 imágenes para entradas en forma de arreglos \cite{kerasfit}, dando lugar a 84 pasos por época. Las métricas se supervisaron mediante TensorBoard y el entrenamiento finalizó al completar el número establecido de épocas, sin parada anticipada ni restauración automática de una época anterior.
+
+La referencia conserva las dos activaciones sigmoidales finales y la pérdida categórica empleada durante el ajuste. En inferencia, se comparan sus puntuaciones para asignar la clase. La configuración y los pesos obtenidos al finalizar la quinta época se mantienen como punto de partida común para estudiar las estrategias de cuantización.
+
+
+\subsection{Control neuronal MPC}\label{sec:mpc_transferencia}
+
+Se partió del controlador preentrenado y del banco CartPole asociados al trabajo de Hose, Gräfe y Trimpe~\cite{cap5_hose,cap5_repo}. La red aproxima la acción de control a partir del estado instantáneo de la planta. El modelo Float32 no se entrenó nuevamente desde cero: se cargaron sus parámetros, se reconstruyó la red y se transfirieron los pesos a Keras. Esta referencia transferida permitió generar las variantes TensorFlow Lite. La topología se describe en la sección~\ref{sec:arquitectura_mpc}, y el procedimiento de comparación, en la sección~\ref{sec:comparacion_transferencia}.
+
+Se conservó el orden de estado $\mathbf{x}=[y,\alpha,\dot y,\dot\alpha]$, formado por posición del carro, ángulo del péndulo y sus respectivas velocidades. La normalización utiliza los coeficientes del controlador de referencia, coincidentes con los de la implementación en C. La salida de la red se transforma de su representación normalizada a tensión y se limita a $[-9,9]$ V antes de aplicarla a la planta simulada. La normalización y la reducción angular son operaciones distintas: la primera adapta la escala de entrada; la segunda representa una orientación en el intervalo principal. La convención adoptada para la entrada del HIL actualizado se especifica en la sección~\ref{sec:hil_seleccionada}.
+
+Los datos se organizaron según la pregunta experimental que permiten responder. Los pares estado--acción se utilizaron para el ajuste; los estados representativos, para calibrar las conversiones; y la comparación estática de la transferencia utilizó 10000 estados comunes. Adicionalmente, se emplearon dos conjuntos diferentes de 200 elementos:
+
+\begin{enumerate}
+\item \textbf{Doscientos estados para validación estática en ST.} El programa de preparación seleccionó 200 filas del conjunto de estados mediante NumPy, con semilla 100. Cada fila contiene un estado que se acondiciona al tensor de entrada del modelo. Se ejecuta una inferencia por entrada y se contrasta la salida de la implementación compilada con la referencia correspondiente. No se integra la planta ni se realimenta la acción para generar el estado siguiente; por ello, estas muestras no son 200 trayectorias de control.
+\item \textbf{Doscientas condiciones iniciales para simulación dinámica.} Se generaron mediante JAX, con semilla 100, variando la posición inicial en $[-0{,}35,0{,}35]$ m y el ángulo inicial en $[-\pi,\pi]$ rad, con ambas velocidades iniciales nulas. Cada vector inicia una simulación independiente de 16 s. En cada paso, el controlador obtiene la acción, la planta evoluciona y el nuevo estado se realimenta. Se reutiliza el mismo banco inicial para comparar las variantes.
+\end{enumerate}
+
+La validación utiliza la cadena de despliegue de IA de ST: STM32Cube AI Studio proporciona la interfaz de trabajo y ST Edge AI Core, registrado en versión 4.0.1, realiza el análisis y la generación de la implementación. La validación en destino ejecuta la red en la placa y recupera salidas y tiempos mediante el firmware de validación. Su función se distingue de CubeIDE, utilizado para compilar y depurar la aplicación, y de CubeProgrammer, utilizado para programar los dispositivos~\cite{cap5_stvalidacion}. En esta fase se verifica la implementación de inferencia; no se utiliza Studio como simulador de la dinámica CartPole.
+
+La referencia numérica de una variante cuantizada es su propio archivo exportado; la comparación contra Float32 se realiza por separado en el computador. Una buena correspondencia entre el archivo cuantizado y su implementación ST no acredita, por sí sola, que se haya conservado el desempeño del controlador Float32~\cite{cap5_stvalidacion}. Asimismo, que ambos bancos tengan 200 elementos y semilla 100 no implica que contengan los mismos estados: utilizan procedimientos y bibliotecas diferentes. El nuevo barrido HIL de ocho condiciones es un tercer banco, orientado a la alternativa seleccionada, y se describe en la sección~\ref{sec:hil_seleccionada}.
+
+\subsubsection{Arquitectura del perceptrón multicapa utilizado}\label{sec:arquitectura_mpc}
+La red empleada es un perceptrón multicapa, o MLP, completamente conectado y de propagación hacia adelante. Recibe el estado instantáneo del sistema y no contiene capas recurrentes ni un estado interno que se actualice entre instantes de control. La información sobre el movimiento se incorpora mediante las velocidades incluidas en su entrada. Su topología es distinta de la CNN del caso de radiografías: las capas densas combinan variables físicas, en lugar de extraer patrones espaciales de una imagen.
+
+El modelo se reconstruyó en Keras a partir de la implementación en Equinox, conservando siete capas ocultas de 50 neuronas con activación tangente hiperbólica y una capa de salida lineal. Su estructura es
+\begin{equation}
+4\;\longrightarrow\;\underbrace{50\longrightarrow\cdots\longrightarrow50}_{7\text{ capas ocultas, tanh}}\;\longrightarrow\;1\text{ lineal}.
+\end{equation}
+La Figura~\ref{fig:arquitectura_mpc_cap2} muestra el recorrido de la información. Los cuatro estados se normalizan antes de ingresar en la primera capa. Las siete capas ocultas transforman sucesivamente esta representación y la capa de salida produce un único valor normalizado. Posteriormente, la transformación inversa de escala recupera la acción en voltios y la saturación la limita al intervalo del actuador.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=0.45cm, bloque/.style={draw,rounded corners,align=center,text width=10.5cm,inner sep=6pt,font=\small},>=Latex]
+\node[bloque] (entrada) {Estado del sistema: $x=[y,\alpha,\dot y,\dot\alpha]^{\mathsf T}$\\Normalización de cuatro variables físicas};
+\node[bloque,below=of entrada] (ocultas) {Siete capas densas ocultas de 50 neuronas cada una\\$4\rightarrow50\rightarrow50\rightarrow50\rightarrow50\rightarrow50\rightarrow50\rightarrow50$\\Activación tangente hiperbólica en cada capa};
+\node[bloque,below=of ocultas] (salida) {Capa densa de salida: $50\rightarrow1$\\Activación lineal: acción normalizada $u_n$};
+\node[bloque,below=of salida] (accion) {Transformación a voltios y saturación\\Acción de control aplicada: $u\in[-9,9]\ \mathrm{V}$};
+\draw[->] (entrada) -- (ocultas);
+\draw[->] (ocultas) -- (salida);
+\draw[->] (salida) -- (accion);
+\end{tikzpicture}
+\caption{Arquitectura e interfaz de la red neuronal utilizada como aproximador del MPC. La normalización y la transformación de salida forman parte de la interfaz de inferencia.}
+\label{fig:arquitectura_mpc_cap2}
+\fuente{elaboración propia a partir del modelo utilizado en el caso de estudio}
+\end{figure}
+
+Si $h^{(0)}=x_n$ representa el estado normalizado, la evaluación de las capas puede escribirse como
+\begin{align}
+h^{(\ell)} &= \tanh\!\left(W^{(\ell)}h^{(\ell-1)}+b^{(\ell)}\right),\quad \ell=1,\ldots,7,\\
+u_n &= W^{(8)}h^{(7)}+b^{(8)}.
+\end{align}
+Cada vector $h^{(\ell)}$ contiene 50 activaciones internas. La primera matriz de pesos combina las cuatro entradas; las seis siguientes combinan las 50 activaciones de la capa precedente. Finalmente, la matriz de salida reúne las últimas 50 activaciones en un escalar. La tangente hiperbólica introduce la no linealidad necesaria para representar una relación compleja entre estado y control. La salida lineal evita imponer en esa última capa el intervalo de una función sigmoide o de una tangente hiperbólica; el límite físico se aplica posteriormente, al recuperar la tensión del actuador.
+
+La Tabla~\ref{tab:cap2_mlp} detalla las dimensiones y los parámetros de las ocho capas densas que componen la referencia utilizada en la memoria.
+
+\begin{table}[H]\centering\small
+\caption{Topología del controlador transferido a Keras.}\label{tab:cap2_mlp}
+\begin{tabularx}{\linewidth}{Yrrr}\toprule
+Capa & Entradas & Salidas & Parámetros\\\midrule
+\texttt{dense\_0}, tanh & 4 & 50 & 250\\
+\texttt{dense\_1}, tanh & 50 & 50 & 2550\\
+\texttt{dense\_2}, tanh & 50 & 50 & 2550\\
+\texttt{dense\_3}, tanh & 50 & 50 & 2550\\
+\texttt{dense\_4}, tanh & 50 & 50 & 2550\\
+\texttt{dense\_5}, tanh & 50 & 50 & 2550\\
+\texttt{dense\_6}, tanh & 50 & 50 & 2550\\
+\texttt{output\_u}, lineal & 50 & 1 & 51\\\midrule
+Total & & & 15\,601\\\bottomrule
+\end{tabularx}
+\fuente{elaboración propia a partir de la arquitectura del controlador}
+\end{table}
+Los parámetros Float32 ocupan 62\,404 bytes, equivalentes a 60,94 KiB. El número de productos de las capas densas es $4\cdot50+6\cdot50^2+50=15\,250$, sin contabilizar activaciones, sesgos ni transformaciones de interfaz. Estos parámetros se mantienen fijos durante la evaluación de la referencia Float32.
+
+\subsubsection{Transferencia de pesos y sesgos}
+Equinox evalúa una capa con pesos almacenados como $(n_{\mathrm{out}},n_{\mathrm{in}})$, mientras que Keras almacena su matriz como $(n_{\mathrm{in}},n_{\mathrm{out}})$. Para conservar la transformación se asigna
+\begin{equation}
+W_{\mathrm{Keras}}=W_{\mathrm{EQX}}^{\mathsf T},\qquad b_{\mathrm{Keras}}=b_{\mathrm{EQX}}.
+\end{equation}
+Los pesos y sesgos se transfirieron directamente en representación Float32, conservando las activaciones de cada capa. La transposición de las matrices adapta su organización al convenio de Keras sin modificar los coeficientes de la transformación representada. Esta reconstrucción permite utilizar el modelo dentro del flujo de conversión y cuantización, manteniendo como referencia la política previamente aprendida.
+
+La obtención de esta referencia no requirió un nuevo entrenamiento. En consecuencia, su caracterización se realiza mediante la comparación de salidas entre implementaciones y la evaluación del comportamiento en lazo cerrado. El ajuste posterior asociado al entrenamiento consciente de cuantización constituye una etapa distinta, cuyo propósito es adaptar los parámetros a una representación de menor precisión.
+
+\subsubsection{Variables de entrada y normalización}
+\label{sec:mpc_normalizacion}
+
+La red neuronal utilizada como aproximador del controlador MPC recibe
+el estado del sistema carro--péndulo, organizado según
+\begin{equation}
+    x =
+    \begin{bmatrix}
+        y & \alpha & \dot{y} & \dot{\alpha}
+    \end{bmatrix}^{\mathsf T},
+\end{equation}
+donde $y$ es la posición del carro, expresada en metros;
+$\alpha$ es el ángulo del péndulo, expresado en radianes;
+y $\dot{y}$ y $\dot{\alpha}$ son sus respectivas velocidades
+lineal y angular. Estas variables presentan diferentes unidades y
+magnitudes, por lo que se transforman antes de ingresar a la red.
+
+En esta memoria se replicó el procedimiento de normalización
+implementado por los autores en el código complementario de su trabajo
+sobre MPC aproximado adaptativo \cite{hose2024,hoserepo}.
+El artículo describe la arquitectura y la implementación del
+controlador, mientras que la definición explícita de esta
+transformación se encuentra en el archivo
+\texttt{neural\_network\_training/data/dataset.py} del repositorio.
+En dicho archivo se calculan, para cada componente del estado, la
+media de las muestras y el máximo de sus valores absolutos.
+
+Considerando un conjunto de $N$ muestras, los parámetros de
+normalización de la variable $j$ se definen como
+\begin{equation}
+    \mu_{x,j} = \frac{1}{N}\sum_{i=1}^{N}x_{i,j},
+    \qquad
+    s_{x,j} = \max_{1\leq i\leq N}|x_{i,j}|.
+\end{equation}
+La entrada normalizada se obtiene mediante
+\begin{equation}
+    x_{n,j} = \frac{x_j-\mu_{x,j}}{s_{x,j}},
+    \qquad j=1,\ldots,4.
+    \label{eq:normalizacion_estado_mpc}
+\end{equation}
+
+Esta operación centra cada variable respecto de su media y utiliza
+como escala el máximo valor absoluto de los datos antes del centrado.
+Por tanto, no corresponde a una estandarización mediante desviación
+estándar ni a una transformación min--max. Asimismo, no impone
+necesariamente un intervalo exacto de $[-1,1]$, debido al
+desplazamiento introducido al restar la media.
+
+Los coeficientes utilizados en la implementación de esta memoria,
+presentados de forma redondeada y en el mismo orden que el vector
+de estado, son
+\begin{align}
+    \mu_x &\approx
+    \begin{bmatrix}
+        0{,}000067 \\
+        0{,}004411 \\
+        0{,}000187 \\
+        -0{,}003780
+    \end{bmatrix},
+    &
+    s_x &\approx
+    \begin{bmatrix}
+        0{,}349999 \\
+        6{,}283180 \\
+        1{,}199999 \\
+        9{,}999998
+    \end{bmatrix}.
+\end{align}
+Cada componente de $\mu_x$ y $s_x$ tiene las unidades de la variable
+física correspondiente, de modo que la entrada normalizada es
+adimensional. Estos valores corresponden a los coeficientes
+empleados en los ensayos de esta memoria; el procedimiento de
+cálculo y aplicación se sustenta en el código de los autores,
+sin atribuir estos valores numéricos al texto del artículo.
+
+Para la acción de control se aplica el mismo criterio de
+normalización durante la preparación de los datos. En la inferencia,
+la red entrega una salida normalizada $u_n$, que se transforma
+nuevamente a voltios mediante
+\begin{equation}
+    \widetilde{u} = s_u u_n + \mu_u,
+    \qquad
+    \mu_u \approx -0{,}007703\ \mathrm{V},
+    \qquad
+    s_u = 9\ \mathrm{V}.
+    \label{eq:desnormalizacion_control_mpc}
+\end{equation}
+Posteriormente, la acción aplicada se limita al intervalo de
+operación del actuador:
+\begin{equation}
+    u = \operatorname{sat}_{[-9\,\mathrm{V},\,9\,\mathrm{V}]}
+        \left(\widetilde{u}\right).
+\end{equation}
+La saturación constituye una operación posterior a la
+desnormalización. Esta secuencia reproduce la implementada en
+la función \texttt{call\_control} del archivo
+\texttt{neural\_network\_training/tester/run\_testing.py}
+del repositorio de los autores \cite{hoserepo}.
+
+Las implementaciones en Equinox y Keras utilizan el mismo orden
+de entradas, los mismos coeficientes y las mismas transformaciones
+de salida. De esta forma, la comparación de fidelidad numérica
+se realiza bajo una interfaz común y permite evaluar las
+diferencias entre ambas implementaciones sin introducir cambios
+en el preprocesamiento de los estados ni en la recuperación
+de la acción de control.
+
+
+\subsubsection{Síntesis de las referencias utilizadas}
+La referencia de radiografías es una CNN de 22\,700 parámetros guardada al finalizar la quinta época. La referencia MPC es una MLP de 15\,601 parámetros transferida desde Equinox sin nuevo entrenamiento, con siete capas ocultas de 50 neuronas y una salida lineal.
+
+Las estrategias de la sección~\ref{cap:cuant} se evaluarán respecto de estas referencias, distinguiendo fidelidad numérica, desempeño funcional y ejecución en la placa. La validación de transferencia complementa el análisis en lazo cerrado del controlador.
+
+\section{Estrategias de cuantización}
+\label{sec:estrategias_experimentales}
+
+Las variantes se obtuvieron a partir de los pesos de referencia de cada caso. Se consideraron Float32, PTQ INT8, QAT INT8, INT16x8 y precisión mixta selectiva, siguiendo las definiciones de la sección~\ref{cap:cuant}. En MPC se distinguieron además PTQ por tensor y por canal; en radiografías se evaluaron dos selecciones mixtas, con tres y cinco nodos preservados en precisión flotante. Las conversiones enteras utilizaron datos representativos ya sometidos al mismo procesamiento de entrada que el modelo de referencia~\cite{cap5_ptq}.
+
+\begin{table}[htbp]
+\centering
+\caption{Configuraciones de calibración y ajuste empleadas.}
+\label{tab:ajuste_cap5}
+\begingroup\small\setstretch{1.05}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{2.8cm}YY@{}}
+\toprule
+Procedimiento & Radiografías & MPC \\
+\midrule
+Calibración PTQ y mixta & Primeras 350 imágenes de entrenamiento usadas por el generador. & 5000 estados normalizados, sin reemplazo, semilla 100. \\
+Datos para QAT & 2279 imágenes de ajuste y 403 de validación. & 50000 pares estado--acción; 45000 de ajuste y 5000 de validación, semilla 123. \\
+Optimización QAT & Adam, $10^{-5}$; entropía cruzada categórica dispersa; lote 32. & Adam, $10^{-5}$; error cuadrático medio; lote 256. \\
+Finalización QAT & Máximo 15 épocas; parada temprana con paciencia 4. & Máximo 20 épocas; parada temprana con paciencia 4. \\
+Selección de pesos & Restauración de los pesos de menor pérdida de validación. & Restauración de los pesos de menor pérdida de validación. \\
+\bottomrule
+\end{tabularx}
+\endgroup
+\end{table}
+
+En QAT se ajustaron los pesos bajo la simulación de cuantización y posteriormente se exportó el modelo~\cite{cap5_qat}. En radiografías se añadió una reducción de la tasa de aprendizaje por un factor 0,5 tras dos épocas sin mejora, con mínimo $10^{-7}$. Los registros de entrenamiento documentan ocho épocas de ajuste en radiografías y siete en MPC; los máximos de la tabla son límites configurados, no el número de épocas efectivamente ejecutado. La calibración de la exportación QAT radiográfica utilizó 350 imágenes del subconjunto de ajuste, seleccionadas con semilla 42.
+
+La precisión mixta se construyó a partir del diagnóstico de error por nodo. En radiografías se ordenó la raíz del error cuadrático medio (RMSE) dividida por la escala del cuantizador y se preservaron tres o cinco nodos según la variante. El criterio priorizaba errores superiores a 0,7, pero completaba la cantidad solicitada con el ranking restante. Por tanto, la selección ejecutada no equivale a conservar exclusivamente los nodos que superan ese umbral~\cite{cap5_debugger,cap5_registros}.
+
+En MPC se conservaron en Float32 la primera capa y la salida, y se aplicó un umbral de 0,32 a las capas internas. La selección obtenida mantuvo también en Float32 las capas \texttt{dense\_2} a \texttt{dense\_5}, mientras que \texttt{dense\_1} y \texttt{dense\_6} permanecieron cuantizadas. El interés experimental de esta variante fue preservar las regiones sensibles y evaluar el compromiso resultante en el controlador completo.
+
+La interfaz de entrada y salida se trató como una propiedad de cada archivo. INT16x8 conservó interfaces Float32; las variantes mixtas emplearon INT8 en radiografías y Float32 en MPC. Además, el generador radiográfico produjo una versión PTQ con interfaz INT8, mientras que la comparación posterior cargó otra versión PTQ con interfaz Float32. Cada resultado debe asociarse al archivo concreto evaluado, sin considerar ambas exportaciones intercambiables.
+
+Las comprobaciones documentadas abarcan la inspección de tipos y parámetros de cuantización y, en las variantes mixtas, la revisión de la composición del grafo. Su alcance varía entre programas: existe una función de auditoría aplicada a variantes MPC y verificaciones específicas en radiografías. No se dispone de una auditoría exhaustiva de todas las conversiones. Para el despliegue se contrastó asimismo el modelo exportado con el informe del compilador, en relación con la sección~\ref{sec:cap4_compilacion}.
+
+\section{Evaluación y validación}
+\label{sec:evaluacion_validacion}
+
+\subsection{Comprobación de la transferencia MPC}\label{sec:comparacion_transferencia}
+\subsubsection{Comparación sobre entradas idénticas}
+La fidelidad de la transferencia se evaluó sobre los primeros 10\,000 estados del conjunto de datos, aplicando la misma normalización y entregando entradas idénticas a ambas implementaciones. Este procedimiento permite medir las diferencias introducidas por la representación computacional de la red antes de estudiar su efecto sobre la evolución de la planta.
+
+Para $e_i=u_i^{\mathrm{Keras}}-u_i^{\mathrm{EQX}}$ se calculan
+\begin{align}
+\mathrm{RMSE}&=\sqrt{\frac{1}{n}\sum_{i=1}^{n}e_i^2},\label{eq:rmse}\\
+\mathrm{MAE}&=\frac{1}{n}\sum_{i=1}^{n}|e_i|,\qquad
+E_{\max}=\max_i|e_i|.
+\end{align}
+Primero se comparan salidas normalizadas. Después se aplica la desnormalización y, en ambos modelos, una saturación a $[-9,9]$ V. El segundo grupo de métricas caracteriza, por tanto, la acción desnormalizada y saturada que se entrega al sistema.
+
+
+Sin saturación, una transformación afín común multiplicaría cada error por $s_u$. La saturación puede reducir diferencias en los extremos; por ello, las métricas físicas se calculan directamente a partir de las acciones finales de ambas implementaciones.
+\subsubsection{Contraste con la evaluación en lazo cerrado}
+La evaluación de las dos implementaciones en lazo cerrado utilizó el banco común de 200 condiciones iniciales descrito en la sección~\ref{sec:mpc_transferencia}, con el procedimiento de simulación indicado a continuación.
+
+
+Los resultados de estas comparaciones se presentan en la sección~\ref{sec:equivalencia_mpc}.
+
+\subsection{Evaluación funcional en el computador}
+
+En radiografías se compararon las predicciones sobre las mismas 624 imágenes mediante exactitud, precisión, sensibilidad, medida F1 y matriz de confusión. La clase se obtuvo a partir de la mayor puntuación de salida. Se calculó además el RMSE de las puntuaciones respecto de Float32 para distinguir la conservación de la decisión de clasificación de la conservación numérica de la salida.
+
+La medición temporal en el computador utilizó el intérprete TensorFlow Lite con cuatro hilos y diez invocaciones de calentamiento. El intervalo cronometrado comprendió únicamente la llamada de inferencia, dejando fuera la preparación y copia de entradas. Se registraron media, mediana, desviación estándar y percentil 95. La comparación de tamaño se realizó entre archivos TensorFlow Lite, incluida la referencia Float32, para evitar que diferencias entre contenedores se interpretaran como reducción de memoria de la red.
+
+En MPC se evaluaron primero las salidas para entradas comunes y luego el comportamiento en lazo cerrado. Se utilizó el banco de 200 condiciones iniciales descrito en la sección~\ref{sec:mpc_transferencia}. Cada simulación duró 16 s, con período de muestreo de 0,16 s y 100 acciones de control. La planta nominal se integró mediante \texttt{odeint}, manteniendo constante la acción durante cada intervalo.
+
+El criterio principal de éxito exigió mantener $|y|<0{,}4$ m durante la trayectoria y alcanzar, en las últimas diez muestras, $|y|<0{,}1$ m y un error angular menor que 0,17 rad, junto con la limitación de voltaje. El evaluador de referencia aplica además cotas globales de 100 rad, 100 m/s y 100 rad/s al ángulo reducido y a las dos velocidades; en las últimas diez muestras, limita las velocidades a 100 m/s y 170 rad/s. Se conserva este predicado completo al contabilizar los éxitos. El ángulo se reduce al intervalo principal para evaluar el error angular, pero la simulación de referencia entrega al controlador el ángulo continuo. La tasa de éxito se calcula sobre las 200 condiciones de ese banco y no se atribuye a la placa.
+
+\subsection{Compilación, validación estática e integración por UART}\label{sec:validacion_st}
+
+Los archivos seleccionados se importaron a la cadena ST para analizar su compatibilidad, generar la implementación y validar las salidas con entradas conocidas~\cite{cap5_stcompiler,cap5_stvalidacion}. Se registraron el formato exportado, la representación admitida por el compilador, la asignación de operadores y los recursos informados. En particular, una ejecución con sustituciones de precisión o procesamiento software se identifica como tal al presentar sus resultados.
+
+En radiografías, el proyecto de validación identifica la variante mixta de cinco nodos y utiliza AI Runner mediante el puerto serie a 115200 bit/s~\cite{cap5_integracion}. El computador carga las ocho imágenes del archivo de validación y adapta sus entradas a INT8, con forma $1\times150\times150\times1$, escala $0{,}00392156885936856$ y punto cero $-128$. Cada inferencia devuelve dos valores INT8, con escala $1/256$ y punto cero $-128$. Se comparan las salidas de la implementación en placa con las del archivo TensorFlow Lite de referencia, además de contrastarlas con las etiquetas disponibles.
+
+El programa principal activa el servicio de validación de ST. Su middleware para Neural-ART recibe los tensores, ejecuta la red, recoge los contadores de tiempo y devuelve las salidas mediante Protocol Buffers. El proyecto conserva informes de análisis, generación y validación en destino, que vinculan el modelo con su configuración y sus resultados. Esta ruta utiliza el protocolo oficial de ST. La demostración de 16 imágenes emplea una aplicación distinta con mensajes \texttt{XRAY}/\texttt{RESULT}; compartir el puerto serie no acredita que ambas utilicen el mismo ejecutable.
+
+\subsubsection{Alcance del análisis de los archivos compilados}\label{sec:analisis_listados}
+Un archivo de listado o desensamblado permite inspeccionar las instrucciones y los símbolos incluidos en el ejecutable. En esta memoria se analizaron, entre otros, \texttt{PTQ\_\allowbreak MIX\_\allowbreak SELECTIVE\_\allowbreak CM55.list} y \texttt{PTQ\_\allowbreak MIX\_\allowbreak SELECTIVE\_\allowbreak NPU.list}. Los extractos de la sección~\ref{sec:cap4_evidencia} proceden de esos artefactos experimentales \cite{cap4_evidence}. Las direcciones identifican posiciones dentro de cada compilación y no constituyen direcciones universales para otras versiones del firmware.
+
+La evidencia estática permite reconocer instrucciones y llamadas entre funciones. Una llamada identificada dentro de una ruta asociada a la red ofrece mayor información que encontrar un símbolo aislado en el binario. Sin embargo, el listado no registra cuántas veces se ejecutó cada instrucción durante una prueba ni su duración. Esas preguntas se resuelven con mediciones y perfiles de ejecución.
+
+
+\subsection{Validación HIL de la alternativa MPC seleccionada}\label{sec:hil_seleccionada}
+El banco utiliza un controlador físico y una planta simulada de paso fijo. Su sincronización con el tiempo de pared se evalúa por separado; la denominación HIL no implica aquí una garantía de ejecución estricta en tiempo real.
+
+
+La comparación de estrategias de cuantización se desarrolla en el computador y mediante la validación de inferencia en placa. Como etapa de integración se seleccionó la alternativa de precisión mixta para el banco HIL. Esta etapa evalúa el controlador desplegado dentro del lazo de realimentación; no constituye una comparación HIL de todas las cuantizaciones. La configuración de ejecución, incluida su asignación a Cortex-M55 o NPU, se identifica con el proyecto compilado y sus informes, sin deducirla del formato Float32 de la interfaz.
+
+El computador integra la planta y la STM32 calcula la acción de control. En cada instante se transmiten el identificador de muestra y los cuatro estados físicos, sin normalizar. El firmware normaliza la entrada, ejecuta la red, recupera la tensión y devuelve la acción, la salida normalizada, los ciclos de inferencia y el estado de ejecución. La solicitud ocupa 24 bytes y la respuesta 28. El programa comprueba cabecera, identificador y estado de ejecución antes de avanzar la planta. Esta comunicación utiliza el protocolo HIL personalizado y no el servicio de validación ST empleado en la etapa anterior.
+
+La actualización del procedimiento establece una convención angular común con la simulación de referencia: se conserva el ángulo continuo en la transmisión y en la preparación de entrada del firmware. Para ello, se sustituye la reducción angular por el valor directo del estado tanto en el emisor Python como en el arreglo previo a la normalización en C. La reducción a $[-\pi,\pi)$ se mantiene exclusivamente para calcular y representar el error respecto del equilibrio. Así, la normalización se realiza una sola vez en el firmware. La versión anterior reducía el ángulo antes de la inferencia; sus registros se distinguen de los obtenidos con el procedimiento actualizado~\cite{cap5_hil_actualizado}.
+
+La correspondencia entre código y ejecución forma parte de la identificación del ensayo.\footnote{Compilar o iniciar una sesión del cargador FSBL no demuestra que se haya actualizado la aplicación MPC. La confirmación requiere identificar el binario de aplicación cargado o inspeccionar la entrada efectiva de la red. El registro del ángulo continuo de la planta no acredita por sí solo el valor transmitido. Esta verificación se realiza fuera de las mediciones temporales si requiere detener el procesador.}
+
+Para ampliar la evaluación más allá de una trayectoria, se definió el barrido de ocho condiciones de la tabla~\ref{tab:hil_ocho}. Se varía únicamente el ángulo inicial, manteniendo posición y velocidades iniciales nulas. Los pares de signos permiten observar respuestas desde ambos sentidos, mientras que las amplitudes pequeñas, intermedias y próximas a $\pi$ exploran distintos puntos de partida. La selección es determinista; no es una muestra aleatoria representativa de todo el dominio ni reemplaza las 200 condiciones de simulación.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Condiciones iniciales definidas para el barrido HIL de precisión mixta.}
+\label{tab:hil_ocho}
+\begin{tabular}{ccccc}
+\toprule
+Caso & $y_0$ [m] & $\alpha_0$ [rad] & $\dot y_0$ [m/s] & $\dot\alpha_0$ [rad/s] \\
+\midrule
+1 & 0 & $+0{,}10$ & 0 & 0 \\
+2 & 0 & $-0{,}10$ & 0 & 0 \\
+3 & 0 & $+0{,}30$ & 0 & 0 \\
+4 & 0 & $-0{,}30$ & 0 & 0 \\
+5 & 0 & $+1{,}00$ & 0 & 0 \\
+6 & 0 & $-1{,}00$ & 0 & 0 \\
+7 & 0 & $+3{,}13$ & 0 & 0 \\
+8 & 0 & $-3{,}13$ & 0 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Cada ensayo se configura con duración de 16 s, período de 0,16 s y 100 acciones. Se mantiene el mismo firmware, modelo, normalización e integrador \texttt{odeint}, con acción constante durante cada intervalo. Las solicitudes se atienden secuencialmente por UART a 115200 bit/s, sin breakpoints activos. Cada condición se registra en un CSV independiente con estados, acciones, tiempos y avisos de incumplimiento temporal. Se preservan los registros incompletos como incidencias de ejecución y no se clasifican automáticamente como fallos de estabilización. El capítulo de resultados presenta los ensayos y los registros que sustentan su evaluación.
+
+La evaluación HIL comprueba $|y|<0{,}4$ m durante la trayectoria muestreada, $|y|<0{,}1$ m y $|e_\alpha|<0{,}17$ rad en las últimas diez muestras, y la tensión dentro de $[-9,9]$ V. Estas comprobaciones no reproducen las cotas amplias de velocidad del evaluador original. Por tanto, se informa el cumplimiento de los criterios HIL sobre las condiciones efectivamente completadas; solo se compara con una tasa de simulación cuando coinciden las condiciones iniciales y el predicado de evaluación.
+
+Se distingue también el instante registrado: el programa guarda el estado previo a cada acción, por lo que el CSV de 100 filas abarca de 0 a 15,84 s. Para evaluar el horizonte completo se reconstruye el estado de 16 s con el integrador de la planta, el último estado registrado y la última acción. La trayectoria analizada contiene así 101 estados y su ventana terminal de diez muestras corresponde a 14,56--16,00 s. El estado final es calculado, no una medición adicional contenida en el CSV. La reproducción de los pasos anteriores permite comprobar la consistencia de la reconstrucción con el registro. Esta es la ventana utilizada en los resultados HIL; las diez últimas filas del CSV, por sí solas, abarcarían una ventana diferente. El cumplimiento al final del horizonte describe ese ensayo y no demuestra estabilidad para tiempos arbitrariamente largos.
+
+\subsection{Medición temporal, memoria y alcance de los resultados}
+
+En el firmware MPC, el contador de ciclos DWT delimita la llamada de ejecución de la red. La conversión a microsegundos se calibra frente al contador de milisegundos del sistema durante una ventana de 10 ms; la frecuencia declarada del núcleo se usa como alternativa si esa calibración no resulta válida. La normalización, la transformación de salida y la comunicación quedan fuera de ese intervalo. Por separado, el computador mide el tiempo de ida y vuelta de la solicitud UART, que incluye transferencia, atención de la petición y recepción de la respuesta.
+
+El programa HIL registra media, percentil 99 y máximo de ambos tiempos. Compara cada tiempo de ida y vuelta con el período de 0,16 s y contabiliza por separado los ciclos tardíos del computador, cuyo trabajo incluye integración y representación gráfica. De forma predeterminada intenta acompasar las iteraciones al tiempo de pared mediante esperas; la opción de ejecución sin sincronización elimina esas esperas. Este mecanismo permite observar incumplimientos temporales, pero no constituye una garantía de tiempo real estricto.
+
+En radiografías se mantiene la misma distinción entre transferencia e inferencia. En la aplicación con entrada INT8, la carga útil de una imagen contiene 22500 bytes, sin incluir cabeceras ni respuestas. Su transferencia a 115200 bit/s forma parte del tiempo de aplicación y no del costo computacional de la CNN. Otras interfaces requieren calcular el volumen según el tipo de datos efectivamente transmitido. En el proyecto de validación, el middleware recibe la entrada antes de ejecutar la red y devuelve después los contadores recogidos durante su ejecución. El informe separa el procesamiento hardware, el software y el control de ejecución. Esta latencia se distingue del tiempo total de transferencia por UART.
+
+La memoria se analizó diferenciando tamaño del modelo exportado, almacenamiento de parámetros y búferes de activaciones. Las dos últimas magnitudes dependen de la implementación compilada y de su configuración de memoria; no se deducen únicamente del tamaño del archivo TensorFlow Lite. No se dispone de una caracterización homogénea de la ocupación total Flash y RAM del firmware para todas las variantes. Los fallos de enlace o asignación documentan restricciones de configuraciones concretas, pero no sustituyen esa medición global. De igual modo, los listados de ensamblado se utilizaron como evidencia de instrucciones y rutas presentes, con el alcance estático de la sección~\ref{sec:analisis_listados}.
+
+La selección final se realiza dentro de cada tarea, considerando desempeño funcional, latencia y memoria de la implementación ejecutada. Cada resultado se vincula con su conjunto de evaluación y nivel de ejecución. Las métricas de clasificación y control se presentan por separado. El tamaño, los ciclos y el esfuerzo de control no se consideran mediciones de energía eléctrica.
+
+
+\section{Validación complementaria en NUCLEO-L476RG}\label{sec:metodo_l476}
+La campaña complementaria utiliza ST Edge AI Core 4.0.1 para validar los modelos exportados en una NUCLEO-L476RG. Se conservaron los registros de generación, compilación, validación y los listados de instrucciones. El clasificador QAT se evaluó sobre ocho imágenes y cinco variantes MPC sobre 200 entradas por modelo. Las comparaciones se emparejaron mediante el hash del modelo informado por ST y el conjunto de entrada identificado en los comandos; los intentos fallidos se registraron separadamente sin asignarles métricas de inferencia.
+
+Se extrajeron latencia, ciclos de CPU, error cruzado, pesos y activaciones. Para la memoria se utilizó el primer resumen de generación, evitando mezclarlo con la representación de referencia que puede aparecer después en la validación NPU. Los perfiles identifican CPU a 80 MHz en L476 y a 800 MHz en N657. Los registros de la campaña complementaria identifican rutas de STM32CubeIDE 2.2.0 y herramientas GNU 14.3.1; las bibliotecas CPU precompiladas se identifican como runtime 12.0.1, compilado con GCC 13.3.1. Estas versiones se conservan como metadatos de la campaña complementaria, sin asumir que todos los objetos se recompilaron con las mismas opciones.
+
+La revisión estática incluye los seis listados L476 y los dos QAT radiográficos N657. Se distinguieron registros Q y predicación MVE, aritmética escalar y operaciones DSP empaquetadas del M4. La comparación entre placas no se diseñó como una prueba con Helium activado y desactivado en el mismo procesador; por ello se examinaron conjuntamente frecuencias, ciclos, instrucciones y latencia. No se realizaron nuevos ensayos HIL en L476 dentro de esta campaña.

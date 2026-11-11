@@ -1,0 +1,415 @@
+{
+  "aton_execution_time": [
+    {
+      "c_layer_name": "EpochBlock_1",
+      "counters": [
+        3425,
+        2962,
+        2348
+      ],
+      "cycles": 8736,
+      "cycles_by_macc": 0,
+      "duration_ms": 0.01092000026255846,
+      "percentage": 0.010429825238082129
+    },
+    {
+      "c_layer_name": "EpochBlock_2",
+      "counters": [
+        279,
+        52,
+        165520
+      ],
+      "cycles": 165852,
+      "cycles_by_macc": 0,
+      "duration_ms": 0.20731578394770622,
+      "percentage": 0.19800983000745534
+    },
+    {
+      "c_layer_name": "EpochBlock_3",
+      "counters": [
+        249,
+        52,
+        48666457
+      ],
+      "cycles": 48666758,
+      "cycles_by_macc": 0,
+      "duration_ms": 60.83344793319702,
+      "percentage": 58.10276697049821
+    },
+    {
+      "c_layer_name": "EpochBlock_4",
+      "counters": [
+        700,
+        52,
+        961410
+      ],
+      "cycles": 962162,
+      "cycles_by_macc": 0,
+      "duration_ms": 1.202703133225441,
+      "percentage": 1.1487164094532918
+    },
+    {
+      "c_layer_name": "EpochBlock_5",
+      "counters": [
+        924,
+        52,
+        614746
+      ],
+      "cycles": 615722,
+      "cycles_by_macc": 0,
+      "duration_ms": 0.769653432071209,
+      "percentage": 0.7351053660608692
+    },
+    {
+      "c_layer_name": "EpochBlock_6",
+      "counters": [
+        13317,
+        108034,
+        2069
+      ],
+      "cycles": 123421,
+      "cycles_by_macc": 0,
+      "duration_ms": 0.1542768757790327,
+      "percentage": 0.14735172289049225
+    },
+    {
+      "c_layer_name": "EpochBlock_7",
+      "counters": [
+        728,
+        52,
+        237010
+      ],
+      "cycles": 237790,
+      "cycles_by_macc": 0,
+      "duration_ms": 0.2972381189465523,
+      "percentage": 0.2838957472682764
+    },
+    {
+      "c_layer_name": "EpochBlock_8",
+      "counters": [
+        575,
+        52,
+        25601456
+      ],
+      "cycles": 25602084,
+      "cycles_by_macc": 0,
+      "duration_ms": 32.002605676651,
+      "percentage": 30.566078419903164
+    },
+    {
+      "c_layer_name": "EpochBlock_9",
+      "counters": [
+        1433,
+        52,
+        263626
+      ],
+      "cycles": 265111,
+      "cycles_by_macc": 0,
+      "duration_ms": 0.33138953149318695,
+      "percentage": 0.31651417729856945
+    },
+    {
+      "c_layer_name": "EpochBlock_10",
+      "counters": [
+        738,
+        52,
+        169837
+      ],
+      "cycles": 170628,
+      "cycles_by_macc": 0,
+      "duration_ms": 0.21328546479344368,
+      "percentage": 0.20371154488393284
+    },
+    {
+      "c_layer_name": "EpochBlock_11",
+      "counters": [
+        6691,
+        27556,
+        2068
+      ],
+      "cycles": 36314,
+      "cycles_by_macc": 0,
+      "duration_ms": 0.045393749605864286,
+      "percentage": 0.04335612306839809
+    },
+    {
+      "c_layer_name": "EpochBlock_12",
+      "counters": [
+        667,
+        52,
+        60543
+      ],
+      "cycles": 61261,
+      "cycles_by_macc": 0,
+      "duration_ms": 0.07657749950885773,
+      "percentage": 0.07314010236658915
+    },
+    {
+      "c_layer_name": "EpochBlock_13",
+      "counters": [
+        605,
+        52,
+        5402544
+      ],
+      "cycles": 5403201,
+      "cycles_by_macc": 0,
+      "duration_ms": 6.754002273082733,
+      "percentage": 6.4508298234562655
+    },
+    {
+      "c_layer_name": "EpochBlock_14",
+      "counters": [
+        696,
+        52,
+        75811
+      ],
+      "cycles": 76560,
+      "cycles_by_macc": 0,
+      "duration_ms": 0.09570015594363213,
+      "percentage": 0.09140438440936771
+    },
+    {
+      "c_layer_name": "EpochBlock_15",
+      "counters": [
+        1126,
+        52,
+        47561
+      ],
+      "cycles": 48739,
+      "cycles_by_macc": 0,
+      "duration_ms": 0.06092406203970313,
+      "percentage": 0.058189313607150225
+    },
+    {
+      "c_layer_name": "EpochBlock_16",
+      "counters": [
+        5636,
+        8855,
+        2070
+      ],
+      "cycles": 16562,
+      "cycles_by_macc": 0,
+      "duration_ms": 0.020702655892819166,
+      "percentage": 0.019773358766904066
+    },
+    {
+      "c_layer_name": "EpochBlock_17",
+      "counters": [
+        1389,
+        52,
+        16980
+      ],
+      "cycles": 18422,
+      "cycles_by_macc": 0,
+      "duration_ms": 0.02302750013768673,
+      "percentage": 0.021993845817885938
+    },
+    {
+      "c_layer_name": "EpochBlock_18",
+      "counters": [
+        1129,
+        52,
+        1106769
+      ],
+      "cycles": 1107951,
+      "cycles_by_macc": 0,
+      "duration_ms": 1.3849392533302307,
+      "percentage": 1.3227723470960795
+    },
+    {
+      "c_layer_name": "EpochBlock_19",
+      "counters": [
+        1421,
+        52,
+        15190
+      ],
+      "cycles": 16662,
+      "cycles_by_macc": 0,
+      "duration_ms": 0.020828749984502792,
+      "percentage": 0.019893792769485934
+    },
+    {
+      "c_layer_name": "EpochBlock_20",
+      "counters": [
+        1162,
+        52,
+        11730
+      ],
+      "cycles": 12943,
+      "cycles_by_macc": 0,
+      "duration_ms": 0.01617999980226159,
+      "percentage": 0.015453714856436651
+    },
+    {
+      "c_layer_name": "EpochBlock_21 -> 23",
+      "counters": [
+        4696,
+        84044,
+        2067
+      ],
+      "cycles": 90807,
+      "cycles_by_macc": 0,
+      "duration_ms": 0.1135099995881319,
+      "percentage": 0.10841478296829413
+    },
+    {
+      "c_layer_name": "EpochBlock_24",
+      "counters": [
+        1159,
+        216,
+        4650
+      ],
+      "cycles": 6027,
+      "cycles_by_macc": 0,
+      "duration_ms": 0.007533750031143427,
+      "percentage": 0.007195576403201674
+    },
+    {
+      "c_layer_name": "EpochBlock_25",
+      "counters": [
+        3279,
+        3668,
+        1060
+      ],
+      "cycles": 8008,
+      "cycles_by_macc": 0,
+      "duration_ms": 0.01001093746162951,
+      "percentage": 0.009561568286052625
+    },
+    {
+      "c_layer_name": "EpochBlock_26",
+      "counters": [
+        698,
+        52,
+        10086
+      ],
+      "cycles": 10836,
+      "cycles_by_macc": 0,
+      "duration_ms": 0.01354500011075288,
+      "percentage": 0.01293699456119398
+    },
+    {
+      "c_layer_name": "EpochBlock_27",
+      "counters": [
+        2759,
+        1499,
+        2069
+      ],
+      "cycles": 6327,
+      "cycles_by_macc": 0,
+      "duration_ms": 0.007909374893642962,
+      "percentage": 0.007554340283856645
+    },
+    {
+      "c_layer_name": "EpochBlock_28",
+      "counters": [
+        756,
+        52,
+        6839
+      ],
+      "cycles": 7647,
+      "cycles_by_macc": 0,
+      "duration_ms": 0.009559375001117587,
+      "percentage": 0.00913027548074327
+    },
+    {
+      "c_layer_name": "EpochBlock_29",
+      "counters": [
+        1174,
+        52,
+        4498
+      ],
+      "cycles": 5725,
+      "cycles_by_macc": 0,
+      "duration_ms": 0.007156562467571348,
+      "percentage": 0.006835319967721235
+    },
+    {
+      "c_layer_name": "EpochBlock_30 -> 31",
+      "counters": [
+        3477,
+        2985,
+        1062
+      ],
+      "cycles": 7525,
+      "cycles_by_macc": 0,
+      "duration_ms": 0.009406562428921461,
+      "percentage": 0.008984322332037577
+    }
+  ],
+  "environment": {
+    "generated_model": {
+      "generated_time": "2026-08-18T15:54:42-0400",
+      "name": "network"
+    },
+    "network_signature": "0x725a4737d6bee3b2",
+    "target": "stm32 family - 0x486 - STM32N6xx @800/400MHz",
+    "test_name": "",
+    "tools": [
+      {
+        "arguments": "validate --model C:\\Users\\Alonso\\Jupyter\\Tesis\\Test_Modelos_Cuantizacion\\Red_clasificacion_Imagenes\\Red_clasificacion_Radiografias\\modelos\\CNN_PTQ_MIXED_SELECTIVE_5_NODES.tflite --valinput C:\\Users\\Alonso\\Jupyter\\Tesis\\Test_Modelos_Cuantizacion\\Red_clasificacion_Imagenes\\Red_clasificacion_Radiografias\\chest_xray\\val\\radiografias_val_8_st.npz --mode target --st-neural-art user_profile@C:\\Users\\Alonso\\.stm32cubeaistudio\\workspace\\Clasificador_Neumonia\\.ai\\run\\run-3\\.ai\\profile-neural-art.json --name network --verbosity 1 --c-api st-ai --target stm32n6 --workspace C:\\Users\\Alonso\\.stm32cubeaistudio\\workspace\\Clasificador_Neumonia\\.ai\\run\\run-3\\.ai\\st_ai_ws --output C:\\Users\\Alonso\\.stm32cubeaistudio\\workspace\\Clasificador_Neumonia\\.ai\\run\\run-3\\.ai\\st_ai_output --desc serial:COM4:115200 --save-csv",
+        "environment": [
+          "STATS_TYPE=STM32CUBEAI-STUDIO"
+        ],
+        "input_model": {
+          "model_files": [
+            {
+              "name": "CNN_PTQ_MIXED_SELECTIVE_5_NODES.tflite",
+              "signature": "0x3cec55c27d881d56ca818fe359b606b4"
+            }
+          ],
+          "n_params": 22700,
+          "name": "CNN_PTQ_MIXED_SELECTIVE_5_NODES",
+          "size": 26000,
+          "type": "tflite"
+        },
+        "name": "ST.EdgeAI.Core",
+        "version": "4.0.1-20581 7ed50de05"
+      }
+    ]
+  },
+  "json_schema_version": "2.0",
+  "validation": {
+    "device": "VALIDATION_TARGET",
+    "val_error": 0.0,
+    "val_error_desc": "x-cross (rmse) #1",
+    "val_metrics": [
+      {
+        "acc": "75.00%",
+        "cos": 0.8308208584785461,
+        "desc": "TARGET c-model #1",
+        "l2r": 1.5588992834091187,
+        "mae": 0.3818359375,
+        "mean": 0.2548828125,
+        "nse": 0.12881888361362248,
+        "rmse": 0.4819907248020172,
+        "snr": 3.3289262652397156,
+        "std": 0.42250025272369385
+      },
+      {
+        "acc": "75.00%",
+        "cos": 0.8308208584785461,
+        "desc": "original model #1",
+        "l2r": 1.5588992834091187,
+        "mae": 0.3818359375,
+        "mean": 0.2548828125,
+        "nse": 0.12881888361362248,
+        "rmse": 0.4819907248020172,
+        "snr": 3.3289262652397156,
+        "std": 0.42250025272369385
+      },
+      {
+        "acc": "n.a.",
+        "cos": 1.0,
+        "desc": "X-cross #1",
+        "l2r": 0.0,
+        "mae": 0.0,
+        "mean": 0.0,
+        "nse": 1.0,
+        "rmse": 0.0,
+        "snr": Infinity,
+        "std": 0.0
+      }
+    ]
+  }
+}

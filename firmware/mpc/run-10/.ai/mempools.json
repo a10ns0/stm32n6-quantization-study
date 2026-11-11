@@ -1,0 +1,25 @@
+{
+  "version": "1.0",
+  "memory": {
+    "mempools": [
+      {
+        "name": "RAM",
+        "usable_size": "2097152B",
+        "size": "2097152B",
+        "address": "0x34000000"
+      },
+      {
+        "name": "AXISRAM3_4_5_6",
+        "usable_size": "1835008B",
+        "size": "1835008B",
+        "address": "0x34200000"
+      },
+      {
+        "name": "xSPI1",
+        "usable_size": "33554432B",
+        "size": "33554432B",
+        "address": "0x90000000"
+      }
+    ]
+  }
+}

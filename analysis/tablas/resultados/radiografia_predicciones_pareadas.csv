@@ -1,0 +1,7 @@
+Modelo,ambos_correctos,solo_variante_correcto,solo_base_correcto,ambos_incorrectos,predicciones_distintas
+Float32,498,0,0,126,0
+PTQ INT8,480,25,18,101,43
+INT16x8,494,0,4,126,4
+Mixed-3,496,0,2,126,2
+Mixed-5,498,0,0,126,0
+QAT INT8,490,9,8,117,17

@@ -1,0 +1,7 @@
+Unnamed: 0,Modelo,N,Éxitos,Fallos,Success_Rate_%,Tamaño_bytes,Tiempo_evaluacion_s
+0,Float32 Keras,,,,99.5,97905,
+1,PTQ_INT8_PerTensor,200.0,74.0,126.0,37.0,22440,20.947489
+2,PTQ_INT8_PerChannel,200.0,50.0,150.0,25.0,30672,20.897432
+3,QAT_INT8,200.0,65.0,135.0,32.5,23568,21.026473
+4,PTQ_INT16x8,200.0,198.0,2.0,99.0,35624,19.538243
+5,Mixed_Control_RMSEscale_0.32,200.0,156.0,44.0,78.0,55360,19.772422

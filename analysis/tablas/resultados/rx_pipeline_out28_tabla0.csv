@@ -1,0 +1,4 @@
+Unnamed: 0,op_name,tensor_name,scale,mean_squared_error,rmse_scale,orden
+0,CONV_2D,sequential_1_1/conv2d_4_1/Relu;sequential_1_1/...,0.002728,2e-06,0.474614,1
+1,CONV_2D,sequential_1_1/conv2d_6_1/Relu;sequential_1_1/...,0.004907,4e-06,0.409462,2
+2,FULLY_CONNECTED,sequential_1_1/dense_3_1/MatMul;sequential_1_1...,0.038899,0.000244,0.401518,3
